@@ -1,0 +1,40 @@
+<div class="modal-header">
+    <h4 class="modal-title" translate>singlepercent_shapesvg_modal_title</h4>
+</div>
+<div class="modal-body">
+	<p><span translate>singlepercent_shapesvg_modal_intro</span></p>
+	<div>
+		<strong translate>shapesvg_basic_title</strong>
+		<div class='svgshape-panel'>
+			<a href class='btn-svgshape' ng-click='selectSvg(s.key)' ng-repeat='s in svgBasic '>
+				<span class='svg-icon-text'>{{s.text}}</span> 
+				<span class='svg-label' >{{'svgshape_'+s.key|translate}}</span>
+			</a>
+		</div>
+		<strong translate>shapesvg_common_title</strong>
+		<div class='svgshape-panel '>
+			<a href class='btn-svgshape' ng-click='selectSvg(s.key)' ng-repeat='s in svgCommon' title={{'svgshape_'+s.key|translate}}>
+				<img class='svg-icon-img' src='{{s.url}}'></img> <br>
+				<span class='svg-label' >{{'svgshape_'+s.key|translate|string_ellipse:11}}</span>
+			</a>
+		</div>
+		<strong translate>shapesvg_yucca_domain_title</strong>
+		<div class='svgshape-panel '>
+			<a href class='btn-svgshape' ng-click='selectSvg(s.key)' ng-repeat='s in svgYucca' title={{'svgshape_'+s.key|translate}}>
+				<img class='svg-icon-img' src='{{s.url}}'></img> <br>
+				<span class='svg-label' >{{'svgshape_'+s.key|translate|string_ellipse:11}}</span>
+			</a>
+		</div>
+		<strong translate>shapesvg_meteo_title</strong>
+		<div class='svgshape-panel '>
+			<a href class='btn-svgshape' ng-click='selectSvg(s.key)' ng-repeat='s in svgMeteo' title={{'svgshape_'+s.key|translate}}>
+				<img class='svg-icon-img' src='{{s.url}}'></img> <br>
+				<span class='svg-label' >{{'svgshape_'+s.key|translate|string_ellipse:11}}</span>
+			</a>
+		</div>
+	</div>
+</div>
+<div class="modal-footer">
+	<button class="btn btn-link" type="button" ng-click="cancel()">Cancel</button>
+	<button class="btn btn-default" type="button" ng-click="ok()">OK</button>
+</div>

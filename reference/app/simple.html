@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> 
+<html lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>SmartData Reference Essential Demo</title>
+	<meta charset="utf-8">  <!-- it's important for d3.js -->
+	<link rel="stylesheet" href="bower_components/nvd3/build/nv.d3.min.css">
+	<link rel="stylesheet" href="bower_components/leaflet/dist/leaflet.css">
+	<link rel="stylesheet" href="bower_components/yucca-angular-widgets/dist/style/angular-yucca.css">
+
+
+	<script type="text/javascript" src="bower_components/d3/d3.js"></script>
+	<script type="text/javascript" src="bower_components/nvd3/build/nv.d3.min.js"></script>
+	<script type="text/javascript" src="bower_components/leaflet/dist/leaflet.js"></script>
+
+
+	<script type="text/javascript" src="bower_components/angular/angular.js"></script>
+	<script type="text/javascript" src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
+	<script type="text/javascript" src="bower_components/angular-nvd3/dist/angular-nvd3.js"></script>
+	<script type="text/javascript" src="bower_components/stomp-websocket/lib/stomp.min.js"></script>
+	<script type="text/javascript" src="bower_components/angular-leaflet-directive/dist/angular-leaflet-directive.min.js"></script>
+	<script type="text/javascript" src="bower_components/yucca-angular-widgets/dist/js/angular-yucca.js"></script> 
+
+	<style>
+		body{font-family: sans-serif;}
+	</style>
+	<script type="text/javascript"> 
+		angular.module('myApp', ['yucca.plugin']).controller('myCtrl', function($scope){
+			$scope.tenant_code = 'csp';
+			$scope.stream_code = 'H';
+			$scope.smartobject_code = 'a3de712d-6801-5cc4-84b6-a10bd830469d';
+		})
+	</script>
+  
+</head>
+<body>
+	<h1>Widget in a non AngularJS website</h1>
+	<div ng-app="myApp">
+		<div ng-controller="myCtrl">
+			<ng-yucca-stream-last-value tenant_code='{{tenant_code}}' stream_code='{{stream_code}}' smartobject_code='{{smartobject_code}}' chart_color='#aa00ff' />
+	</div>
+</body>
+</html>

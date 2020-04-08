@@ -1,0 +1,81 @@
+<div class="modal-header">
+	<h4 class="modal-title" translate>columnsrelations_param_dialog_title</h4>
+</div>
+<div class="modal-body multipleparams_body">
+	<p ng-bind-html="'columnsrelations_param_dialog_intro'|translate"></p>
+	<div class='inline-feedback-warning' ng-if='!validateAdd'>
+		<i class='fa fa-triangle'></i> <span translate >columnsrelations_mandatory_warning</span>
+	</div>			
+
+	
+	<form class="form-horizontal">
+		<div class="form-group">
+ 			<label for="columnsrelationsSourceColumnInput" translate class="col-sm-2 control-label">columnsrelations_param_relation_source</label>
+ 			<div class="col-sm-5">
+ 				<div class="input-group">
+ 					<input type="text" class="form-control" id="columnsrelationsSourceColumnInput" placeholder="{{'param_config_column_key'|translate}}" 
+						ng-model='newValue.source' uib-typeahead="columnKey as columnKey  for columnKey in  getColumns($viewValue) | limitTo:8" ng-blur="updateSourceColumnLabel()">
+				  	<span class="input-group-addon" id="basic-addon2"  title="{{columnsList}}"><i class='fa fa-info'></i></span>
+				</div>
+			</div>
+			<div class="col-sm-5">
+				<input type="text" class="form-control" id="columnsrelationsSourceTypeInput" placeholder="{{'param_config_column_label'|translate}}" ng-model='newValue.sourceType'>
+			</div>
+		</div>
+		<div class="form-group">
+ 			<label for="columnsrelationsTargetColumnInput" translate class="col-sm-2 control-label" translate>columnsrelations_param_relation_target</label>
+ 			<div class="col-sm-5">
+ 				<div class="input-group">
+	 				<input type="text" class="form-control" id="columnsrelationsTargetColumnInput" placeholder="{{'param_config_column_key'|translate}}" 
+						ng-model='newValue.target' uib-typeahead="columnKey as columnKey  for columnKey in  getColumns($viewValue) | limitTo:8" ng-blur="updateTargetColumnLabel()">
+				  	<span class="input-group-addon" id="basic-addon2"  title="{{columnsList}}"><i class='fa fa-info'></i></span>
+				</div>
+			</div>
+			<div class="col-sm-5">
+				<input type="text" class="form-control" id="columnsrelationsTargetTypeInput" placeholder="{{'param_config_column_label'|translate}}" ng-model='newValue.targetType'>
+			</div>
+		</div>
+		<div class="form-group">
+ 			<label for="columnsrelationsColorInput"  class="col-sm-2 control-label" translate>columnsrelations_param_relation</label>
+  			<div class="col-sm-5">
+				<input type="text" class="form-control" id="columnsrelationsRelationTypeInput" placeholder="{{'columnsrelations_param_relation_link_type'|translate}}" ng-model='newValue.relationType'>
+			</div>
+  			<div class="col-sm-5">
+ 				<!-- <color-picker colorvalue='newValue.color' class='color-picker-inline'/>-->
+ 				<div class="btn-group input-group-sm" role="group" >
+					<button type="button" class="btn btn-default  btn-sm btn-group-addon" translate>param_config_link_line</button>
+					<button type="button" class="btn btn-default  btn-sm" ng-click="newValue.linkLine = 'arc'" title='{{"param_config_link_line_arc"|translate}}'
+						ng-class='{btn_on_off_active:newValue.linkLine=="arc"}'>
+						&nbsp;<span class="line-type-arc-1"></span>
+					</button>
+					<button type="button" class="btn btn-default  btn-sm" ng-click="newValue.linkLine = 'straight'" title='{{"param_config_link_line_arc"|translate}}'
+						ng-class='{btn_on_off_active:newValue.linkLine=="straight"}'>
+						&nbsp;<span class="line-type-straight-1"></span><span class="line-type-straight-2"></span>
+					</button>
+					<button type="button" class="btn btn-default  btn-sm btn-bezier" ng-click="newValue.linkLine = 'bezier'" title='{{"param_config_link_line_bezier"|translate}}'
+						ng-class='{btn_on_off_active:newValue.linkLine=="bezier"}'>
+						&nbsp;<span class="line-type-bezier-1"></span><span class="line-type-bezier-2"></span>
+					</button>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+    		<div class="col-sm-12 text-right">
+				<button type="submit" class="btn btn-default" translate ng-click='addValue(newValue)'>multiple_param_add</button>	
+			</div>
+		</div>
+	</form>
+	<p>&nbsp;</p>
+	<div class='multipleparams_rows'>
+		<div class='multipleparams_row' ng-repeat='v in newValues track by $index'>
+			<div class='multipleparams_row_value'> 
+				{{v.source}} <span style='color: {{v.color}}'>&rarr;</span> {{v.target}}
+			</div>
+			<a class='multipleparams_row_deletebutton' href ng-click='removeValue($index)'><i class='fa fa-trash'></i></a>
+		</div>
+	</div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-link" type="button" ng-click="cancel()">Cancel</button>
+    <button class="btn btn-default" type="button" ng-click="ok()">OK</button>
+</div>

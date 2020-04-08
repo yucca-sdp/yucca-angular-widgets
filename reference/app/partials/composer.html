@@ -1,0 +1,259 @@
+<div id='composer'>
+	<header id='composer-header'>
+		<div  class='header-title' id='composer-header-dashboard-tile'>
+			Composer 
+			<small>
+			
+				<a href ng-if='!isEditingTitle'ng-click='openDashboardConfigDialog()'>{{dashboard.name}} <i class='fa fa-pencil'></i></a>
+			
+				<!-- 
+					<a href ng-if='!isEditingTitle' ng-init='isEditingTitle=false' ng-click='editDashboardTitle(true)'>{{dashboard.name}} <i class='fa fa-pencil'></i></a>
+				-->
+				<input type='text' class='' ng-model='dashboard.name' ng-if='isEditingTitle'  />
+				<!-- 
+				<a ng-if='isEditingTitle'  href ng-click='editDashboardTitle(false)'><i class='fa fa-check'></i></a>
+				 -->
+			</small>
+		</div>
+		<div class='composer-header-toolbar'>
+			<!--  <div class='composer-header-toolbar-item' ng-click='openDashboardConfigDialog()'>
+				<i class='fa fa-cog'></i> <span translate>dashboard_config</span>
+			</div>-->
+			<div class='composer-header-toolbar-item' >
+				<a href ng-click='accordions.opendashboard = !accordions.opendashboard'>
+					<i class='fa fa-upload'></i>
+					<span translate>dashboard_load</span>  
+					<span class="caret"  ng-if='!accordions.opendashboard'></span>
+					<span class="caret caret-up"  ng-if='accordions.opendashboard'></span>
+				</a>
+				<div class='menu-a' ng-if='accordions.opendashboard'>
+					<span class='menu-a-title'><span translate>dashboard_load_title</span></span>
+					<a href ngf-select="loadDashboard($files)" ngf-pattern="'*.json'" data-multiple="false" title="select file">
+						<i class='fa fa-folder-open-o'></i>&nbsp; <span translate>dashboard_load</span>
+					</a>
+					<span class='menu-a-title'><span translate>dashboard_draft</span></span>
+					<a href class='' ng-if='dashboardsDraftList.length==0'><i translate>dashboard_draft_no_items</i></a>	
+					<a href ng-repeat='d in dashboardsDraftList track by $index' class='menu-a-row'>
+						<span ng-click='loadDashboardDraft($index)' >{{d.name}}&nbsp;</span> <small>{{d.date|date}}</small>
+						<i class='fa fa-times' ng-click='deleteDashboardDraft($index)' ></i>
+					</a>
+				</div>
+			</div>
+			<div class='composer-header-toolbar-item' >
+				<a href ng-click='saveDashboard()'><i class='fa fa-download'></i> <span translate>dashboard_save</span></a>
+			</div>
+			
+			<div class='composer-header-toolbar-item' ng-click=''>
+				<a href ng-click='accordions.export = !accordions.export'>
+					<i class='fa fa-share-square-o'></i>
+					<span translate>dashboard_embed</span>  
+					<span class="caret"  ng-if='!accordions.export'></span>
+					<span class="caret caret-up"  ng-if='accordions.export'></span>
+				</a>
+				<div class='menu-a' ng-if='accordions.export'>
+					<span class='menu-a-title' translate>dashboard_embed_static_page</span>
+					<a href class='' ng-click='downloadProject()'><i class='fa fa-code'></i> <span translate>Html</span></a>
+					<!-- <span class='menu-a-title'>CMS Plugin</span>
+					<a href class=''><i class='fa fa-wordpress'></i> <span translate>Wordpress</span></a>
+					<a href class=''><i class='fa fa-joomla'></i> <span translate>Joomla!</span></a>
+					<a href class=''><i class='fa fa-drupal'></i> <span translate>Drupal</span></a>-->
+					<span class='menu-a-title' translate>dashboard_embed_webapp</span>
+					<a href class='php-icon'><i class='fa fa-code'></i> <span translate>Php</span></a>
+					<a href class=''><span class='java-icon'>&lbrace;&nbsp;&rbrace;</span> <span translate>Java</span></a>
+				</div>
+			</div>
+
+			
+			<!-- <a href class='composer-header-toolbar-item' ng-click='downloadProject()'><i class='fa fa-code'></i> <span translate>dashboard_embed</span></a>-->
+			<div class='composer-header-toolbar-item' title="{{'dashboard_preview_hint'|translate}}">
+				<a href='preview.html' target='widget-preview'><i class='fa fa-eye'></i> <span translate>dashboard_preview</span></a>
+			</div>
+			<!-- 
+			<div class='composer-header-toolbar-item' ngf-select="loadDashboard($files)" ngf-pattern="'*.json'" data-multiple="false" title="select file"  >
+				<a href><i class='fa fa-upload'></i> <span translate>dashboard_load</span></a>
+			</div>-->
+			
+			
+		</div>
+	</header>
+	<div id='composer-content'>
+		<div id='left-sidebar' class='sidebar'>
+			<section ng-repeat='(section_key, section_items) in widgets track by $index'>
+				<div class='sidemenu-accordion'><span class='sidemenu-accordion-label'>{{'components_section_' + section_key|translate}}</span>
+					<a href ng-click='accordions.widget[section_key]=true' ng-if='!accordions.widget[section_key]'><i class='fa fa-chevron-down '></i></a>
+					<a href ng-click='accordions.widget[section_key]=false' ng-if='accordions.widget[section_key]'><i class='fa fa-chevron-up '></i></a>
+				</div>
+				<div ng-if='accordions.widget[section_key]'>
+					<div class='composer-menu-item' ng-repeat='w in section_items track by $index' ng-drag="true" ng-drag-data="w" 
+						ng-drag-start='dragdrop.isDragging=true' ng-dblclick='addWidget(w)'>
+						<span translate class='composer-menu-item-label'>{{w.key}}</span>
+						<a href class='help-icon' ng-click='openWidgetHelp(w.key)'><i class="fa fa-question-circle" aria-hidden="true"></i></a> 
+					</div>
+				</div>
+			</section>
+				
+		</div>
+		<style>{{getDashboardCss()}}</style>
+		<div id='content' ng-mousemove="captureCoordinate($event)" ng-drop="true" ng-drop-success="onDropComponent($data,$event)" ng-drag-move='onResizeComponent($data,$event)'>
+			<div class='composer-content-x-y-coord' ><span><strong>x:</strong>{{composerCoordinates.x}}</span> <span><strong>y:</strong>{{composerCoordinates.y}}</span> </div>
+			<div ng-repeat="c in dashboard.components track by $index" class="component-card" style="{{getStyle(c)}}" id='{{c.componentId}}'  
+			  ng-class='{active:c.componentId==current.componentId}' ng-drag="!isResizing" ng-drag-data="c" ng-drag-start='dragdrop.isDragging=true' 
+			  	ng-drop-success="onMoveDropComplete($index, $data,$event)" ng-drag-stop='onMoveStop($index, $data,$event)' ng-drop="true" >
+				<div class='component-card-toolbar component-card-toolbar-trash'>
+					<a href ng-click="removeComponent($index)">&times;</a>
+				</div>
+				<div class='component-card-toolbar component-card-toolbar-left'>
+					<a href ng-click="resetSizeComponent(c)" ng-if='c.content.params.common.chart_width.values ||c.content.params.common.chart_height.values'title='Reset size of widget'><i class='fa fa-arrows-alt'></i></a>
+					<a href class='drag-icon'><i class='fa fa-arrows'></i></a>
+					<a href ng-click="showWidgetCode(c)"><i class='fa fa-code'></i></a>
+					<a href ng-click='editComponentConfig(c)'><i class='fa fa-cog'></i></a>
+					<a href ng-click='editComponentEvent(c)'><i class='fa fa-exchange'></i></a>
+					<a href ng-click='editComponentStyle(c)'><i class='fa fa-tint'></i></a>
+					
+				</div>
+				<div bind-html-compile="getHtmlContent(c)" ng-if='isComponentReady(c) && !isResizing'></div>
+				<div ng-if='!isComponentReady(c)' class='component-placeholder component-placeholder-{{c.content.key}}' style='background-image: url(./images/widgets/{{c.content.key}}-bn.png)'></div>
+				<div class='card-border-right' ng-drag="true" ng-drag-start='onStartResizeComponent($data,$event,"width")' ng-drag-stop="onFinishResizeComponent()" ng-drag-data="c" ng-if='c.type!="yucca-control"'></div>
+				<div class='card-border-bottom' ng-drag="true"   ng-drag-start='onStartResizeComponent($data,$event,"height")' ng-drag-stop="onFinishResizeComponent()" ng-drag-data="c" ng-if='c.type!="yucca-control"'></div>
+				<div class='card-corner-bottom-right' ng-drag="true"   ng-drag-start='onStartResizeComponent($data,$event,"both")' ng-drag-stop="onFinishResizeComponent()" ng-drag-data="c" ng-if='c.type!="yucca-control"'></div>
+				<style ng-bind-html='getCssContent(c)'></style>
+          	</div>
+		</div>
+		<div id='right-sidebar' class='sidebar' ng-if='current'>
+			<h4 ng-click="debug()" class='header-with-help'>
+				<span translate class='header-with-help-title'>{{current.content.key}}</span>
+				<a href class='help-icon' ng-click='openWidgetHelp(current.content.key)'><i class="fa fa-question-circle" aria-hidden="true"></i></a>
+			</h4>
+			<div class='toolbar'>
+				<div class='toolbar-item' ng-class='{active:isEditingComponentConfig}' ng-click=editComponentConfig()><i class='fa fa-cog' ></i> <span translate>widget_config_section_config</span></div>
+				<div class='toolbar-item' ng-class='{active:isEditingComponentEvent}' ng-click=editComponentEvent()><i class='fa fa-exchange' ></i> <span translate>widget_config_section_event</span></div>
+				<div class='toolbar-item' ng-class='{active:isEditingComponentStyle}' ng-click='editComponentStyle()'><i class='fa fa-tint'></i> <span translate>widget_config_section_style</span></div>
+			</div>
+			<div  class='sidebar-content'>
+			
+				<div id='configSidebar' ng-if='isEditingComponentConfig' ng-init='isEditingComponentConfig = false'>
+					<section ng-repeat='(section_key, section_params) in current.content.params track by $index' >
+						<div class='sidemenu-accordion'>
+							<span class='sidemenu-accordion-label'>{{'params_section_'+section_key|translate}} <small ng-if="$index!=0" class='sidemenu-accordion-label-optional'><i translate>optional</i></small></span>
+							<a href ng-click='accordions.params[section_key]=true' ng-if='!accordions.params[section_key]'><i class='fa fa-chevron-down'></i></a>
+							<a href ng-click='accordions.params[section_key]=false' ng-if='accordions.params[section_key]'><i class='fa fa-chevron-up'></i></a>
+						</div>
+						<form ng-if='accordions.params[section_key]'>
+						  <div class="form-group form-group-sm" ng-repeat='(param_key,p) in section_params track by $index' title="{{current.content.key + '_' + p.name|translate}}">
+						  	<label for="i_{{p.name}}" title='{{p.name}}'>{{'param_' + param_key|translate}}</label>
+						  	<div class="input-group input-group-xs">
+						  		<!--  <param-config-tenantcode param='p'></param-config-tenantcode>-->
+						  		<param-config directive_type='param_config_{{p.type}}' param='p' current='current'></param-config>
+							  	<div class="input-group-addon">
+										<small><a href ng-click='show_help="true"' ng-show='show_help=="false"' ng-init='show_help="false"' title='Show help'>&quest; </a></small> 
+										<small><a href ng-click='show_help="false"' ng-show='show_help=="true"' title='Hide help'>&quest; </a></small>
+									</div>
+								</div>
+								<span class="help-block" ng-show='show_help=="true"' ng-bind-html="'help_inline_'+param_key|translate"></span>
+						  </div>
+						</form>
+					</section>
+				</div>
+				<div id='eventSidebar' ng-if='isEditingComponentEvent' ng-init='isEditingComponentEvent = false'>
+					<section ng-repeat='(section_key, section_events) in current.content.events track by $index' >
+						<div class='sidemenu-accordion'>
+							<span class='sidemenu-accordion-label'>{{'events_section_'+section_key|translate}}</span>
+							<a href ng-click='accordions.events[section_key]=true' ng-if='!accordions.events[section_key]'><i class='fa fa-chevron-down'></i></a>
+							<a href ng-click='accordions.events[section_key]=false' ng-if='accordions.events[section_key]'><i class='fa fa-chevron-up'></i></a>
+						</div>
+						<form ng-if='accordions.events[section_key]'>
+						  <div class="form-group form-group-sm" ng-repeat='e in section_events track by $index' title="{{current.content.key + '_' + e.name|translate}}">
+						  	<label for="i_{{e.name}}" title='{{e.name}}'>{{'event_' + e.name|translate}}</label>
+						  	<div class="input-group input-group-xs">
+						  		<!--  <param-config-tenantcode param='p'></param-config-tenantcode>-->
+						  		<param-config directive_type='event_config_{{e.type}}' param='e' current='current'></param-config>
+							  	<div class="input-group-addon">
+										<small><a href ng-click='show_help="true"' ng-show='show_help=="false"' ng-init='show_help="false"' title='Show help'>&quest; </a></small> 
+										<small><a href ng-click='show_help="false"' ng-show='show_help=="true"' title='Hide help'>&quest; </a></small>
+									</div>
+								</div>
+								<span class="help-block" ng-show='show_help=="true"' ng-bind-html="'help_inline_'+e.name|translate"></span> 
+						  </div>
+						  <div ng-if='section_events|isEmpty'><i class='mute'>{{'events_section_' + section_key + '_no_values'|translate}}</i></div>
+						</form>
+					</section>
+								
+				</div>
+				<div id='styleSidebar' ng-if='isEditingComponentStyle' ng-init='isEditingComponentStyle = false'>
+					<form >
+						  <div class="form-group form-group-sm">
+						  	<label for="i_widget_html_id" >{{'param_widget_id'|translate}}</label>
+						  	<div class="input-group input-group-xs">
+								<input type="text" class="form-control " id="i_{{s.name}}" ng-model='current.content.params.advanced.widget_id.values'>
+								<div class="input-group-btn">
+									<button type="button" class="btn btn-default btn-xs btn-help" aria-label="Help" ng-click='show_help_id_widget=!show_help_id_widget'>&quest;</button>
+								</div>
+							</div>
+							<!--<span class="help-block" ng-show='show_help=="true"' ng-bind-html="'help_inline_'+s.name|translate"></span>-->
+							<span class="help-block" ng-show='show_help_id_widget'>
+								<span ng-bind-html="'help_inline_widget_id'|translate" ></span> 
+							</span>
+							
+						  </div>
+						</form>
+					<section ng-repeat='(section_key, section_styles) in current.content.styles track by $index' >
+						<div class='sidemenu-accordion'>
+							<span class='sidemenu-accordion-label'>{{'styles_section_'+section_key|translate}}</span>
+							<a href ng-click='accordions.styles[section_key]=true' ng-if='!accordions.styles[section_key]'><i class='fa fa-chevron-down'></i></a>
+							<a href ng-click='accordions.styles[section_key]=false' ng-if='accordions.styles[section_key]'><i class='fa fa-chevron-up'></i></a>
+						</div>
+						<form ng-if='accordions.styles[section_key]'>
+						  <div class="form-group form-group-sm" ng-repeat='s in section_styles track by $index' title="{{current.content.key + '_' + e.name|translate}}">
+						  	<label for="i_{{s.name}}" title='{{s.name}}'>{{'style_' + s.name|minus2underscore|translate}}</label>
+						  	<div class="input-group input-group-xs">
+						  		<!--  <param-config-tenantcode param='p'></param-config-tenantcode>-->
+								<input type="text" class="form-control " id="i_{{s.name}}" ng-model='s.custom'>
+								<div class="input-group-btn">
+									<button type="button" class="btn btn-default btn-xs btn-middle" aria-label="Edit" ng-click='openChangeStyleDialog(current.content.key,section_key, s.name, s.custom_dialog)'>
+										<i class="fa fa-pencil" aria-hidden="true"></i>
+									</button>
+									<button type="button" class="btn btn-default btn-xs btn-help" aria-label="Help" ng-click='show_help="true"' ng-show='show_help=="false"'
+										ng-init='show_help="false"' title='Show help'
+									>&quest;</button>
+									<button type="button" class="btn btn-default btn-xs btn-help" aria-label="Help" ng-click='show_help="false"' ng-show='show_help=="true"' title='Hide help'>&quest;
+									</button>
+								</div>
+							</div>
+							<!--<span class="help-block" ng-show='show_help=="true"' ng-bind-html="'help_inline_'+s.name|translate"></span>-->
+							<span class="help-block" ng-show='show_help=="true"'>
+								<strong translate>help_style_css_selector</strong><br> 
+								<code>.yucca-widget {{s.selector}}</code>
+							</span>
+							
+						  </div>
+						</form>
+					</section>
+								
+				</div>
+				
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/ng-template" id="WidgetCodeDialog.html">
+	<div class='code-widget-dialog'>
+        <div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="ok()"><span aria-hidden="true">&times;</span></button>
+            <h3 class="modal-title" translate>widget_code_dialog_title</h3>
+        </div>
+        <div class="modal-body">
+			<h4 class='title-with-button'>
+				<div class='title-with-button-title'>Angular Directive</div>
+				<div class='mute'>
+					<span>{{copyToClipboardFeedback|translate}}</span>&nbsp;
+					<a href ng-click='copyToClipboard(widgetCodeRaw)' title='Copy to Clipboard' class='mute'><i class='fa fa-copy'></i></a> 
+				</div>
+			</h4>
+			<div class='prettyhtml' ng-bind-html="widgetCode"></div>
+			<h4>Css Style</h4>
+			<div class='prettycss' ng-bind-html="widgetStyle"></div>
+        </div>
+    </div>
+</script>
+

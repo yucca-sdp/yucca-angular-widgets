@@ -1,0 +1,73 @@
+<div class="modal-header">
+    <h4 class="modal-title" translate>param_geojsons_title</h4>
+</div>
+<div class="modal-body multipleparams_body">
+	<p><span translate>multiple_param_geojsons_dialog_intro</span></p>
+	<form class="form-horizontal multipleparams_form form-compact">
+		<legend translate>new_geojson</legend>
+		<div class="form-group">
+  				<label for="geojsonUrlValueInput" class='col-sm-3' translate>geojson_url_param</label>
+			<div class='col-sm-9'>
+					<input type="text" class="form-control input-sm" id="geojsonurlValueInput" placeholder="{{'geojson_url_param_placeholder'|translate}}" 
+						ng-model='newGeojson.url'>
+					<small class='help-block text-right'>
+						<span translate>geojson_url_param_hint</span><br>
+						<span translate>geojson_url_param_on_yucca</span>: 
+						<strong><a href ng-click='newGeojson.url="lib/yucca-angular-widgets/dist/data/piemonte_province_geojson.json"' translate>geojson_piedmont</a></strong> |  
+						<strong><a href ng-click='newGeojson.url="lib/yucca-angular-widgets/dist/data/italia_regioni_geojson.json"' translate>geojson_italy</a></strong> |
+						<strong><a href ng-click='newGeojson.url="lib/yucca-angular-widgets/dist/data/europe_countries_geojson.json"' translate>geojson_europe</a></strong> |
+						<strong><a href ng-click='newGeojson.url="lib/yucca-angular-widgets/dist/data/world_countries_geojson.json"' translate>geojson_world</a></strong>			
+					</small>
+						
+			</div>
+		</div>
+		<div class="form-group">
+  				<label for="geojsonKeyValueInput" class='col-sm-3' translate>geojson_key_param</label>
+			<div class='col-sm-9'>
+  					<input type="text" class="form-control input-sm" id="multipleparamValueInputValue" placeholder="{{'geojson_key_param_placeholder'|translate}}" ng-model='newGeojson.key'>
+				<small class='help-block text-right' translate>geojson_key_param_hint</small>
+			</div>
+		</div>
+		<div class="form-group">
+  				<label class='col-sm-4' translate>geojson_render_line_param</label>
+			<div class='col-sm-2'>
+  					<input type="number" class="form-control input-sm" id="geojsonRenderLineWeightValueInput" placeholder="" ng-model='newGeojson.render.line.weight'>
+				<label class='label-small text-right' for="geojsonRenderLineWeightValueInput" translate>geojson_render_line_weight_param</label>
+			</div>
+			<div class='col-sm-2'>
+ 						<input type="number" class="form-control input-sm" id="geojsonRenderLineOpacityValueInput" placeholder="" ng-model='newGeojson.render.line.opacity'>
+   				<label class='label-small text-right' for="geojsonRenderLineOpacityValueInput" translate>geojson_render_line_opacity_param</label>
+			</div>
+			<div class='col-sm-2'>
+ 						<color-picker colorvalue='newGeojson.render.line.dashcolor' id="geojsonRenderLineDashcolorValueInput">
+   				<label class='label-small text-right' for="geojsonRenderLineDashcolorValueInput" translate>geojson_render_line_dashcolor_param</label>
+			</div>
+			<div class='col-sm-2'>
+ 						<input type="number" class="form-control input-sm" id="geojsonRenderLineDasharrayValueInput" placeholder="" ng-model='newGeojson.render.line.dasharray'>
+   				<label class='label-small text-right' for="geojsonRenderLineDasharrayValueInput" translate>geojson_render_line_dasharray_param</label>
+			</div>
+		</div>
+		<div class="form-group">
+  				<label class='col-sm-4' translate>geojson_render_areas_param</label>
+			<div class='col-sm-2'>
+ 						<input type="number" class="form-control input-sm" id="fillopacity" placeholder="" ng-model='newGeojson.render.areas.fillopacity'>
+   				<label  class='label-small text-right' for="geojsonRenderAreasDasharrayValueInput" translate>geojson_render_areas_fillopacity_param</label>
+			</div>
+		</div>
+		<div class='text-right'>
+			<button type="submit" class="btn btn-default" translate ng-click='addGeojson(newGeojson)'>multiple_param_add</button>
+		</div>
+	</form>
+	<p>&nbsp;</p>
+	<legend translate>existing_geojson</legend>
+	<div class='multipleparams_rows'>
+		<div class='multipleparams_row' ng-repeat='v in newValues track by $index'>
+			<div class='multipleparams_row_value'>{{v.key}}</div>
+			<a class='multipleparams_row_deletebutton' href ng-click='removeGeojson($index)'><i class='fa fa-trash'></i></a>
+		</div>
+	</div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-link" type="button" ng-click="cancel()">Cancel</button>
+    <button class="btn btn-default" type="button" ng-click="ok()" ng-disabled='newValues.length==0'>OK</button>
+</div>

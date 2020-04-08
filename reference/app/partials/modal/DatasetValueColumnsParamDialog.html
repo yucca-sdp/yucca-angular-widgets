@@ -1,0 +1,65 @@
+<div class="modal-header">
+	<h4 class="modal-title" translate>dataset_value_columns_param_dialog_title</h4>
+</div>
+
+<div class="modal-body multipleparams_body">
+	<p><span translate>dataset_value_columns_param_dialog_intro</span></p>
+	<p>&nbsp;</p>
+	<form class="form-horizontal">
+		<div class="form-group  form-group-sm">
+			<label class="col-sm-1 control-label"translate>param_config_series_column</label>
+			<div class='col-sm-3'>
+				<div class="input-group">
+					<span class="input-group-addon" id="basic-addon1" translate>param_config_column_key</span>
+					<input type="text" uib-typeahead="columnKey as columnKey  for columnKey in  getColumns($viewValue) | limitTo:8"
+						class="form-control" id="column_key" ng-model='newValue.key' placeholder="{{'param_config_column_key_placeholder'|translate}}" ng-blur="updateColumnLabel()">
+				  	<span class="input-group-addon" id="basic-addon2"  title="{{columnsList}}"><i class='fa fa-info'></i></span>
+				</div>						
+			</div>
+			<div class='col-sm-3'>
+				<div class="input-group">
+					<span class="input-group-addon" translate>param_config_column_label</span>
+					<input type="text" class="form-control" id="column_label" ng-model='newValue.label' placeholder="{{'param_config_column_label_placeholder'|translate}}">				</div>						
+			</div>
+			<div class='col-sm-2'>
+				<div class="input-group">
+					<span class="input-group-addon" id="basic-addon4" translate>color</span>
+					<input type="color" class="form-control"  aria-describedby="Color" ng-model="newValue.color">
+				</div>						
+			</div>
+			<div class='col-sm-3 '  title='{{"param_config_horizontal_side_hint"|translate'>
+				<div class="input-group">
+					<span class="input-group-addon" translate>param_config_horizontal_side</span>
+					<select class="form-control" id="column_side" ng-model='newValue.side'>
+						<option>L</option>
+						<option>R</option>
+					</select>
+				</div>			
+			</div>
+		</div>
+		<p>&nbsp;</p>
+		<div class="form-group  form-group-sm text-right">
+			<div class="col-sm-12">
+				<span class='inline-feedback-warning' ng-if='!validateAdd'><i class='fa fa-triangle'></i> <span translate >dataset_value_columns_mandatory_warning</span></span>			
+				<button type="submit" class="btn btn-default" translate ng-click='addValue(newValue)'>multiple_param_add</button>
+			</div>
+		</div>
+     </form>
+     
+     
+     
+	<p>&nbsp;</p>
+	<div class='multipleparams_rows'>
+		<div class='multipleparams_row' ng-repeat='v in newValues track by $index'>
+			<div class='bar_preview' style='color:{{v.color}}'><i class='fa fa-bar-chart'></i></div>
+			<div class='multipleparams_row_value'>{{v.key}} - {{v.label}}</div>
+			<div class='multipleparams_row_value' ng-if='v.side'>{{v.side}}</div>
+			
+			<a class='multipleparams_row_deletebutton' href ng-click='removeValue($index)'><i class='fa fa-trash'></i></a>
+		</div>
+	</div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-link" type="button" ng-click="cancel()">Cancel</button>
+    <button class="btn btn-default" type="button" ng-click="ok()" ng-disabled='newValues.length==0'>OK</button>
+</div>

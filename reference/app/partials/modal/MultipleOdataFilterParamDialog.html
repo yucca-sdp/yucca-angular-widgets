@@ -1,0 +1,36 @@
+<div class="modal-header">
+    <h4 class="modal-title" translate>multiple_odatafilter_param_dialog_title</h4>
+</div>
+<div class="modal-body multipleparams_body">
+	<p><span translate>multiple_odatafilter_dialog_intro</span></p>
+
+	
+	<form class="form-inline multipleparams_form">
+		<div class="form-group">
+  			<label for="multipleparamValueInputLabel" translate class="">multiple_odatafilter_param_label</label>
+			<input type='text' class='form-control' ng-model='newValue.label' name=''/>
+		</div>
+		<div class="form-group">
+  			<label for="multipleparamValueInputLimit" translate>multiple_odatafilter_param_filter</label>
+  			<div class='input-group'>
+				<input type='text' class='form-control' ng-model='newValue.filter'/>
+				<a href ng-click='openNewFilterDialog()' class='input-group-addon ' translate>multiple_odatafilter_add_filter_create</a>
+  			</div>
+		</div>
+		<button type="submit" class="btn btn-default" translate ng-click='addValue(newValue)'>multiple_param_add</button>
+	</form>
+	<div>
+		
+	</div>
+	<div class='multipleparams_rows'>
+		<div ng-if='newValues.length==0' translate>multiple_odatafilter_filter_empty</div>
+		<div class='multipleparams_row' ng-repeat='v in newValues track by $index'>
+			<div class='multipleparams_row_value' style='background-color: '>{{v.label}} &nbsp; - {{v.filter|string_ellipse:20}}</div>
+			<a class='multipleparams_row_deletebutton' href ng-click='removeValue($index)'><i class='fa fa-trash'></i></a>
+		</div>
+	</div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-link" type="button" ng-click="cancel()">Cancel</button>
+    <button class="btn btn-default" type="button" ng-click="ok()">OK</button>
+</div>

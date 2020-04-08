@@ -1,0 +1,239 @@
+<div class="modal-header">
+	<h4 class="modal-title" translate>dataset_serie_columns_param_dialog_title</h4>
+</div>
+
+<div class="modal-body multipleparams_body">
+	<p><span translate ng-if='!isLineChart && !isMultibarChart' >dataset_serie_columns_param_dialog_intro</span></p>
+	<p class='inline-feedback-info' ng-if='isMultibarChart' translate>serie_columns_counting_mode_info</p>
+	<p>&nbsp;</p>
+	<form class="form-horizontal">
+		<div class="form-group  form-group-sm">
+			<label class="col-sm-1 control-label"translate>param_config_series_column</label>
+			<div class='col-sm-3'>
+				<div class="input-group">
+					<span class="input-group-addon" id="basic-addon1" translate>param_config_column_key</span>
+					<input type="text" uib-typeahead="columnKey as columnKey  for columnKey in  getColumns($viewValue) | limitTo:8"
+						class="form-control" id="column_key" ng-model='newValue.key' placeholder="{{'param_config_column_key_placeholder'|translate}}" ng-blur="updateColumnLabel()">
+				  	<span class="input-group-addon" id="basic-addon2"  title="{{columnsList}}"><i class='fa fa-info'></i></span>
+				</div>						
+			</div>
+			<div class='col-sm-3'>
+				<div class="input-group">
+					<span class="input-group-addon" translate>param_config_column_label</span>
+					<input type="text" class="form-control" id="column_label" ng-model='newValue.label' placeholder="{{'param_config_column_label_placeholder'|translate}}">				</div>						
+			</div>
+			<div class='col-sm-3'>
+				<div class="input-group">
+					<span class="input-group-addon" translate>param_config_column_countingmode_short</span>
+					<select class="form-control" id="column_counting_mode" ng-model='newValue.countingMode'>
+						<option>count</option>
+						<option>sum</option>
+					</select>
+				</div>			
+			</div>
+			<div class='col-sm-2 ' ng-if='!isLineChart && !isMultibarChart && !isHorizontalmultibarChart'>
+				<div class="input-group">
+					<span class="input-group-addon" translate>param_config_column_y_axis</span>
+					<select class="form-control" id="column_y_axis" ng-model='newValue.yAxis'>
+						<option>1</option>
+						<option>2</option>
+					</select>
+				</div>			
+			</div>
+		</div>
+		<div class="form-group  form-group-sm" ng-if='isMultibarChart'>
+			<div class='col-sm-4 col-sm-offset-1'>
+				<div class="input-group">
+					<span class="input-group-addon" translate>param_config_scale_value</span>
+					<input type="number" class="form-control" id="column_scale" ng-model='newValue.scale' placeholder="0.001">
+					<span class="input-group-addon" id="basic-addon2"  title="{{'param_config_scale_value_hint'|translate}}"><i class='fa fa-question'></i></span>
+				</div>						
+			</div>						
+			<div class='col-sm-5'>
+				<div class="input-group">
+					<span class="input-group-addon" translate>param_config_text_after</span>
+					<input type="text" class="form-control" id="column_text_after" ng-model='newValue.text_after' placeholder="Mld">
+					<span class="input-group-addon" id="basic-addon2"  title="{{'param_config_text_after_hint'|translate}}"><i class='fa fa-question'></i></span>
+				</div>						
+			</div>
+	  	</div>
+		<div class="form-group  form-group-sm" ng-if='isMultibarChart'>
+			<label class="col-sm-1 control-label"translate>param_config_number_format</label>
+			<div class='col-sm-3 '>
+      			<div class="checkbox">
+					<label><input type="checkbox" ng-model="newValue.euro_value" >   
+						<span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+						<span  translate>param_euro_value</span>
+					</label>
+				</div>
+			</div>						
+			<div class='col-sm-3 '>
+				<div class="input-group">
+					<span class="input-group-addon" translate>param_decimal_value</span>
+					<input type="number" class="form-control" id="column_decimal" ng-model='newValue.decimal_value' placeholder="2">
+				</div>						
+			</div>						
+			<div class='col-sm-4 '>
+      			<div class="checkbox">
+					<label><input type="checkbox" ng-model="newValue.format_big_number" >   
+						<span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+						<span  translate>param_format_big_number</span>
+					</label>
+				</div>
+			</div>	
+	  	</div>		
+	  	<div class="form-group  form-group-sm">
+			<label class="col-sm-1 control-label"translate>param_config_series_style</label>
+			<div class='col-sm-5' ng-if="!isHorizontalmultibarChart">
+				<div class="input-group">
+					<span class="input-group-addon" translate>param_config_series_visualization_type</span>
+					<select class="form-control" id="column_visualization_type" ng-model='newValue.type' 
+						ng-disabled='isLineChart || isMultibarChart || isHorizontalmultibarChart'>
+						<option value="area" translate>visualization_type_area</option>
+						<option value="bar" translate>visualization_type_bar</option>
+						<option value="line" translate>visualization_type_line</option>
+						<option value="scatter" translate>visualization_type_scatter</option>
+					</select>
+				</div>			
+			</div>
+			<div class='col-sm-2'>
+				<div class="input-group">
+					<span class="input-group-addon" id="basic-addon4" translate>color</span>
+					<input type="color" class="form-control"  aria-describedby="Color" ng-model="newValue.color">
+				</div>						
+			</div>
+			<div class='col-sm-4 ' ng-if='isHorizontalmultibarChart'   title='{{"param_config_horizontal_side_hint"|translate'>
+				<div class="input-group">
+					<span class="input-group-addon" translate>param_config_horizontal_side</span>
+					<select class="form-control" id="column_side" ng-model='newValue.side'>
+						<option>L</option>
+						<option>R</option>
+					</select>
+				</div>			
+			</div>
+			
+	  	</div>
+<!-- 		<div class="form-group  form-group-sm" ng-if='newValue.type == "area"'>
+			<div class='col-sm-3 col-sm-offset-1'>
+				<div class="input-group">
+					<span class="input-group-addon" id="basic-addon4" translate>Color</span>
+					<input type="color" class="form-control"  aria-describedby="Color" ng-model="newValue.color">
+				</div>						
+			</div>
+		</div>
+		<div class="form-group  form-group-sm" ng-if='newValue.type == "bar"'>
+			<div class='col-sm-2 col-sm-offset-1'>
+				<div class="input-group">
+					<span class="input-group-addon" id="basic-addon4" translate>Color</span>
+					<input type="color" class="form-control"  aria-describedby="Color" ng-model="newValue.color">
+				</div>						
+			</div>
+		</div>-->
+		<div class="form-group  form-group-sm" ng-if='newValue.type == "line"'>
+			<div class='col-sm-2 col-sm-offset-1'>
+				<div class="input-group">
+					<span class="input-group-addon" id="basic-addon5">Size</span>
+					<input type="number" class="form-control" min="1" aria-describedby="Size" ng-model="newValue.strokeWidth">
+				</div>						
+			</div>
+			<div class='col-sm-3 text-right'>
+				<div class="btn-group input-group-sm" role="group" aria-label="text align">
+					<button type="button" class="btn btn-default  btn-sm btn-group-addon">Line</button>
+							<button type="button" class="btn btn-default  btn-sm" ng-click="newValue.classed='solid'" ng-class='{btn_on_off_active:newValue.classed=="solid"}'>
+						&nbsp;<span class="icon-border-style icon-border-style-solid"></span>
+					</button>
+							<button type="button" class="btn btn-default  btn-sm" ng-click="newValue.classed='dashed'" ng-class='{btn_on_off_active:newValue.classed=="dashed"}'>
+						&nbsp;<span class="icon-border-style icon-border-style-dashed"></span>
+					</button>
+							<button type="button" class="btn btn-default  btn-sm" ng-click="newValue.classed='dotted'" ng-class='{btn_on_off_active:newValue.classed=="dotted"}'>
+						&nbsp;<span class="icon-border-style icon-border-style-dotted"></span>
+					</button>
+					<!-- <button type="button" class="btn btn-default  btn-sm" ng-click="newValue.classed='double'" ng-class='{btn_on_off_active:newValue.classed=="double"}'>
+						&nbsp;<span class="icon-border-style icon-border-style-double"></span>
+					</button>-->
+				</div>
+			</div>
+			<div class='col-sm-4'>
+				<div class="input-group">
+					<span class="input-group-addon" translate>param_config_visualization_interpolation</span>
+					<select class="form-control" id="column_interpolation" ng-model='newValue.interpolate'>
+						<option>linear</option>
+						<option>stepbefore</option>
+						<option>stepafter</option>
+						<option>basis</option>
+						<option>basisopen</option>
+						<option>basisclosed</option>
+						<option>bundle</option>
+						<option>cardinal</option>
+						<option>cardinalopen</option>
+						<option>cardinalclosed</option>
+						<option>natural</option>
+					</select>
+					<a href class="input-group-addon" translate ng-click="openInterpolationHelp()">&quest;</a>
+					
+				</div>			
+			</div>
+		</div>
+		<div class="form-group  form-group-sm" ng-if='newValue.type == "scatter"'>
+			
+			<div class='col-sm-6 col-sm-offset-1'>
+				<div class="btn-group input-group-sm btn-group-icons" role="group" aria-label="text align">
+					<button type="button" class="btn btn-default  btn-sm btn-group-addon" translate>param_config_scatter_shape</button>
+					<button type="button" class="btn btn-default  btn-sm btn-icon-text" ng-click="newValue.shape='circle'" ng-class='{btn_on_off_active:newValue.shape=="circle"}'>
+						<span>&#9711;</span>
+					</button>
+					<button type="button" class="btn btn-default  btn-sm btn-icon-text" ng-click="newValue.shape='square'" ng-class='{btn_on_off_active:newValue.shape=="square"}'>
+						<span>&#8414;</span>
+					</button>
+					<button type="button" class="btn btn-default  btn-sm btn-icon-text" ng-click="newValue.shape='diamond'" ng-class='{btn_on_off_active:newValue.shape=="diamond"}'>
+						<span>&#9674;</span>
+					</button>
+					<button type="button" class="btn btn-default  btn-sm btn-icon-text" ng-click="newValue.shape='triangle-up'" ng-class='{btn_on_off_active:newValue.shape=="triangle-up"}'>
+						<span>&#8420;</span>
+					</button>
+					<button type="button" class="btn btn-default  btn-sm btn-icon-text" ng-click="newValue.shape='triangle-down'" ng-class='{btn_on_off_active:newValue.shape=="triangle-down"}'>
+						<span class='triangle-down'>&#8420;</span>
+					</button>
+					<button type="button" class="btn btn-default  btn-sm btn-icon-text" ng-click="newValue.shape='cross'" ng-class='{btn_on_off_active:newValue.shape=="cross"}'>
+						<span>&#10010;</span>
+					</button>
+				</div>
+			</div>
+		</div>
+		<p>&nbsp;</p>
+		<div class="form-group  form-group-sm text-right">
+			<div class="col-sm-12">
+				<span class='inline-feedback-warning' ng-if='!validateAdd'><i class='fa fa-triangle'></i> <span translate >dataset_serie_columns_mandatory_warning</span></span>			
+				<button type="submit" class="btn btn-default" translate ng-click='addValue(newValue)'>multiple_param_add</button>
+			</div>
+		</div>
+     </form>
+     
+     
+     
+	<p>&nbsp;</p>
+	<div class='multipleparams_rows'>
+		<div class='multipleparams_row' ng-repeat='v in newValues track by $index'>
+			<div class='area_preview' ng-if='v.type == "area"' style='color:{{v.color}}'><i class='fa fa-area-chart'></i></div>
+			<div class='bar_preview' ng-if='v.type == "bar"' style='color:{{v.color}}'><i class='fa fa-bar-chart'></i></div>
+			<div class='line_preview' ng-if='v.type == "line"' style='border-top-style:{{v.classed}}; border-top-color:{{v.color}}; border-top-width:{{v.strokeWidth}}px'>&nbsp;</div>
+			<div class='scatter_preview' ng-if='v.type == "scatter"' style='color:{{v.color}};'>
+				<span ng-if="v.shape=='circle'">&#9711;</span>
+				<span ng-if="v.shape=='square'" >&#8414;</span>
+				<span ng-if="v.shape=='diamond'" >&#9674;</span>
+				<span ng-if="v.shape=='triangle-up'" >&#8420;</span>
+				<span ng-if="v.shape=='triangle-down'"  class='triangle-down'>&#8420;</span>
+				<span ng-if="v.shape=='cross'" >&#10010;</span>
+			</div>
+			<div class='multipleparams_row_value'>{{v.key}} - {{v.label}}</div>
+			<div class='multipleparams_row_value' ng-if='v.countingMode'>{{v.countingMode}}</div>
+			<div class='multipleparams_row_value' ng-if='v.side'>{{v.side}}</div>
+			
+			<a class='multipleparams_row_deletebutton' href ng-click='removeValue($index)'><i class='fa fa-trash'></i></a>
+		</div>
+	</div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-link" type="button" ng-click="cancel()">Cancel</button>
+    <button class="btn btn-default" type="button" ng-click="ok()" ng-disabled='newValues.length==0'>OK</button>
+</div>

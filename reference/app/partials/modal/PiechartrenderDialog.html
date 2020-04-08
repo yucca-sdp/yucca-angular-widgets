@@ -1,0 +1,88 @@
+<div class="modal-header">
+    <h4 class="modal-title" translate ng-click='updateVisibility()'>piechartrender_param_dialog_title</h4>
+</div>
+<div class="modal-body ">
+	<div class='modal-piechartrender-content'>
+		<form class="form-horizontal">
+			<legend class='legend-light' translate>piechartrender_donut_title</legend>
+			<div class="form-group">
+				<div class='col-sm-3'>
+					<div class="checkbox">
+						<label><input type="checkbox" ng-model="piechartrender_options.chart.donut" ng-change='updateRender1()'>   
+							<span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+							<span translate-cloak translate>piechartrender_donut</span>
+						</label>
+					</div>
+				</div>
+				<label for="donutRatio" translate class="col-sm-3 control-label label-light nowrap">piechartrender_donutratio</label>
+				<div class="col-sm-6 input-range">
+					<input type="range" min="0" max="2" step=".1" class="form-control input-sm" id="donutRatio" placeholder="" 
+							ng-model='piechartrender_options.chart.donutRatio' ng-disabled='!piechartrender_options.chart.donut'>
+					<small class='mute' ng-if="piechartrender.donutRatio">{{piechartrender_options.chart.donutRatio}}%</small>				
+				</div>
+			</div>
+			<p>&nbsp;</p>
+			<legend class='legend-light'  translate>piechartrender_piesection_title</legend>
+			<div class="form-group">
+				<label translate class="col-sm-2 control-label label-light nowrap  text-left">piechartrender_angles_section</label>
+				<div class='col-sm-2'>
+					<div class="radio nowrap">
+						<label><input type="radio" name='pie_angle_section' value='full' ng-model="piechartrender.angleTypes" ng-change='updateAngles()' >   
+							<span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+							<span translate-cloak translate>piechartrender_fullpie</span>
+						</label>
+					</div>
+				</div>
+				<div class='col-sm-2'>
+					<div class="radio nowrap">
+						<label><input type="radio" name='pie_angle_section' value='half' ng-model="piechartrender.angleTypes" ng-change='updateAngles()' >   
+							<span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+							<span translate-cloak translate>piechartrender_halfpie</span>
+						</label>
+					</div>
+				</div>
+				<div class='col-sm-2'>
+					<div class="radio nowrap">
+						<label><input type="radio" name='pie_angle_section' value='custom' ng-model="piechartrender.angleTypes">   
+							<span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+							<span translate-cloak translate>piechartrender_angles</span>
+						</label>
+					</div>
+				</div>
+				<div class="col-sm-4 input-range">
+					<input string-to-number type="range" min="1" max="8" step="1" class="form-control input-sm" id="startAngle"
+						ng-change='updateRender()'  ng-model='piechartrender.a' ng-disabled='piechartrender.angleTypes!="custom"'>
+					<small class='mute' ng-if="piechartrender.a">{{piechartrender.a}}</small>				
+				</div>
+			</div>
+			<p>&nbsp;</p>
+			<legend class='legend-light'  translate>piechartrender_radius_title</legend>
+			<div class="form-group">
+				<label translate class="col-sm-2 control-label label-light nowrap">piechartrender_angles_rotation</label>
+				<div class="col-sm-4 input-range">
+					<input string-to-number type="range" min="0" max="20" step="1" class="form-control input-sm" id="endAngle"
+						ng-change='updateRender()' ng-model='piechartrender.r'>
+					<small class='mute' ng-if="piechartrender.r">{{piechartrender.r}}</small>				
+				</div>
+				<label translate class="col-sm-2 control-label label-light nowrap">piechartrender_corner_radius</label>
+				<div class="col-sm-4 input-range">
+					<input string-to-number type="range" min="0" max="90" step="1" class="form-control input-sm" id="cornerRadius"
+						ng-model='piechartrender_options.chart.cornerRadius'>
+					<small class='mute' ng-if="piechartrender_options.chart.cornerRadius">{{piechartrender_options.chart.cornerRadius}}</small>				
+				</div>
+			
+			</div>
+
+		</form>	
+
+	
+		<div class='modal-piechartrender-preview'>
+			<nvd3 options="piechartrender_options" data="piechartrender_data"></nvd3>
+		</div>
+
+	</div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-link" type="button" ng-click="cancel()">Cancel</button>
+    <button class="btn btn-default" type="button" ng-click="ok()">OK</button>
+</div>

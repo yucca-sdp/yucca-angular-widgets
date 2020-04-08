@@ -1,0 +1,21 @@
+<div class="modal-header">
+    <h4 class="modal-title" translate>dashboard_widget_styles_dialog_title</h4>
+</div>
+<div class="modal-body">
+	<p translate>dashboard_widget_styles_dialog_intro</p>
+	<p>&nbsp;</p>
+	<form class="form-horizontal">
+		<div class="form-group  form-group-sm">
+			<label class='col-sm-2' translate>dashboard_widget_styles_dialog_flex_grow</label>
+			<div class='col-sm-2 '>
+				<input type='number' class='form-control' ng-model="dashboard.flexgrow" /> 
+			</div>
+			<div class='col-sm-8'><small translate>dashboard_widget_styles_dialog_flex_grow_help</small></div>
+		</div>
+	</form>
+
+</div>
+<div class="modal-footer">
+    <button class="btn btn-link" type="button" ng-click="cancel()">Cancel</button>
+    <button class="btn btn-default" type="button" ng-click="ok()">OK</button>
+</div>

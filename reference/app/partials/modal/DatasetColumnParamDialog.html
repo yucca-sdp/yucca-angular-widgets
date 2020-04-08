@@ -1,0 +1,43 @@
+<div class="modal-header">
+    <h4 class="modal-title" translate>param_config_column_modal_title</h4>
+</div>
+<div class="modal-body">
+	<form class="form-horizontal">
+  		<div class="form-group">
+			<label class="col-sm-2 control-label"translate>param_config_column_key</label>    
+			<div class="col-sm-10 input-with-feedback">
+				<div class="input-group">
+      				<input type="text" uib-typeahead="columnKey as columnKey  for columnKey in  getColumns($viewValue) | limitTo:8"  ng-blur="updateColumnLabel()"
+					class="form-control" id="column_key" ng-model='column.key' placeholder="{{'param_config_column_key_placeholder'|translate}}" typeahead-loading="loadingDataset">
+				  	<span class="input-group-addon" id="basic-addon2"  title="{{columnsList}}"><i class='fa fa-info'></i></span>
+				</div>
+	    	</div>
+	  	</div>
+  		<div class="form-group">
+			<label class="col-sm-2 control-label"translate>param_config_column_label</label>    
+			<div class="col-sm-10">
+      			<input type="text" class="form-control" id="column_label" ng-model='column.label' placeholder="{{'param_config_column_label_placeholder'|translate}}">
+    		</div>
+	  	</div>
+		<div class="form-group" ng-if="isValuecolumn">
+			<label class="col-sm-2 control-label"translate>param_config_column_countingmode</label>    
+			<div class="col-sm-10">
+				<select class="form-control" id="column_label" ng-model='column.countingMode'>
+					<option>count</option>
+					<option>sum</option>
+					<option>avg</option>
+					<option>min</option>
+					<option>max</option>
+				</select>
+				<p ng-bind-html="'param_config_column_countingmode_hint'|translate"></p>
+      			<!--
+					<input type="text" class="form-control" id="column_label" ng-model='column.label' placeholder="{{'param_config_column_label_placeholder'|translate}}">
+				-->
+    		</div>
+	  	</div>
+     </form>
+     <div class="modal-footer">
+         <button class="btn btn-link" type="button" ng-click="cancel()">Cancel</button>
+         <button class="btn btn-default" type="button" ng-click="ok()">OK</button>
+     </div>
+</div>

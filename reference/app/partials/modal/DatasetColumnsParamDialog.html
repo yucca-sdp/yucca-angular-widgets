@@ -1,0 +1,50 @@
+<div class="modal-header">
+	<h4 class="modal-title" translate>multiple_param_dialog_title</h4>
+</div>
+<div class="modal-body multipleparams_body">
+	<p><span translate>multiple_param_dialog_intro</span></p>
+	<form class="form-inline multipleparams_form">
+		<div class="form-group">
+ 			<label for="multipleparamValueInput" translate>multiple_keylabel_param_key</label>
+			<div class="input-group">
+				<input type="text" class="form-control" id="multipleparamValueInputKey" placeholder="" ng-model='newValue.key'  ng-blur="updateColumnLabel()" 
+					uib-typeahead="columnKey as columnKey  for columnKey in  getColumns($viewValue) | limitTo:8" typeahead-loading="loadingDataset">
+					<span class="input-group-addon" id="basic-addon2"  title="{{columnsList}}"><i class='fa fa-info'></i></span>
+			</div>
+		</div>
+		<div class="form-group">
+ 			<label for="multipleparamValueInput" translate>multiple_keylabel_param_label</label>
+			<input type="text" class="form-control" id="multipleparamValueInputValue" placeholder="" ng-model='newValue.label'>
+		</div>
+		<div class="form-group" ng-if='isCollapsibletreeboxes'>
+ 			<label for="multipleparamDirectionInput" translate>multiple_keylabel_param_direction</label>
+			<select class="form-control" id="multipleparamDirectionInput" ng-model='newValue.direction'>
+				<option value='none' translate>arrow_direction_none</option>
+				<option value='left' translate>arrow_direction_left</option>
+				<option value='right' translate>arrow_direction_right</option>
+				<option value='both' translate>arrow_direction_both</option>
+			</select>
+		</div>
+		<button type="submit" class="btn btn-default" ng-disabled='!newValue.key || !newValue.label' translate ng-click='addValue(newValue)'>multiple_param_add</button>
+	</form>
+	<p>&nbsp;</p>
+	<div class='multipleparams_rows'>
+		<div class='multipleparams_row' ng-repeat='v in newValues track by $index'>
+			<div class='multipleparams_row_value row'>
+				<div class='col-sm-4'>{{v.key}}</div> 
+				<div class='col-sm-4'>{{v.label}}</div> 
+				<div class='col-sm-4'>
+					<span ng-if='v.direction=="none"'><span translate>multiple_keylabel_param_direction</span>: &minus; <span translate>arrow_direction_none</span></span>
+					<span ng-if='v.direction=="left"'><span translate>multiple_keylabel_param_direction</span>: &larr; <span translate>arrow_direction_left</span></span>
+					<span ng-if='v.direction=="right"'><span translate>multiple_keylabel_param_direction</span>: &rarr; <span translate>arrow_direction_right</span></span>
+					<span ng-if='v.direction=="both"'><span translate>multiple_keylabel_param_direction</span>: &harr; <span translate>arrow_direction_both</span></span>
+				</div>
+			</div>
+			<a class='multipleparams_row_deletebutton' href ng-click='removeValue($index)'><i class='fa fa-trash'></i></a>
+		</div>
+	</div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-link" type="button" ng-click="cancel()">Cancel</button>
+    <button class="btn btn-default" type="button" ng-click="ok()" ng-disabled='newValues.length==0'>OK</button>
+</div>

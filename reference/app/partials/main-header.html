@@ -1,0 +1,95 @@
+<nav id='main-header' class="navbar  navbar-inverse navbar-fixed-top">
+	<div class="container-fluid">
+		<div class="navbar-header ">
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"/>
+				<span class="icon-bar"/>
+				<span class="icon-bar"/>
+			</button>
+			<a class="navbar-brand" href="https://yucca.smartdatanet.it/" target='_blank' style=''>
+				<span >
+					<img alt="Brand" src="images/yucca/logoyucca_header-inv.png" style=''/>
+				</span>
+			</a>
+		</div>
+
+		<!-- Collect the nav links, forms, and other content for toggling -->
+		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			<ul class="nav navbar-nav">
+				<li>
+					<a href="#/home">Yucca Dashboard</a>
+				</li>
+				<li  ng-class="{active:currentSection()=='install'}">
+					<a href="#/install" translate>getting_started</a>
+				</li>
+				<li  ng-class="{active:currentSection()=='widget'}">
+					<a href="#/widget" translate>Widget</a>
+				</li>
+
+				<li  ng-class="{active:currentSection()=='composer'}">
+					<a href="#/composer" translate>composer</a>
+				</li>
+				<li  ng-class="{active:currentSection()=='advancedwidget'}">
+					<a href="#/advancedwidget" translate>advaced_widget</a>
+				</li>
+				
+			</ul>
+			<ul class="nav navbar-nav navbar-right navbar-flags ">
+				
+				<li class="dropdown lang-menu ng-hide"  uib-dropdown>
+          			<a href="#" class="dropdown-toggle" uib-dropdown-toggle role="button" aria-haspopup="true" aria-expanded="false">
+          				<span><i class='fa fa-language'></i></span> 
+          				<span class="caret"></span>
+	          		</a>
+			        <ul class="dropdown-menu" uib-dropdown-menu>
+						<li>
+							<a href ng-click="changeLanguage('it')" title="{{'MENU_LANG_IT'|translate}}" class="menu-flag-icon menu-flag-icon-it">
+								<img src='images/flags/it.png' /> Italiano
+							</a>
+						</li>
+						<li>
+							<a href ng-click="changeLanguage('en')" title="{{'MENU_LANG_EN'|translate}}" class="menu-flag-icon menu-flag-icon-en">
+								<img src='images/flags/en.png' /> English
+							</a>
+						</li>
+			        </ul>
+			    </li>
+				<li class="dropdown lang-menu ng-hide"  uib-dropdown>
+          			<a href="#" class="dropdown-toggle" uib-dropdown-toggle role="button" aria-haspopup="true" aria-expanded="false">
+          				<span><i class='fa fa-question'></i></span> 
+          				<span class="caret"></span>
+	          		</a>
+			        <ul class="dropdown-menu" uib-dropdown-menu>
+						<li><a href ng-click="toggleHelpIstant()" translate>menu_show_help_istant</a></li>
+						<li><a href ng-click="showHelpTour()" translate>menu_show_help_tour</a></li>
+			        </ul>
+			    </li>
+				<li ng-if='!currentUser.user.loggedIn' >
+					<a href='https://userportal.smartdatanet.it/userportal/api/authorize?returnUrl=..%2Freference%2Findex.html%23%2Fcomposer%2F&typeAuth=personal' translate>login</a>
+				</li>
+				<li class="dropdown user-logged-menu"  uib-dropdown ng-if="currentUser.user.loggedIn">
+          			<a href="#" class="dropdown-toggle username-menu" uib-dropdown-toggle role="button" aria-haspopup="true" aria-expanded="false">
+          				<span>{{currentUser.user.firstname}} {{currentUser.user.lastname}}<br>
+          					<small>{{currentUser.user.activeTenant}}</small>
+          				</span> 
+          				<span class="caret"></span>
+	          		</a>
+			        <ul class="dropdown-menu" uib-dropdown-menu>
+			            <li><a href ng-click="changeActiveTenant(tenant)" ng-repeat="tenant in currentUser.user.tenants | orderBy:'tenantcode'"
+			            	ng-class="{'active':tenant.tenantcode == currentUser.user.activeTenant}">{{tenant.tenantcode}}</a>
+			            </li>
+			            <li role="separator" class="divider"></li>
+					    <li role="presentation">
+					    	<a role="menuitem" tabindex="-1" href="https://userportal.smartdatanet.it/userportal/api/authorize?logout={{currentUser.user.username}}&returnUrl=..%2Freference%2Findex.html}}">
+					    		<i class='fa fa-sign-out indent-dropdownitem-icon'></i>&nbsp;<span translate-cloak translate>logout</span>
+					    	</a>
+					    </li>
+			        </ul>
+			    </li>
+			</ul>
+			<p class="navbar-text navbar-right"><span class='navbar-beta '>Beta version</span></p>
+		</div>
+	</div>
+</nav>
+

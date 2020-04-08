@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>SmartData Reference Essential Demo</title>
+	<meta charset="utf-8">  <!-- it's important for d3.js -->
+	<link rel="stylesheet" href="http://localhost:8000/lib/nvd3/build/nv.d3.min.css">
+	<link rel="stylesheet" href="http://localhost:8000/lib/leaflet/dist/leaflet.css">
+	<link rel="stylesheet" href="http://localhost:8000/lib/yucca-angular-widgets/dist/style/angular-yucca.css">
+
+
+	<script type="text/javascript" src="http://localhost:8000/lib/d3/d3.js"></script>
+	<script type="text/javascript" src="http://localhost:8000/lib/nvd3/build/nv.d3.min.js"></script>
+	<script type="text/javascript" src="http://localhost:8000/lib/leaflet/dist/leaflet.js"></script>
+
+
+	<script type="text/javascript" src="http://localhost:8000/lib/angular/angular.js"></script>
+	<script type="text/javascript" src="http://localhost:8000/lib/angular-sanitize/angular-sanitize.min.js"></script>
+	<script type="text/javascript" src="http://localhost:8000/lib/angular-nvd3/dist/angular-nvd3.js"></script>
+	<script type="text/javascript" src="http://localhost:8000/lib/stomp-websocket/lib/stomp.min.js"></script>
+	<script type="text/javascript" src="http://localhost:8000/lib/angular-leaflet-directive/dist/angular-leaflet-directive.min.js"></script>
+	<!-- <script type="text/javascript" src="http://localhost:8000/lib/yucca-angular-widgets/dist/js/angular-yucca.js"></script> -->
+	
+	<link rel="stylesheet" href="http://localhost:8001/style/angular-yucca.css">
+	
+	  <script type="text/javascript" src="http://localhost:8001/js/yucca-constants.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/yucca-plugin.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/yucca-utils.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/yucca-websocket-service.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/yucca-services.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/lib/treemap-directive.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/lib/sankey-directive.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/lib/forcedirected-directive.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-streams-tweet-stats.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-datasets-image-gallery.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-datasets-multidata-stats.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-streams-multistream-value.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-streams-last-value.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-streams-multistream-map.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-streams-monitor.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-streams-multistream-stats.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-datasets-multidata-treemap.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-datasets-bullet-chart.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-datasets-sankey-chart.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-datasets-forcedirected-chart.js"></script>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+	<style>
+		body{font-family: sans-serif; font-size: 14px; margin: 0;}
+		.header{background-color: #f7f7f7; padding: 24px; border-bottom: solid 1px #1dbbee; clear: both; overflow:  hidden;}
+		.header h1{float: left;}
+		.header a{display: inline block; float: right; color: #333; text-decoration: none;  margin: 24px;}
+		.header a:hover{color: #1dbbee;}
+		.content{margin: 24px; }
+		.widget-container{}
+	</style>
+
+	<script type="text/javascript">
+		angular.module('myApp', ['yucca.plugin', 'ngSanitize']).controller('myCtrl', function($scope, $compile){
+			$scope.tenant_code = 'csp';
+			$scope.stream_code = 'H';
+			$scope.smartobject_code = 'a3de712d-6801-5cc4-84b6-a10bd830469d';
+			var htmlDirective =  	'<div> \n' +
+				'  <ng-yucca-dataset-force-directed-chart \n' +
+				'    widget_title="Scuole Piemontesi" \n' +
+				'    tenant_code="regpie" \n' +
+				'    dataset_code="ScuolePiemon_1282" \n' +
+				'    node_columns=\'["Provincia","AmbitoFunzionale","GradoScolastico","TipoDiGestione"]\'\n' + 
+				'    chart_width="550"\n' + 
+				'    chart_height="400"\n' +
+				'    debug="true"\n' + 
+				'   />\n' +
+				'</div>';
+			$scope.directiveCode = htmlDirective;
+			jQuery(document).on('show.bs.modal','#myModal', function () {
+					angular.element(document.getElementById('modal-body')).empty().append($compile(htmlDirective)($scope));
+			});
+		});
+
+
+	</script>
+	<style>
+		.yucca-dataset-forcedirected-content{width: 980px;}
+		.forcedirected-chart{overflow: hidden; }
+		.forcedirected-chart .forcedirected-canvas{ float: left; width: 590px;}
+		.forcedirected-chart .forcedirected-legend{float: right;  width: 300px; clear:none;}
+		.forcedirected-chart .forcedirected-legend .forcedirected-legend-block-title{margin-top: 30px;}
+		.forcedirected-chart .link {fill: none;  stroke: #666;  stroke-width: 1.5px;}
+		.forcedirected-chart  #licensing { fill: green;}
+		.forcedirected-chart .link.licensing {  stroke: green;}
+		.forcedirected-chart .node.Descr_discipl{stroke: black; fill: green; stroke-width: 4;}
+		.forcedirected-chart .node.Denom_struttura{stroke: black;fill: #ddd; stroke-width: 4;}
+		.forcedirected-chart .node.CASA_DI_CURA_VILLA_IGEA{fill: #aaa}
+		.forcedirected-chart .node.POLICLINICO_DI_MONZA_PRESIDIO_SALUS{fill: #ccc}
+		.forcedirected-chart .node.CASA_DI_CURA_VILLA_CRISTINA{fill: #888}
+		.forcedirected-chart .node.CASA_DI_CURA_I_CEDRI{fill: #444}
+
+		
+		.forcedirected-chart .link.resolved { stroke-dasharray: 0,2 1;}
+		.forcedirected-chart circle { fill: #ccc;stroke: #333; stroke-width: 1.5px;}
+		.forcedirected-chart text {font: 10px sans-serif; pointer-events: none; text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;}
+		
+		.forcedirected-chart .node.MEDICINA_GENERALE{stroke: #60a917; fill: #82e123;}
+		.forcedirected-chart .node.CHIRURGIA_GENERALE{stroke: #0050ef; fill: #3478ff;}
+		.forcedirected-chart .node.DAY_SURGERYMULTISPECIALISTICO{stroke: #f472d0; fill: #f9b1e5;}
+		.forcedirected-chart .node.NEURORIABILITAZIONE{stroke: #e51400; fill: #ff3d2a;}
+		.forcedirected-chart .node.LUNGODEGENTI{stroke: #d8c100; fill: #ffe71d;}
+		.forcedirected-chart .node.RECUPERO_E_RIABILITAZIONE_FUNZIONALE{stroke: #ff6600; fill: #ff8f44;}
+		.forcedirected-chart .node.ORTOPEDIA_E_TRAUMATOLOGIA{stroke: #d80073; fill: #ff1d95;}
+		.forcedirected-chart .node.NEUROLOGIA{stroke: #aa00ff; fill: #c144ff;}
+		.forcedirected-chart .node.PSICHIATRIA{stroke: #825a2c;fill: #b57d3d;}
+		.forcedirected-chart .node.OCULISTICA{stroke: #a4c400; fill: #d7ff09;}
+		
+		.forcedirected-chart .link.target_MEDICINA_GENERALE{stroke: #60a917}
+		.forcedirected-chart .link.target_CHIRURGIA_GENERALE{stroke: #0050ef}
+		.forcedirected-chart .link.target_DAY_SURGERYMULTISPECIALISTICO{stroke: #f472d0}
+		.forcedirected-chart .link.target_NEURORIABILITAZIONE{stroke: #e51400}
+		.forcedirected-chart .link.target_LUNGODEGENTI{stroke: #d8c100}
+		.forcedirected-chart .link.target_RECUPERO_E_RIABILITAZIONE_FUNZIONALE{stroke: #ff6600}
+		.forcedirected-chart .link.target_ORTOPEDIA_E_TRAUMATOLOGIA{stroke: #d80073}
+		.forcedirected-chart .link.target_NEUROLOGIA{stroke: #aa00ff}
+		.forcedirected-chart .link.target_PSICHIATRIA{stroke: #825a2c}
+		.forcedirected-chart .link.target_OCULISTICA{stroke: #a4c400}		
+		
+		.forcedirected-chart .label.MEDICINA_GENERALE{display: none;}
+		.forcedirected-chart .label.CHIRURGIA_GENERALE{display: none;}
+		.forcedirected-chart .label.DAY_SURGERYMULTISPECIALISTICO{display: none;}
+		.forcedirected-chart .label.NEURORIABILITAZIONE{display: none;}
+		.forcedirected-chart .label.LUNGODEGENTI{display: none;}
+		.forcedirected-chart .label.RECUPERO_E_RIABILITAZIONE_FUNZIONALE{display: none;}
+		.forcedirected-chart .label.ORTOPEDIA_E_TRAUMATOLOGIA{display: none;}
+		.forcedirected-chart .label.NEUROLOGIA{display: none;}
+		.forcedirected-chart .label.PSICHIATRIA{display: none;}
+		.forcedirected-chart .label.OCULISTICA{display: none;}	
+		
+		.forcedirected-chart .node.NO{stroke: #364e59; fill: #364e59;}
+		.forcedirected-chart .node.AL{stroke: #9eabb0; fill: #9eabb0;}
+		
+		.forcedirected-chart  .link.link_Descr_discipl_Denom_struttura{display: none;}
+		.forcedirected-chart  .link.link_Denom_struttura_Denom_asr, .forcedirected-chart  .link.link_Denom_asr_Denom_struttura{stroke: #bbb; stroke-width: 2; stroke-dasharray:2}
+		.forcedirected-chart  .link.link_Descr_discipl_Denom_asr, .forcedirected-chart  .link.link_Denom_asr_Descr_discipl{display:none;}
+		
+		
+		.forcedirected-chart .forcedirected-legend-block.Links{display: none;}
+		.forcedirected-chart .forcedirected-legend-item .forcedirected-legend-bullet{border: solid 2px; border-radius: 16px;}
+		
+		.forcedirected-chart .forcedirected-legend-item.MEDICINA_GENERALE .forcedirected-legend-bullet{border-color: #60a917; background-color: #82e123;}
+		.forcedirected-chart .forcedirected-legend-item.CHIRURGIA_GENERALE .forcedirected-legend-bullet{border-color: #0050ef; background-color: #3478ff;}
+		.forcedirected-chart .forcedirected-legend-item.DAY_SURGERYMULTISPECIALISTICO .forcedirected-legend-bullet{border-color: #f472d0; background-color: #f9b1e5;}
+		.forcedirected-chart .forcedirected-legend-item.NEURORIABILITAZIONE .forcedirected-legend-bullet{border-color: #e51400; background-color: #ff3d2a;}
+		.forcedirected-chart .forcedirected-legend-item.LUNGODEGENTI .forcedirected-legend-bullet{border-color: #d8c100; background-color: #ffe71d;}
+		.forcedirected-chart .forcedirected-legend-item.RECUPERO_E_RIABILITAZIONE_FUNZIONALE .forcedirected-legend-bullet{border-color: #ff6600; background-color: #ff8f44;}
+		.forcedirected-chart .forcedirected-legend-item.ORTOPEDIA_E_TRAUMATOLOGIA .forcedirected-legend-bullet{border-color: #d80073; background-color: #ff1d95;}
+		.forcedirected-chart .forcedirected-legend-item.NEUROLOGIA .forcedirected-legend-bullet{border-color: #aa00ff; background-color: #c144ff;}
+		.forcedirected-chart .forcedirected-legend-item.PSICHIATRIA .forcedirected-legend-bullet{border-color: #825a2c;background-color: #b57d3d;}
+		.forcedirected-chart .forcedirected-legend-item.OCULISTICA .forcedirected-legend-bullet{border-color: #a4c400; background-color: #d7ff09;}
+		
+		/*.forcedirected-chart .legend_Denom_struttura{display: none;}*/
+		.forcedirected-chart .forcedirected-legend-item.CASA_DI_CURA_VILLA_IGEA .forcedirected-legend-bullet{border-color: #000; background-color: #444; }
+		.forcedirected-chart .forcedirected-legend-item.POLICLINICO_DI_MONZA_PRESIDIO_SALUS .forcedirected-legend-bullet{border-color: #000; background-color: #aaa; }
+		.forcedirected-chart .forcedirected-legend-item.CASA_DI_CURA_VILLA_CRISTINA .forcedirected-legend-bullet{border-color: #000; background-color: #888; }
+		.forcedirected-chart .forcedirected-legend-item.CASA_DI_CURA_I_CEDRI .forcedirected-legend-bullet{border-color: #000; background-color: #ccc; }
+		
+
+			
+		.forcedirected-chart .forcedirected-legend-item.legend_Denom_asr .forcedirected-legend-bullet {margin: 0 10px 0 0; width: 8px; height: 16px; background-color: #000; 
+				position: relative; box-sizing: border-box; border: none;border-radius: 0;}
+		.forcedirected-chart .forcedirected-legend-item.legend_Denom_asr .forcedirected-legend-bullet:after {position: absolute;box-sizing: border-box; right: -5px;content: " ";
+ 			width: 0; height: 0; border-style: solid; border-width: 8px 0 8px 5px; border-color: transparent transparent transparent #000;}
+		.forcedirected-chart .forcedirected-legend-item.legend_Denom_asr .forcedirected-legend-bullet:before { position: absolute; box-sizing: border-box; right: 8px; content: " ";
+			width: 0; height: 0; border-style: solid; border-width: 8px 5px 8px 0; border-color: transparent #000 transparent transparent;}
+			
+		.forcedirected-chart .forcedirected-legend-item.NO .forcedirected-legend-bullet {background-color: #364e59;}
+		.forcedirected-chart .forcedirected-legend-item.NO .forcedirected-legend-bullet:after {border-color: transparent transparent transparent #364e59;}
+		.forcedirected-chart .forcedirected-legend-item.NO .forcedirected-legend-bullet:before {border-color: transparent #364e59 transparent transparent;}
+		
+		.forcedirected-chart .forcedirected-legend-item.AL .forcedirected-legend-bullet {background-color: #9eabb0;}
+		.forcedirected-chart .forcedirected-legend-item.AL .forcedirected-legend-bullet:after {border-color: transparent transparent transparent #9eabb0;}
+		.forcedirected-chart .forcedirected-legend-item.AL .forcedirected-legend-bullet:before {border-color: transparent #9eabb0 transparent transparent;}
+	
+	</style>
+
+</head>
+<body>
+	<header class='header'>
+		<h1>Test Widget: FORCE DIRECTED</h1>
+		<a href='/' target='_blank'>Home</a>
+		<a href='https://www.smartdatanet.it/' target='_blank'>Smartdatanet.it</a>
+		<a href='https://userportal.smartdatanet.it/reference/#/widget' target='_blank'>Documentation</a>
+	</header>
+	<div ng-app="myApp" class='content' ng-controller="myCtrl">
+		<div class='row' >
+			<div class=' col-sm-4 widget-container'>
+				<h4>In Page</h4>
+				<div>
+					<div>
+ 					  <ng-yucca-dataset-forcedirected-chart 
+					    widget_title='Scuole Piemontesi' 
+					    tenant_code='regpie' 
+					    dataset_code='StruttureRic_1191' 
+					    node_columns = "['Denom_struttura','Descr_discipl', 'Denom_asr']"
+					    node_labels = "['Struttura ospedaliera','Disciplina', 'Asr']"
+					    node_type_icon="{'Denom_struttura':'circle', 'Denom_asr':'hexagon'}"
+					    node_type_column = "Denom_asr"
+					    node_icon = "circle"
+					    link_line1="arc"
+					    chart_width='600' 
+					    chart_height='600' 
+					    filter="'CASA DI CURA VILLA IGEA' eq Denom_struttura or 'POLICLINICO DI MONZA PRESIDIO SALUS' eq Denom_struttura or 'CASA DI CURA I CEDRI' eq Denom_struttura or 'CASA DI CURA VILLA CRISTINA' eq Denom_struttura "
+					    debug='true' 
+					    compute_statistic='false'
+					   />
+
+					<!-- <ng-yucca-dataset-forcedirected-chart 
+					    widget_title='Scuole Piemontesi' 
+					    tenant_code='regpie' 
+					    dataset_code='FlussiTurist_1342' 
+					    node_columns = "['Qualifica','ItalianiStranieri']"
+					    node_labels = "['Qualifica','Provenienza']"
+					    node_type_column = "ItalianiStranieri"
+					    node_icon = "circle"
+					    link_line_1="arc"
+					    chart_width='600' 
+					    chart_height='600' 
+					    filter="'VERCELLI' eq Valore"
+					    compute_statistic='true'
+					    node_size=40
+					    link_length=200
+					    debug='true' 
+					   /> -->
+					   
+					   
+					</div>
+				</div> 
+				
+			</div><!-- 
+			<div class=' col-sm-2 widget-container'>
+				<h4>In Modal View</h4>
+				<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+					Launch demo modal
+				</button>
+			</div>
+			<div class=' col-sm-5 widget-container'>
+				<h4>Directive code</h4>
+				<pre><code id='directive-code'>{{directiveCode}}</code></pre>
+			</div> -->
+		</div>
+		<!-- Modal -->
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		 	<div class="modal-dialog" role="document">
+		    	<div class="modal-content">
+		      		<div class="modal-header">
+		        		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        		<h4 class="modal-title" id="myModalLabel">Modal title</h4>
+		      		</div>
+		      		<div class="modal-body" id="modal-body"></div>
+		      		<div class="modal-footer">
+		        		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		      		</div>
+		    	</div>
+		  	</div>
+		</div>
+	</div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

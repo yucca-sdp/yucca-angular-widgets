@@ -1,0 +1,178 @@
+<div class="modal-header">
+    <h4 class="modal-title" translate>change_style_dialog_title</h4>
+</div>
+<div class="modal-body">
+	<form class="form-horizontal">
+		<div class="form-group  form-group-sm">
+			<label class="col-sm-2 control-label"translate>change_style_dialog_text</label>
+			<div class='col-sm-3'>
+				<div class="input-group">
+					<span class="input-group-addon" id="basic-addon1" >Size</span>
+					<input type="number" class="form-control" ng-model='customStyle.font.size' aria-describedby="Size" ng-change='refreshPreview()'>
+				</div>						
+			</div>
+			<div class='col-sm-7 text-right'>
+				<div class="btn-group input-group-sm" role="group" aria-label="text align" title="{{'change_style_dialog_text_align'|translate}}">
+					<button type="button" class="btn btn-default  btn-sm btn-group-addon">Align</button>
+					<button type="button" class="btn btn-default  btn-sm" ng-click="customStyle.textAlign='left';refreshPreview()" ng-class='{btn_on_off_active:customStyle.textAlign=="left"}'><i class="fa fa-align-left" aria-hidden="true"></i></button>
+					<button type="button" class="btn btn-default  btn-sm" ng-click="customStyle.textAlign='center';refreshPreview()" ng-class='{btn_on_off_active:customStyle.textAlign=="center"}'><i class="fa fa-align-center" aria-hidden="true"></i></button>
+					<button type="button" class="btn btn-default  btn-sm" ng-click="customStyle.textAlign='right';refreshPreview()" ng-class='{btn_on_off_active:customStyle.textAlign=="right"}'><i class="fa fa-align-right" aria-hidden="true"></i></button>
+					<button type="button" class="btn btn-default  btn-sm" ng-click="customStyle.textAlign='justify';refreshPreview()" ng-class='{btn_on_off_active:customStyle.textAlign=="justify"}'><i class="fa fa-align-justify" aria-hidden="true"></i></button>
+				</div>
+				&nbsp;&nbsp;&nbsp;
+				<div class="btn-group input-group-sm" role="group" aria-label="font style" title="{{'change_style_dialog_text_style'|translate}}"> 
+							<button type="button" class="btn btn-default  btn-sm btn-group-addon">Style</button>
+							<button type="button" class="btn btn-default  btn-sm" ng-class='{btn_on_off_active:customStyle.font.weight}' ng-click='customStyle.font.weight=!customStyle.font.weight;refreshPreview()'>
+						<i class="fa fa-bold" aria-hidden="true"></i>
+					</button>
+							<button type="button" class="btn btn-default  btn-sm" ng-class='{btn_on_off_active:customStyle.font.style}' ng-click='customStyle.font.style = !customStyle.font.style;refreshPreview()'>
+						<i class="fa fa-italic" aria-hidden="true"></i>
+					</button>
+				</div>
+			</div>
+		</div>
+
+		<div class="form-group  form-group-sm">
+			<label class="col-sm-2 control-label"translate>change_style_dialog_colors</label>
+			<div class='col-sm-5'>
+				<div class="input-group">
+					<span class="input-group-addon" id="basic-addon2">Foreground</span>
+					<input type="color" class="form-control"  aria-describedby="Foreground color" ng-model="customStyle.color.foreground" ng-change='refreshPreview()'>
+				</div>						
+			</div>
+			<div class='col-sm-5'>
+				<div class="input-group">
+					<span class="input-group-addon" id="basic-addon3">Background</span>
+					<input type="color" class="form-control"  aria-describedby="Foreground color" ng-model="customStyle.color.background" ng-change='refreshPreview()'>
+				</div>						
+			</div>
+		</div>
+
+		<div class="form-group  form-group-sm">
+			<label class="col-sm-2 control-label"translate>change_style_dialog_borders</label>
+			<div class='col-sm-7'>
+				<div class="btn-group input-group-sm" role="group" aria-label="text align" title="{{'change_style_dialog_text_align'|translate}}">
+							<button type="button" class="btn btn-default  btn-sm" ng-click="customStyle.border.position='all';refreshPreview()" ng-class='{btn_on_off_active:customStyle.border.position=="all"}'>
+						<span class="icon-border-position icon-border-position-all"></span>
+					</button>
+							<button type="button" class="btn btn-default  btn-sm" ng-click="customStyle.border.position='none';refreshPreview()" ng-class='{btn_on_off_active:customStyle.border.position=="none"}'>
+						<span class="icon-border-position icon-border-position-none"></span>
+					</button>
+							<button type="button" class="btn btn-default  btn-sm" ng-click="customStyle.border.position='top';refreshPreview()" ng-class='{btn_on_off_active:customStyle.border.position=="top"}'>
+						<span class="icon-border-position icon-border-position-top"></span>
+					</button>
+							<button type="button" class="btn btn-default  btn-sm" ng-click="customStyle.border.position='right';refreshPreview()" ng-class='{btn_on_off_active:customStyle.border.position=="right"}'>
+						<span class="icon-border-position icon-border-position-right"></span>
+					</button>
+							<button type="button" class="btn btn-default  btn-sm" ng-click="customStyle.border.position='bottom';refreshPreview()" ng-class='{btn_on_off_active:customStyle.border.position=="bottom"}'>
+						<span class="icon-border-position icon-border-position-bottom"></span>
+					</button>
+							<button type="button" class="btn btn-default  btn-sm" ng-click="customStyle.border.position='left';refreshPreview()" ng-class='{btn_on_off_active:customStyle.border.position=="left"}'>
+						<span class="icon-border-position icon-border-position-left"></span>
+					</button>
+							<button type="button" class="btn btn-default  btn-sm" ng-click="customStyle.border.position='top-bottom';refreshPreview()" ng-class='{btn_on_off_active:customStyle.border.position=="top-bottom"}'>
+						<span class="icon-border-position icon-border-position-top-bottom"></span>
+					</button>
+							<button type="button" class="btn btn-default  btn-sm" ng-click="customStyle.border.position='left-right';refreshPreview()" ng-class='{btn_on_off_active:customStyle.border.position=="left-right"}'>
+						<span class="icon-border-position icon-border-position-left-right"></span>
+					</button>
+				</div>
+			</div>
+			<div class='col-sm-3'>
+				<div class="input-group">
+					<span class="input-group-addon" id="basic-addon4">Color</span>
+					<input type="color" class="form-control"  aria-describedby="Border color" ng-model="customStyle.border.color" ng-change='refreshPreview()'>
+				</div>						
+			</div>
+		</div>
+		<div class="form-group  form-group-sm">
+			<div class='col-sm-3  col-sm-offset-2'>
+				<div class="input-group">
+							<span class="input-group-addon" id="basic-addon5">Size</span>
+							<input type="number" class="form-control"  aria-describedby="Border size" ng-model="customStyle.border.width" ng-change='refreshPreview()'>
+				</div>						
+			</div>
+			<div class='col-sm-7 text-right'>
+				<div class="btn-group input-group-sm" role="group" aria-label="text align" title="{{'change_style_dialog_text_align'|translate}}">
+					<button type="button" class="btn btn-default  btn-sm btn-group-addon">Style</button>
+							<button type="button" class="btn btn-default  btn-sm" ng-click="customStyle.border.style='solid';refreshPreview()" ng-class='{btn_on_off_active:customStyle.border.style=="solid"}'>
+						&nbsp;<span class="icon-border-style icon-border-style-solid"></span>
+					</button>
+							<button type="button" class="btn btn-default  btn-sm" ng-click="customStyle.border.style='dashed';refreshPreview()" ng-class='{btn_on_off_active:customStyle.border.style=="dashed"}'>
+						&nbsp;<span class="icon-border-style icon-border-style-dashed"></span>
+					</button>
+							<button type="button" class="btn btn-default  btn-sm" ng-click="customStyle.border.style='dotted';refreshPreview()" ng-class='{btn_on_off_active:customStyle.border.style=="dotted"}'>
+						&nbsp;<span class="icon-border-style icon-border-style-dotted"></span>
+					</button>
+							<button type="button" class="btn btn-default  btn-sm" ng-click="customStyle.border.style='double';refreshPreview()" ng-class='{btn_on_off_active:customStyle.border.style=="double"}'>
+						&nbsp;<span class="icon-border-style icon-border-style-double"></span>
+					</button>
+				</div>
+			</div>
+		</div>
+		<div class="form-group  form-group-sm">
+			<label class="col-sm-2 control-label"translate title="{{'change_style_dialog_spacing_margin'|translate}}">Margin</label>
+			<div class='col-sm-10 text-right multiple-input-row' >
+				<div class="input-group input-group-sm" role="group" aria-label="text align" >
+					<span class="input-group-addon">Top</span>
+					<input type="number" class="form-control" ng-model='customStyle.margin.top' ng-change='refreshPreview()'>
+				</div>
+				&nbsp;
+				<div class="input-group input-group-sm" role="group" aria-label="text align" >
+					<span class="input-group-addon">Right</span>
+					<input type="number" class="form-control" ng-model='customStyle.margin.right' ng-change='refreshPreview()'>
+				</div>
+				&nbsp;
+				<div class="input-group input-group-sm" role="group" aria-label="text align" >
+					<span class="input-group-addon">Bottom</span>
+					<input type="number" class="form-control" ng-model='customStyle.margin.bottom' ng-change='refreshPreview()'>
+				</div>
+				&nbsp;
+				<div class="input-group input-group-sm" role="group" aria-label="text align" >
+					<span class="input-group-addon">Left</span>
+					<input type="number" class="form-control" ng-model='customStyle.margin.left' ng-change='refreshPreview()'>
+				</div>
+			</div>
+		</div>
+		<div class="form-group  form-group-sm">
+			<label class="col-sm-2 control-label"translate title="{{'change_style_dialog_spacing_padding'|translate}}">Padding</label>
+			<div class='col-sm-10 text-right multiple-input-row' >
+				<div class="input-group input-group-sm" role="group" aria-label="text align" >
+					<span class="input-group-addon">Top</span>
+					<input type="number" class="form-control" ng-model='customStyle.padding.top' ng-change='refreshPreview()'>
+				</div>
+				&nbsp;
+				<div class="input-group input-group-sm" role="group" aria-label="text align" >
+					<span class="input-group-addon">Right</span>
+					<input type="number" class="form-control" ng-model='customStyle.padding.right' ng-change='refreshPreview()'>
+				</div>
+				&nbsp;
+				<div class="input-group input-group-sm" role="group" aria-label="text align" >
+					<span class="input-group-addon">Bottom</span>
+					<input type="number" class="form-control" ng-model='customStyle.padding.bottom' ng-change='refreshPreview()'>
+				</div>
+				&nbsp;
+				<div class="input-group input-group-sm" role="group" aria-label="text align" >
+					<span class="input-group-addon">Left</span>
+					<input type="number" class="form-control" ng-model='customStyle.padding.left' ng-change='refreshPreview()'>
+				</div>
+			</div>
+		</div>
+		<p>&nbsp;</p>
+		<div class='row'>
+			<div class='col-sm-5'>
+				<h4>Preview</h4>
+				<div class='change-style-dialog-preview' style='{{rulesPreview}}'>Example Text</div>
+			</div>
+			<div class='col-sm-7 '>
+				<h4>Code</h4>
+				<pre class='change-style-dialog-code' ng-bind-html='rulesCodePreview'></pre>
+			</div>
+		</div>
+	</form>
+
+</div>
+<div class="modal-footer">
+    <button class="btn btn-link" type="button" ng-click="cancel()">Cancel</button>
+    <button class="btn btn-default" type="button" ng-click="ok()">OK</button>
+</div>

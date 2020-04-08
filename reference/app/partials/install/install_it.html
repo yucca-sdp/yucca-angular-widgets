@@ -1,0 +1,154 @@
+<h1>Per iniziare</h1>
+<h2>Installazione</h2>
+<div class='panel-indent-left'>
+	E' possibile effetture il download della libreria tramite <strong><a href='http://bower.io/' target='_blank'>Bower</a></strong>, 
+	oppure direttamente dai sorgenti su <strong><a href='https://github.com/csipiemonte/yucca-angular-widgets/tree/master' target='_blank' >Github</a></strong>, o partire da questo <strong>
+	<a href='https://github.com/csipiemonte/yucca-angular-widgets/raw/master/yuccaAngularWidgetSeed.zip' target='_blank'>progetto minimale</a></strong> che contiene le librerie scaricate e una pagina html con due widget di esempio</strong> 
+	<div class='row panel-install'>
+		<div class='col-sm-6 panel-bower-install'>
+			<div class='logo-bower'></div>
+			<h3>Installazione tramite Bower</h3>
+			<div class='panel-help'>
+				<i class="fa fa-lightbulb-o tip-icon" aria-hidden="true"></i> Non conosci <strong>Bower</strong>? Scopri come usarlo 
+				<i class="fa fa-caret-right caret-icon" aria-hidden="true" ng-show="!showBowerInstall" ng-init="showBowerInstall=false" ng-click="showBowerInstall=true;"></i>
+				<i class="fa fa-caret-down caret-icon" aria-hidden="true" ng-show="showBowerInstall" ng-click="showBowerInstall=false;"></i>
+				
+				<div class='help-content' ng-show="showBowerInstall">
+					<p><strong><a href='http://bower.io/' target='_blank'>Bower</a></strong> &agrave; un tool che permette di scaricare le risorse di frontend per progetti html/javascript salvandole direttamente nel progetto stesso. 
+						Bower funziona tramite la console di <strong>NodeJS</strong> e ha bisogno di un <strong>client Git</strong> per scaricare i sorgenti</p>
+					<p><strong>Installazione</strong></p>
+					<ol>
+					 	<li>Scarica e installa <strong><a target='_blank' href='https://nodejs.org/en/'>NodeJS</a></strong></li>
+					 	<li>Scarica e installa il <strong><a target='_blank' href='https://git-scm.com/'>client Git</a></strong></li>
+					 	<li>Apri la console di comandi di NodeJS e installa Bower lanciando il comando <pre><code>npm install -g bower</code></pre></li>
+					 	<li>Le risorse si installano da console, posizionandosi nella root del progetto da aggiornare e lanciando il comando <pre><code>bower install <i>nome_libreria</i></code></pre> </li>
+					</ol>
+				</div>
+			</div>
+			
+			<pre><code>$ bower install yucca-angular-widgets</code></pre>
+			<p>Bower dovrebbe installare in automatico tutte le dipendenze, nel caso non lo facesse</p>
+			
+				
+<pre><code>$ bower install angular
+$ bower install stomp-websocket
+$ bower install d3
+$ bower install nvd3
+$ bower install angular-nvd3
+$ bower install angular-leaflet-directive</code></pre>
+		</div>
+		<div class='col-sm-6 panel-github-install'>
+			<div class='logo-github'></div>
+			<h3>Installazione tramite download da Github</h3>
+			<div class='panel-feature'>
+				<i class="fa fa-rocket tip-icon" aria-hidden="true"></i>Inizia subito a usare i widget con questo
+				<strong><a href='https://github.com/csipiemonte/yucca-angular-widgets/raw/master/yuccaAngularWidgetSeed.zip' target='_blank'>progetto minimale</a></strong>, 
+				estrai  i file 	in una <strong>cartella esposta da un webserver</strong> e accedi via http
+				<div class='text-center'> 
+					<a href='https://github.com/csipiemonte/yucca-angular-widgets/raw/master/yuccaAngularWidgetSeed.zip' class='btn btn-default btn-action'target='_blank'><i class="fa fa-download" aria-hidden="true"></i> Scarica il progetto</a>
+				</div> 
+			</div>
+			<hr>
+			O in alternativa puoi possibile scaricare la libreria del widget dalla url 
+			<p>
+				<a href='https://github.com/csipiemonte/yucca-angular-widgets/tree/master/' target='_blank' >
+				https://github.com/csipiemonte/yucca-angular-widgets/tree/master/
+				</a>
+			</p>
+			<p>e installare quindi tutte le dipendenze</p>
+			<table class='table table-condensed install-table-dependencies'>
+				<thead><tr><th>Libreria</th><th>Download url</th><th>Dettagli</th></tr></thead>
+				<tbody>
+					<tr><td>AngularJS</td><td><a href='https://angularjs.org/' target='_blank'>https://code.angularjs.org/1.5.5/angular.js</a></td><td>C'&grave; anche la versione minimizzata</td></tr>
+					<tr><td>Angular Sanitaze</td><td><a href='https://code.angularjs.org/1.5.5/angular-sanitize.js' target='_blank'>https://code.angularjs.org/1.5.5/angular-sanitize.js</a></td><td>C'&grave; anche la versione minimizzata</td></tr>
+					<tr><td>Stomp Websocket</td><td><a href='https://github.com/jmesnil/stomp-websocket' target='_blank'>https://github.com/jmesnil/stomp-websocket</a></td><td>I file sono nella cartella <strong>lib/</strong><td></tr>
+					<tr><td>D3.js</td><td><a href='https://github.com/d3/d3/releases' target='_blank'>https://github.com/d3/d3</a></td><td>Selezionare l'ultima release<td></tr>
+					<tr><td>Nvd3</td><td><a href='https://github.com/novus/nvd3' target='_blank'>https://github.com/novus/nvd3</a></td><td>I file sono nella cartella <strong>build/</strong></td></tr>
+					<tr><td>Nvd3 angular directive</td><td><a href='https://github.com/krispo/angular-nvd3' target='_blank'>https://github.com/krispo/angular-nvd3</a></td><td>I file sono nella cartella <strong>dist/</strong></td></tr>
+					<tr><td>Leaflet</td><td><a href='https://github.com/Leaflet/Leaflet/releases' target='_blank'>https://github.com/Leaflet/Leaflet</a></td><td>Selezionare l'ultima release, I file sono nella cartella <strong>dist/</strong></td></tr>
+					<tr><td>Leaflet angular directive</td><td><a href='https://github.com/tombatossals/angular-leaflet-directive' target='_blank'>https://github.com/tombatossals/angular-leaflet-directive</a></td><td>I file sono nella cartella <strong>dist/</strong></td></tr>
+				</tbody>
+				
+			</table>
+		</div>
+	</div>
+</div>
+<h2>Aggiunta delle dipendenze</h2>
+<div class='panel-indent-left'>
+	<p>
+		Nel sezione
+		<code>
+			<strong>head</strong>
+		</code>
+		della pagina principale del tuo portale inserire
+	</p>
+<pre class="prettyprint "><code class="language-html">&lt;meta charset=&quot;utf-8&quot;&gt;  &lt;!-- it&#39;s important for d3.js --&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;bower_components/nvd3/build/nv.d3.min.css&quot;&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;bower_components/leaflet/dist/leaflet.css&quot;&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;bower_components/yucca-angular-widgets/dist/style/angular-yucca.css&quot;&gt;
+
+&lt;script type=&quot;text/javascript&quot; src=&quot;bower_components/d3/d3.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;bower_components/nvd3/build/nv.d3.min.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;bower_components/leaflet/dist/leaflet.js&quot;&gt;&lt;/script&gt;
+
+&lt;script type=&quot;text/javascript&quot; src=&quot;bower_components/angular/angular.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;bower_components/angular-sanitize/angular-sanitize.min.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;bower_components/angular-nvd3/dist/angular-nvd3.min.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;bower_components/stomp-websocket/lib/stomp.min.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;bower_components/angular-leaflet-directive/dist/angular-leaflet-directive.min.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;bower_components/yucca-angular-widgets/dist/js/angular-yucca.js&quot;&gt;&lt;/script&gt; </code></pre>
+
+	<script type="text/javascript" src="bower_components/d3/d3.js"></script>
+	<script type="text/javascript" src="bower_components/nvd3/build/nv.d3.min.js"></script>
+	<script type="text/javascript" src="bower_components/leaflet/dist/leaflet.js"></script>
+
+
+	<script type="text/javascript" src="bower_components/angular/angular.js"></script>
+	<script type="text/javascript" src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
+	<script type="text/javascript" src="bower_components/angular-nvd3/dist/angular-nvd3.js"></script>
+	<script type="text/javascript" src="bower_components/stomp-websocket/lib/stomp.min.js"></script>
+	<script type="text/javascript" src="bower_components/angular-leaflet-directive/dist/angular-leaflet-directive.min.js"></script>
+	<script type="text/javascript" src="bower_components/yucca-angular-widgets/dist/js/angular-yucca.js"></script> 
+
+
+</div>
+<h2>Utilizzo</h2>
+<div class='panel-indent-left'>
+	<p>
+		Aggiungi i moduli
+		<code>
+		<strong>yucca.plugin</strong>
+		</code> e 
+		<code>
+		<strong>ngSanitize</strong> 
+		</code>
+		nel tuo modulo angular
+	</p>
+<pre class="prettyprint "><code>angular.module('myApp', ['yucca.plugin', 'ngSanitize']).controller('myCtrl', function($scope){
+	//...  la tua eventuale logica di business
+})</code></pre>
+	<p>
+		Nei file
+		<code>
+		<strong>html</strong>
+		</code>
+		potrai usare direttamente i widget
+	</p>
+<pre class="prettyprint "><code>&lt;div ng-app=&quot;myApp&quot;&gt;
+  &lt;div ng-controller=&quot;myCtrl&quot;&gt;
+    &hellip;
+    &lt;ng-yucca-dataset-image-gallery tenant_code=&#39;sandbox&#39; dataset_code=&#39;Fotoagro_576&#39;  /&gt;
+    &hellip;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+
+	<div class='panel-tip'><i class="fa fa-lightbulb-o tip-icon" aria-hidden="true"></i> Si possono usare i widgets anche se i siti <strong>non utilizzano AngularJS</strong>: il pannello che conterr&agrave; il 
+	widget diventa una mini app AngularJS.<br>Scarica questo <strong>
+	<a href='https://github.com/csipiemonte/yucca-angular-widgets/raw/master/yuccaAngularWidgetSeed.zip' target='_blank'>progetto minimale</a></strong>
+	</div>
+</div>
+<div class='example-section'>
+	<div class='text-center'>
+		<a class="btn btn-default btn-arrow-right" href="#/widget" role="button">Scopri tutti i widget</a>
+	</div>
+</div>

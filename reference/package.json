@@ -1,0 +1,12 @@
+{
+  "name": "smartdatanet-reference-demo",
+  "version": "0.0.0",
+  "description": "Demo App for SmartDataNet Directive",
+  "repository": "https://github.com/csipiemonte/yucca-angular-widgets",
+  "license": "MIT",
+  "devDependencies": {
+    "bower": "^1.3.1"
+  },
+  "scripts": {
+  }
+}

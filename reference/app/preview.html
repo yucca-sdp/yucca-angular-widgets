@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html lang="en" ng-app="YuccaReferenceWidgetPreview" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" ng-app="YuccaReferenceWidgetPreview" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" ng-app="YuccaReferenceWidgetPreview" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" ng-app="YuccaReferenceWidgetPreview" class="no-js"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>SmartData Reference Demo</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="lib/html5-boilerplate/dist/css/normalize.css">
+  <link rel="stylesheet" href="lib/nvd3/build/nv.d3.min.css">
+  <!--<link rel="stylesheet" type="text/css" href="lib/ng-prettyjson/dist/ng-prettyjson.min.css">-->
+  <!--<link rel="stylesheet" href="lib/angular-code-mirror/dist/css/angular-code-mirror.css"/>-->
+
+  <link rel="stylesheet" href="lib/leaflet/dist/leaflet.css">
+  <link rel="stylesheet" href="lib/html5-boilerplate/dist/css/main.css">
+  <link rel="stylesheet" href="lib/angular-bootstrap/ui-bootstrap-csp.css">
+  <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="lib/components-font-awesome/css/font-awesome.min.css">
+<!-- <link rel="stylesheet" href="lib/yucca-angular-widgets/dist/style/angular-yucca.css">-->
+  <link rel="stylesheet" href="lib/yucca-angular-widgets/dist/style/yucca-widget-theme-minimal.css">
+  <link rel="stylesheet" href="css/preview.css">
+  <script type="text/javascript" src="lib/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>
+  
+</head>
+<body ng-controller='PreviewCtrl'>
+
+  <div class='refresh-toolbar'>
+  	<div class="checkbox" title='Authomatic Refresh every 2 seconds'>
+		<label><input type="checkbox" ng-model="automatichRefresh" >   
+			<span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+			<i class='glyphicon glyphicon-time'></i>
+		</label>
+	</div>
+  	<a href  ng-click='refresh()'title='Refresh'><i class='glyphicon glyphicon-refresh'></i></a>
+  </div>
+  <div ng-view class='main-container ' id='page-preview'>
+	<style ng-bind-html='getDashboardCss()'></style>
+ 	<div id='yucca-dashboard'>
+		<div ng-repeat="c in dashboard.components track by $index"  style="{{getStyle(c)}}" id='{{c.componentId}}' class='component-card'>
+				<div bind-html-compile="getHtmlContent(c)" ng-if='isComponentReady(c) && !isResizing'></div>
+				<div ng-if='!isComponentReady(c)' class='component-placeholder component-placeholder-{{c.content.key}}' style='background-image: url(./images/widgets/{{c.content.key}}-bn.png)'></div>
+    			<style ng-bind-html='getCssContent(c)'></style>
+          	</div>
+		</div>
+
+  </div>
+ 
+
+  <script type="text/javascript" src="lib/stomp-websocket/lib/stomp.min.js"></script>
+  <script type="text/javascript" src="lib/d3/d3.js"></script>
+  <script type="text/javascript" src="lib/nvd3/build/nv.d3.min.js"></script>
+
+
+  <script type="text/javascript" src="lib/angular/angular.js"></script>
+  <script type="text/javascript" src="lib/angular-sanitize/angular-sanitize.min.js"></script>
+  <script type="text/javascript" src="lib/angular-local-storage/dist/angular-local-storage.min.js"></script>
+  
+
+  <script type="text/javascript" src="lib/angular-route/angular-route.js"></script>
+  <!-- <script type="text/javascript" src="lib/angularjs-nvd3-directives/dist/angularjs-nvd3-directives.min.js"></script> -->
+  <script type="text/javascript" src="lib/angular-nvd3/dist/angular-nvd3.min.js"></script>
+  <script type="text/javascript" src="lib/leaflet/dist/leaflet.js"></script>
+  <script type="text/javascript" src="lib/angular-leaflet-directive/dist/angular-leaflet-directive.min.js"></script>
+  <script type="text/javascript" src="lib/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+  <script type="text/javascript" src="lib/yucca-angular-widgets/dist/js/angular-yucca.js"></script>
+
+  <script type="text/javascript" src="lib/angular-bind-html-compile/angular-bind-html-compile.min.js"></script>
+  <script type="text/javascript" src="js/utils.js"></script>
+  
+  <script type="text/javascript" src="js/preview.js"></script>
+</body>
+</html>

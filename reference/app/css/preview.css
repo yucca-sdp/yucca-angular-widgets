@@ -1,0 +1,32 @@
+#yucca-dashboard{min-width: 100vw; min-height: 100vh; display:flex;}
+
+/* app css stylesheet */
+.refresh-toolbar{position: absolute; top: 0px; right: 0px; font-size: 14px; display: flex; padding: 12px 24px; border: solid 1px #ccc; 
+	border-width: 0 0 1px 1px; border-bottom-left-radius: 4px; color: #ccc;z-index: 100;}
+.refresh-toolbar a{padding-left: 12px;color: #ccc;}
+.refresh-toolbar a:hover{color: #19aeff; cursor: pointer;}
+
+.refresh-toolbar:hover{color: #333;}
+.refresh-toolbar:hover a{color: #333;}
+.refresh-toolbar:hover .checkbox .cr,.refresh-toolbar:hover .radio .cr{border-color: #333;}
+
+.component-card{overflow: hidden;}
+.component-placeholder{float: left;min-width: 250px; min-height:250px; position: relative;  display: block;  overflow: hidden;  background-size: 98%; background-repeat: no-repeat;background-position: center center;}
+.component-placeholder img{display: block;  position: absolute;  top: 50%;  left: 50%;  min-height: 100%;  min-width: 100%;  transform: translate(-50%, -50%);}
+
+.checkbox, .radio{margin-top: 0; margin-bottom: 0;}
+.checkbox label, .radio label {padding-left: 0;}
+.checkbox label:after, .radio label:after{clear: both; content: ''; display: table;}
+.checkbox .cr,.radio .cr{border: 1px solid #ccc; border-radius: 0; display: inline-block; float: left; height: 1.3em; margin-right: .5em; position: relative; width: 1.3em;}
+.radio .cr{border-radius: 50%;}
+.checkbox .cr .cr-icon, .radio .cr .cr-icon{font-size: .8em; left: 10%; line-height: 0; position: absolute; top: 50%;}
+.radio .cr .cr-icon{margin-left: 0.04em;}
+.checkbox label input[type="checkbox"],
+.radio label input[type="radio"]{display: none;}
+.checkbox label input[type="checkbox"] + .cr > .cr-icon,
+.radio label input[type="radio"] + .cr > .cr-icon{opacity: 0; transform: scale(3) rotateZ(-20deg); transition: all .1s ease-in;}
+.checkbox label input[type="checkbox"]:checked + .cr > .cr-icon,
+.radio label input[type="radio"]:checked + .cr > .cr-icon{opacity: 1; transform: scale(1) rotateZ(0deg);}
+.checkbox label input[type="checkbox"]:disabled + .cr,
+.radio label input[type="radio"]:disabled + .cr{opacity: .5;}
+

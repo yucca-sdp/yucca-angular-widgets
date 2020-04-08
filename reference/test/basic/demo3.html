@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>SmartData Reference Essential Demo</title>
+	<meta charset="utf-8">  <!-- it's important for d3.js -->
+	<link rel="stylesheet" href="http://localhost:8000/lib/nvd3/build/nv.d3.min.css">
+	<link rel="stylesheet" href="http://localhost:8000/lib/leaflet/dist/leaflet.css">
+	<!-- link rel="stylesheet" href="http://localhost:8000/lib/yucca-angular-widgets/dist/style/angular-yucca.css"-->
+
+
+	<script type="text/javascript" src="http://localhost:8000/lib/d3/d3.js"></script>
+	<script type="text/javascript" src="http://localhost:8000/lib/nvd3/build/nv.d3.min.js"></script>
+	<script type="text/javascript" src="http://localhost:8000/lib/leaflet/dist/leaflet.js"></script>
+
+
+	<script type="text/javascript" src="http://localhost:8000/lib/angular/angular.js"></script>
+	<script type="text/javascript" src="http://localhost:8000/lib/angular-sanitize/angular-sanitize.min.js"></script>
+	<script type="text/javascript" src="http://localhost:8000/lib/angular-nvd3/dist/angular-nvd3.js"></script>
+	<script type="text/javascript" src="http://localhost:8000/lib/stomp-websocket/lib/stomp.min.js"></script>
+	<script type="text/javascript" src="http://localhost:8000/lib/angular-leaflet-directive/dist/angular-leaflet-directive.min.js"></script>
+	<!-- <script type="text/javascript" src="http://localhost:8000/lib/yucca-angular-widgets/dist/js/angular-yucca.js"></script> -->
+	
+	
+	  <script type="text/javascript" src="http://localhost:8001/js/yucca-constants.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/yucca-plugin.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/yucca-utils.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/yucca-websocket-service.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/yucca-services.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/lib/treemap-directive.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/lib/collapsibletree-directive.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/lib/sankey-directive.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/lib/forcedirected-directive.js"></script>
+	  
+	  <!-- script type="text/javascript" src="http://localhost:8001/js/lib/bullet-directive.js"></script-->
+	  <!--
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-streams-tweet-stats.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-datasets-image-gallery.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-datasets-multidata-stats.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-streams-multistream-value.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-streams-last-value.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-streams-multistream-map.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-streams-monitor.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-streams-multistream-stats.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-datasets-multidata-treemap.js"></script>
+	  -->
+	  
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/basic/yucca-datasets-discretebar-chart.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/basic/yucca-datasets-pie-chart.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/basic/yucca-datasets-line-chart.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/basic/yucca-datasets-treemap-chart.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/basic/yucca-datasets-collapsibletree-chart.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/basic/yucca-datasets-sankey-chart.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/basic/yucca-datasets-forcedirected-chart.js"></script>	  
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/basic/yucca-datasets-dataexplorer-chart.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/basic/yucca-datasets-distributionexplorer-chart.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/basic/yucca-datasets-navigableexplorer-chart.js"></script>
+
+
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/basic/yucca-commons.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/controls/yucca-control-selects.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/controls/yucca-control-filter.js"></script>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="http://localhost:8001/style/yucca-widget-theme-minimal.css">
+
+	<style>
+		body{font-family: sans-serif; font-size: 14px; margin: 0;}
+		.header{background-color: #f7f7f7; padding: 12px; border-bottom: solid 1px #1dbbee; clear: both; overflow:  hidden; display: flex; align-items: middle;}
+		.header h1{font-size: 24px; margin: 0; flex-grow: 1;}
+		.header a{display: inline-block; float: right; color: #333; text-decoration: none;  margin: 0 12px;}
+		.header a:hover{color: #1dbbee;}
+		.content{margin: 12px; }
+		.widget-container{}
+		.demo-section{display: flex;}
+	</style>
+
+	<script type="text/javascript">
+		angular.module('myApp', ['yucca.plugin', 'ngSanitize']).controller('myCtrl', function($scope, $compile){
+			
+		});
+
+	</script>
+
+</head>
+<body>
+	<header class='header'>
+		<h1>Demo Nuovi Widget</h1>
+		<a href='/' target='_blank'>Home</a>
+		<a href='https://www.smartdatanet.it/' target='_blank'>Smartdatanet.it</a>
+		<a href='https://userportal.smartdatanet.it/reference/#/widget' target='_blank'>Documentation</a>
+	</header>
+	<div ng-app="myApp" class='content' ng-controller="myCtrl">
+		<div class='demo-section'>
+		
+		</div>
+		
+	
+	
+	
+		<div class='page-main' >
+			<div class=' col-sm-8 widget-container'>
+				<div class='row' >
+ 					<div class=' col-sm-6'>
+						<ng-yucca-dataset-discretebar-chart 
+							 tenant_code="regpie" 
+							 datasetcode="Dwprestc_svil_tb_tempi_erog_sdp_6514" 
+							 group_by_column="{'key':'mese','label':'Anno Mese'}" 
+							 value_column="{'key':'flag_entro_target','label':'Entro','countingMode':'sum'}" 
+							 grouped_query='true'
+							 widget_title="Flussi" 
+							 widget_subtitle="Grafico a barre con group by" 
+							 euro_value="false" 
+							 decimal_value='0'
+							 format_big_number='true'
+							 show_values="true"
+							 chart_height='300'
+							 legend_position='{top:1,left:1, right: 1, bottom: 1}'
+							 main_chart_color='#6a00ff'
+						 	 zzchart_colors='["#eaeae8","#ff0000"]'
+							 show_legend='true'
+							 show_x_axis='true'
+							 show_y_axis='true'
+							 x_axis_label='Provincie'
+							 y_axis_label='Arrivi Totali'
+							 user_token='G8rljo_9mMuyOrKNxuOsY93Yd2Ea'
+							/>
+						
+						<div style='display:none'>
+							 unused attribute
+							 slice_colors='["#fff000","#00ff00"]'
+							 start_angle='1.5'
+							 end_angle='1.4'
+							 </div>
+					</div> 
+
+ 					<div class=' col-sm-6'>
+					<ng-yucca-dataset-distributionexplorer-chart_no
+						 tenant_code="regpie" 
+						 datasetcode="Dwprestc_svil_tb_tempi_erog_sdp_6514" 
+						 group_by_column="{'key':'provincia','label':'Provincia'}" 
+						 value_column="{'key':'arrivi_totali','label':'Arrivi Totali'}" 
+						 widget_title="Chart table" 
+						 widget_subtitle="" 
+						 euro_value="false" 
+						 decimal_value='0'
+						 format_big_number='true'
+						 counting_mode="sum"
+						 zzzmain_color='#6a00ff'
+						 chart_colors='["#eaeae8","#ff0000"]'
+						 max_row='30' 
+						 columns="[{value:'arrivi_totali', label: 'Arrivi totali'},{value:'arrivi_italiani', label: 'Arrivi Italiani'},{value:'arrivi_stranieri', label: 'Arrivi Stranieri'} ]"
+						 
+						/></div>
+					<div class=' col-sm-12'>
+						<ng-yucca-dataset-dataexplorer-chart
+						 tenant_code="regpie" 
+						 datasetcode="Dwprestc_svil_tb_tempi_erog_sdp_6514" 
+						 group_by_column="provincia" 
+						 value_column="arrivi_totali" 
+						 widget_title="Data Explorer" 
+						 widget_subtitle="Table" 
+						 euro_value="false" 
+						 decimal_value='0'
+						 format_big_number='true'
+						 counting_mode="sum"
+						 show_values="true"
+						 chart_height='300'
+						 legend_position='{top:1,left:1, right: 1, bottom: 1}'
+						 main_color='#6a00ff'
+						 max_row='30' 
+						 page_size = '6'
+						 filtered_columns ='["qualifica"]'
+						 columns="[{value:'arrivi_totali', label: 'Arrivi totali'},{value:'arrivi_italiani', label: 'Arrivi Italiani'},{value:'arrivi_stranieri', label: 'Arrivi Stranieri'} ]"
+						 user_token='G8rljo_9mMuyOrKNxuOsY93Yd2Ea'
+						/>
+					</div>					
+					<div class=' col-sm-6'>
+						<ng-yucca-dataset-pie-chart_no 
+							 tenant_code="regpie" 
+							 datasetcode="Dwprestc_svil_tb_tempi_erog_sdp_6514" 
+							 group_by_column="{'key':'provincia','label':'Provincia'}" 
+							 value_column="{'key':'arrivi_totali','label':'Arrivi Totali'}" 
+							 widget_title="Flussi" 
+							 widget_subtitle="Torta" 
+							 euro_value="true" 
+							 counting_mode="sum"
+							 show_labels="true"
+							 label_sunbeam_layout="false"
+							 label_threshold=".1" 
+							 chart_height='300'
+							 donut='false'
+							 donut_ratio='.5'
+							 legend_position='{top:1,left:1, right: 1, bottom: 1}'
+							 main_chart_color='#6a00ff'
+							 z_chart_colors='["#8fca40","#fff43b","#f29524","#f04090","#916ab1","#55b9fc"]'	
+							 show_legend='true'
+							 half_pie='false'
+							/>
+					</div>  
+					<div class=' col-sm-6'>
+						<ng-yucca-dataset-line-chart_no 
+							 tenant_code="regpie" 
+							 datasetcode="Dwprestc_svil_tb_tempi_erog_sdp_6514" 
+							 group_by_column="anno" 
+							 serie_columns="['arrivi_totali','presenza_totali','arrivi_italiani','presenza_italiani','arrivi_stranieri', 'presenza_stranieri']" 
+							 widget_title="Flussi" 
+							 widget_subtitle="Linea" 
+							 euro_value="false" 
+							 decimal_value='0'
+							 format_big_number='true'
+							 counting_mode="sum"
+							 show_values="true"
+							 chart_height='300'
+							 legend_position='{top:1,left:1, right: 1, bottom: 1}'
+							 main_chart_color='#6a00ff'
+							 serie_styles="{'arrivi_totali':{'label':'Arrivi Totali', color: '#c34cff',strokeWidth: 4, 'interpolate': 'cardinal'}, 
+							 			   'arrivi_italiani':{'label':'Arrivi Italiani', color: '#cd6cff',strokeWidth: 2}, 
+							 			   'arrivi_stranieri':{'label':'Arrivi Stranieri', color: '#d88cff',strokeWidth: 2},
+							 			   'presenza_totali':{'label':'Presenze Totali', 'classed':'dashed', color: '#beff42',strokeWidth: 4}, 
+							 			   'presenza_italiani':{'label':'Presenze Italiani', 'classed':'dashed', color: '#c9ff64',strokeWidth: 2}, 
+							 			   'presenza_stranieri':{'label':'Presenze Stranieri', 'classed':'dashed', color: '#d5ff86',strokeWidth: 2}}"
+							 show_legend='true'
+							 show_x_axis='true'
+							 show_y_axis='true'
+							 x_axis_label='Anno'
+							 y_axis_label=''
+							 
+							/>
+				
+					</div>
+					
+
+				</div>
+			</div>
+			<div class=' col-sm-4 widget-container'>
+				<div>
+					<h4>Control cambio colonna da contare</h4>
+					<ng-yucca-control-select 
+						label='Arrivi'
+						hint='Flussi turistici per qualifica e per Provincia'
+						select_empty_label='Scegli il tipo'
+						value_columns="[{key:'flag_entro_target', label: 'Entro'},{key:'flag_entro_doppio_target', label: 'Doppio'},{key:'flag_oltre_doppio_target', label: 'Oltre doppio'} ]"
+						render='radio'
+						direction='row'
+						align_items='start'
+						selected_value='arrivi_totali'
+					/>
+				</div>
+				<div>
+					<h4>Control cambio colonna su cui raggruppare</h4>
+					<ng-yucca-control-select 
+						label='Arrivi'
+						hint='Flussi turistici per qualifica e per Provincia'
+						select_empty_label='Scegli il tipo' 
+						group_by_columns="[{key:'mese', label: 'Mese'},{key:'anno', label: 'Anno'},{key:'annomese', label: 'Mese Anno'}]"
+						render='button'
+						direction='row'
+						align_items='start'
+						selected_value='provincia'
+					/>
+				</div>
+				<div>
+					<h4>Control primo filtro</h4>
+					<ng-yucca-control-filter 
+						label='Anno'
+						hint='Filtra solo i dati di un determinato anno'
+						filter_type='text'
+						column="anno"
+						advanced_filter='numeric'
+					/>
+				</div>
+				<div>
+					<h4>Control secondo filtro</h4>
+					<ng-yucca-control-filter 
+						label='Settore'
+						hint='Filtra solo i dati di un determinato settore'
+						placeholder='SETTORE ALBERGHIERO'
+						filter_type='text'
+						column="settore"
+					/>
+				</div>
+				<div>
+					<h4>Control terzo filtro</h4>
+					<ng-yucca-control-filter 
+						label='Provincia'
+						hint='Filtra solo i dati di una determinata provincia'
+						placeholder='TORINO'
+						filter_type='text'
+						column="provincia"
+						advanced_filter='text'
+					/>
+				</div>
+			</div>
+		</div>
+		</div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

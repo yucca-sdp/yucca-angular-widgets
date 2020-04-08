@@ -1,0 +1,50 @@
+
+
+<div class="modal-header">
+	<h4 class="modal-title" translate>nodesrender_param_dialog_title</h4>
+</div>
+<div class="modal-body multipleparams_body">
+	<p ng-bind-html="'nodesrender_param_dialog_intro'|translate"></p>
+	<div class='inline-feedback-warning' ng-if='!validateAdd'>
+		<i class='fa fa-triangle'></i> <span translate >nodesrender_mandatory_warning</span>
+	</div>			
+	
+	<form class="form-inline multipleparams_form">
+		<div class="form-group">
+ 			<label for="nodesrenderColumnInput" translate>nodesrender_param_column</label>
+			<input type="text" class="form-control" id="nodesrenderColumnInput" placeholder="" ng-model='newValue.column'
+			uib-typeahead="column for column in  nodeColumns | limitTo:8">
+		</div>
+		<div class="form-group">
+ 			<label for="nodesrenderValueInput" translate>nodesrender_param_value</label>
+			<input type="text" class="form-control" id="nodesrenderValueInput" placeholder="" ng-model='newValue.value'>
+		</div>
+		<div class="form-group">
+ 			<label for="nodesrenderColorInput" translate>nodesrender_param_color</label>
+ 			<color-picker colorvalue='newValue.color' class='color-picker-inline'/>
+		</div>
+		<div class="form-group">
+			<div class="checkbox">
+				<label>
+					<input type="checkbox" ng-model="param.fades">
+					<span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+					<span translate-cloak translate>nodesrender_param_fades</span>
+				</label>
+			</div> 			
+		</div>
+		<button type="submit" class="btn btn-default" translate ng-click='addValue(newValue)'>multiple_param_add</button>
+	</form>
+	<p>&nbsp;</p>
+	<div class='multipleparams_rows'>
+		<div class='multipleparams_row' ng-repeat='v in newValues track by $index'>
+			<div class='multipleparams_row_value'> <div class='node-preview' style='background-color: {{v.color}}'></div>
+				{{v.column}} - {{v.value}}
+			</div>
+			<a class='multipleparams_row_deletebutton' href ng-click='removeValue($index)'><i class='fa fa-trash'></i></a>
+		</div>
+	</div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-link" type="button" ng-click="cancel()">Cancel</button>
+    <button class="btn btn-default" type="button" ng-click="ok()">OK</button>
+</div>

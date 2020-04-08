@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>SmartData Reference Essential Demo</title>
+	<meta charset="utf-8">  <!-- it's important for d3.js -->
+	<link rel="stylesheet" href="http://localhost:8000/lib/nvd3/build/nv.d3.min.css">
+	<link rel="stylesheet" href="http://localhost:8000/lib/leaflet/dist/leaflet.css">
+	<link rel="stylesheet" href="http://localhost:8000/lib/yucca-angular-widgets/dist/style/angular-yucca.css">
+
+
+	<script type="text/javascript" src="http://localhost:8000/lib/d3/d3.js"></script>
+	<script type="text/javascript" src="http://localhost:8000/lib/nvd3/build/nv.d3.min.js"></script>
+	<script type="text/javascript" src="http://localhost:8000/lib/leaflet/dist/leaflet.js"></script>
+
+
+	<script type="text/javascript" src="http://localhost:8000/lib/angular/angular.js"></script>
+	<script type="text/javascript" src="http://localhost:8000/lib/angular-sanitize/angular-sanitize.min.js"></script>
+	<script type="text/javascript" src="http://localhost:8000/lib/angular-nvd3/dist/angular-nvd3.js"></script>
+	<script type="text/javascript" src="http://localhost:8000/lib/stomp-websocket/lib/stomp.min.js"></script>
+	<script type="text/javascript" src="http://localhost:8000/lib/angular-leaflet-directive/dist/angular-leaflet-directive.min.js"></script>
+	<!-- <script type="text/javascript" src="http://localhost:8000/lib/yucca-angular-widgets/dist/js/angular-yucca.js"></script> -->
+	
+	<link rel="stylesheet" href="http://localhost:8001/style/angular-yucca.css">
+	
+	  <script type="text/javascript" src="http://localhost:8001/js/yucca-constants.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/yucca-plugin.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/yucca-utils.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/yucca-websocket-service.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/yucca-services.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/lib/treemap-directive.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-streams-tweet-stats.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-datasets-image-gallery.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-datasets-multidata-stats.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-streams-multistream-value.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-streams-last-value.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-streams-multistream-map.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-streams-monitor.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-streams-multistream-stats.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-datasets-multidata-treemap.js"></script>
+	  
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+	<style>
+		body{font-family: sans-serif; font-size: 14px; margin: 0;}
+		.header{background-color: #f7f7f7; padding: 24px; border-bottom: solid 1px #1dbbee; clear: both; overflow:  hidden;}
+		.header h1{float: left;}
+		.header a{display: inline block; float: right; color: #333; text-decoration: none;  margin: 24px;}
+		.header a:hover{color: #1dbbee;}
+		.content{margin: 24px; }
+		.widget-container{}
+	</style>
+
+	<script type="text/javascript">
+		angular.module('myApp', ['yucca.plugin', 'ngSanitize']).controller('myCtrl', function($scope, $compile){
+			$scope.tenant_code = 'cittato_rumore';
+			$scope.stream_code = 's_10';
+			$scope.smartobject_code = '481a4728-7a20-40fd-d950-cfccea48595f';
+
+
+			var filterDate = new Date();
+			filterDate.setDate(filterDate.getDate() - 6);
+			$scope.filter = "time ge datetimeoffset'"+filterDate.toISOString()+"'";
+
+			//$scope.filter = "time ge datetimeoffset'2017-06-20T07:00:00+01:00'";
+			
+			//arpa_rumore.4c5d7481-fa5e-4f2f-d26d-d4e8095b9dd2_s_01
+			//$scope.tenant_code = 'csi_ambiente';
+			//$scope.stream_code = 'pressione';
+			//$scope.smartobject_code = 'meteo_arpa_sede_to';
+			var htmlDirective = '<ng-yucca-stream-monitor  ' + 
+			    'widget_title="Monitor"  ' + 
+			    'tenant_code="'+$scope.tenant_code+'"  ' + 
+			    'stream_code="'+$scope.stream_code+'"  ' + 
+			    'smartobject_code="'+$scope.smartobject_code+'"  ' + 
+			    'labels=\'["Humidity"]\'  ' + 
+			    'chart_color="#aa00ff"  ' + 
+			    'debug="true"  ' + 
+				'/>';
+			$scope.directiveCode = htmlDirective;
+			jQuery(document).on('show.bs.modal','#myModal', function () {
+					angular.element(document.getElementById('modal-body')).empty().append($compile(htmlDirective)($scope));
+			});
+
+		});
+
+	</script>
+
+</head>
+<body>
+	<header class='header'>
+		<h1>Test Widget: MONITOR</h1>
+		<a href='/' target='_blank'>Home</a>
+		<a href='https://www.smartdatanet.it/' target='_blank'>Smartdatanet.it</a>
+		<a href='https://userportal.smartdatanet.it/reference/#/widget' target='_blank'>Documentation</a>
+	</header>
+	<div ng-app="myApp" class='content' ng-controller="myCtrl">
+		<div class='row' >
+
+			<div class=' col-sm-5 widget-container'>
+				<h4>In Page</h4>
+				 <div>
+				  <div>
+					  	<div>
+					  	<div>
+<div class="col-md-6"><!--
+  <ng-yucca-stream-last-value
+    widget_title='Ultimo valore Temperatura'
+    tenant_code='cittato_aria'
+    stream_code='AQS_001'
+    smartobject_code='9610f4fc-1535-4d09-c596-76dc0a5a339c'
+    labels='["Temperatura"]'
+    components='["T"]'
+    chart_color='#aa00ff'
+    user_token='yqJjPch4Dk90LMazBg42WPgcCGga'
+    debug='false'
+   />
+</div>
+<div class="col-md-12">
+  <ng-yucca-stream-last-value
+    widget_title='Ultimo valore Umidit&agrave;'
+    tenant_code='cittato_aria'
+    stream_code='AQS_001'
+    smartobject_code='9610f4fc-1535-4d09-c596-76dc0a5a339c'
+    labels='["Umidit&agrave;"]'
+    components='["H"]'
+    chart_color='#aa00ff'
+    user_token='yqJjPch4Dk90LMazBg42WPgcCGga'
+    debug='false'
+   />
+</div>
+<div class="col-md-12">
+<ng-yucca-stream-last-value
+    widget_title='Ultimo valore Umidit&agrave;'
+	tenant_code='{{tenant_code}}'
+	stream_code='{{stream_code}}'
+	smartobject_code='{{smartobject_code}}'    
+	labels='["Umidit&agrave;"]'
+	components='["b_31_5_Hz"]'
+    chart_color='#aa00ff'
+    user_token='yqJjPch4Dk90LMazBg42WPgcCGga'
+    debug='false'
+   />
+</div>
+<div class="col-md-12">
+   <ng-yucca-stream-last-value
+    widget_title='Ultimo valore Umidit&agrave;'
+	tenant_code='{{tenant_code}}'
+	stream_code='{{stream_code}}'
+	smartobject_code='{{smartobject_code}}'    
+    components='["b_6300_Hz"]'
+    chart_color='#aa00ff'
+    user_token='yqJjPch4Dk90LMazBg42WPgcCGga'
+    debug='false'
+   />
+
+</div>-->
+
+
+<div class="row">
+
+<div class="col-md-12"><!-- 
+  <ng-yucca-stream-monitor 
+    widget_title='Rilevamento dell'inquinamento dell'aria' 
+    widget_intro='Stazione meteo presso sede ARPA Torino - via Pio VII, 9' 
+    tenant_code='cittato_aria' 
+    stream_code='AQS_001' 
+    smartobject_code='9610f4fc-1535-4d09-c596-76dc0a5a339c' 
+    landing_panel='chart'
+    labels='["Stazione","Temperatura","Umidit&agrave;","Luminosit&agrave;","CO2","VOC"]'
+    chart_type='lineChart' 
+    chart_color='#aa00ff' 
+    user_token='yqJjPch4Dk90LMazBg42WPgcCGga' 
+    debug='false' 
+   /> -->
+</div>
+
+<div class="row">
+  <div class="col-md-16">
+    <h3>Rumore inviato da ARPA</h3>
+  </div>
+</div> 
+
+<div class="row">
+  <div class="col-md-12"><!-- 
+  <ng-yucca-stream-monitor 
+    widget_title="Rilevamento dell'inquinamento acustico, dal progetto Fonometri di ARPA Piemonte"
+    widget_intro='Stazione meteo presso sede ARPA Torino - via Pio VII, 9' 
+    tenant_code='arpa_rumore' 
+    stream_code='s_01' 
+    smartobject_code='4c5d7481-fa5e-4f2f-d26d-d4e8095b9dd2' 
+    components='["LAeq"]' 
+    labels='["Rumore"]' 
+    chart_color='#aa00ff' 
+    debug='true' 
+   /> -->
+  </div>
+</div>
+					  	
+							<ng-yucca-stream-monitor 
+						        widget_title='Monitor' 
+ 								tenant_code='{{tenant_code}}'
+    							stream_code='{{stream_code}}'
+    							smartobject_code='{{smartobject_code}}'
+    							labels='["Prima (db)","Atmosferica ()","Media","Massima","Minima"]' 
+    							components='["b_6300_Hz", "b_31_5_Hz"]'
+							    chart_color='#aa00ff' 
+							        user_token='7q8c2TSxqXK8tMIc3dO9nak5yuEa'
+							    filter="{{filter}}"
+							    debug='true' 
+						   /> 
+						</div>
+					</div>				    
+					<div>
+  <!-- <ng-yucca-stream-multistream-value 
+    widget_title="Rilevamento della qualita' dell'aria nelle scuole, dal progetto HALADIN's@schools" 
+    widget_intro='HALADINs - Ist. Castigliano' 
+    streams='[{"tenantCode":"arpa_rumore","streamCode":"s_01","smartobjectCode":"4c5d7481-fa5e-4f2f-d26d-d4e8095b9dd2","components":[{"name":"b_6300_Hz","label":"Humidity","minWarning":"30","minCritical":"20","maxWarning":"70","maxCritical":"80"}]}]'
+    debug='true' 
+   />-->
+</div>
+				</div> 
+			</div>
+			<div class=' col-sm-2 widget-container'>
+				<h4>In Modal View</h4>
+				<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+					Launch demo modal
+				</button>
+			</div>
+			<div class=' col-sm-5 widget-container'>
+				<h4>Directive code</h4>
+				<pre><code id='directive-code'>{{directiveCode}}</code></pre>
+			</div>
+		</div>
+		<!-- Modal -->
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		 	<div class="modal-dialog" role="document">
+		    	<div class="modal-content">
+		      		<div class="modal-header">
+		        		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        		<h4 class="modal-title" id="myModalLabel">Modal title</h4>
+		      		</div>
+		      		<div class="modal-body" id="modal-body"></div>
+		      		<div class="modal-footer">
+		        		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		      		</div>
+		    	</div>
+		  	</div>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<div class='help-widget-dialog'>
+       <div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="ok()"><span aria-hidden="true">&times;</span></button>
+           <h3 class="modal-title" translate>{{widgetKey}}</h3>
+       </div>
+       <div class="modal-body">
+		<img class='main-image' src='./images/widgets/{{widgetKey}}-help.png' />
+		<div class='help-widget-intro' ng-bind-html='"help_intro_"+widgetKey|translate'></div>
+		<h4 translate>help_datasource</h4>
+		<div ng-bind-html='"help_datasource_"+widgetKey|translate'></div>
+		<h4 translate>help_datasource_example</h4>
+		<div ng-bind-html='"help_datasource_example_"+widgetKey|translate'></div>
+		<h4 translate>help_listen_events</h4>
+		<div ng-bind-html='"help_listen_events_"+widgetKey|translate'></div>
+		<h4 translate>help_sent_events</h4>
+		<div ng-bind-html='"help_sent_events_"+widgetKey|translate'></div>
+		<h4 translate>help_related_widget</h4>
+		<div ng-bind-html='"help_related_widget_"+widgetKey|translate'></div>
+
+	</div>
+</div>

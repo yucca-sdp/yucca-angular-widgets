@@ -1,0 +1,236 @@
+<div class='help-widget-dialog dashboard-config-dialog'>
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="ok()"><span aria-hidden="true">&times;</span></button>
+        <h3 class="modal-title" translate>dashboard_config_dialog_title</h3>
+    </div>
+    <div class="modal-body">
+		<form class="form-horizontal">
+			<div class="form-group">
+  				<label for="dashboardName" class="col-sm-2 control-label" translate>dashboard_name</label>
+		   	 	<div class="col-sm-6">
+     				<input type="text" class="form-control" id="dashboardName" placeholder="My Dashboard" ng-model='dashboard.name'>
+   				</div>
+   				<div class='col-sm-4'>
+   					<small translate>dashboard_config_name_help</small>
+   				</div>
+			</div>
+			<div class="form-group">
+   				<label for="widgetPositionType" class="col-sm-2 control-label" translate>dashboard_widget_position_type</label>
+   				<div class="col-sm-6 ">
+   					<div class='inline-control'>
+				    	<div class="radio" >
+							<label><input type="radio"  name="widgetPositionType" value="absolute" ng-model="dashboard.widgetPositionType" >   
+								<span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+								<span translate>dashboard_widget_position_type_absolute</span>
+							</label>
+						</div>
+				    	<div class="radio" >
+							<label><input type="radio"  name="widgetPositionType" value="flex" ng-model="dashboard.widgetPositionType" >   
+								<span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+								<span translate>dashboard_widget_position_type_flex</span>
+							</label>
+						</div>
+				    	<div class="radio" >
+							<label><input type="radio"  name="widgetPositionType" value="grid" ng-model="dashboard.widgetPositionType" >   
+								<span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+								<span translate>dashboard_widget_position_type_grid</span>
+							</label>
+						</div>
+   					</div>
+					<div ng-if='dashboard.widgetPositionType=="flex"'>
+						<div class='inline-control'>
+							<label class='main-label' translate>dashboard_widget_flex_direction</label>
+							<div class="radio" >
+								<label><input type="radio"  name="widgetFlexDirection" value="row" ng-model="dashboard.styles['flex-direction']" >   
+									<span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+									<span title="{{'dashboard_widget_flex_direction_row'|translate}}"><i class='fa fa-long-arrow-right'></i></span>
+								</label>
+								<label><input type="radio"  name="widgetFlexDirection" value="row-reverse" ng-model="dashboard.styles['flex-direction']" >   
+									<span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+									<span title="{{'dashboard_widget_flex_direction_row_reverse'|translate}}"><i class='fa fa-long-arrow-left'></i></span>
+								</label>
+								<label><input type="radio"  name="widgetFlexDirection" value="column" ng-model="dashboard.styles['flex-direction']" >   
+									<span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+									<span title="{{'dashboard_widget_flex_direction_column'|translate}}"><strong><i class='fa fa-long-arrow-down'></i></strong></span>
+								</label>
+								<label><input type="radio"  name="widgetFlexDirection" value="column-reverse" ng-model="dashboard.styles['flex-direction']" >   
+									<span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+									<span title="{{'dashboard_widget_flex_direction_column_reverse'|translate}}"><strong><i class='fa fa-long-arrow-up'></i></strong></span>
+								</label>
+								
+							</div>
+						</div>
+						<div class='inline-control'>
+							<label class='main-label' translate>dashboard_widget_flex_wrap</label>
+							<div class="radio" >
+								<label><input type="radio"  name="widgetFlexWrap" value="row" ng-model="dashboard.styles['flex-wrap']" >   
+									<span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+									<span title="{{'dashboard_widget_flex_wrap_no'|translate}}"><i class='fa fa-minus'></i></span>
+								</label>
+								<label><input type="radio"  name="widgetFlexWrap" value="row-reverse" ng-model="dashboard.styles['flex-wrap']" >   
+									<span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+									<span title="{{'dashboard_widget_flex_wrap_normal'|translate}}"><i class='fa fa-long-arrow-down'></i></span>
+								</label>
+								<label><input type="radio"  name="widgetFlexWrap" value="column" ng-model="dashboard.styles['flex-wrap']" >   
+									<span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+									<span title="{{'dashboard_widget_flex_wrap_inverse'|translate}}"><i class='fa fa-long-arrow-up'></i></span>
+								</label>
+							</div>
+						</div>
+						<div class='inline-control'>
+							<label class='main-label' translate>dashboard_widget_flex_align_content</label>
+							<div class="radio" >
+								<label><input type="radio"  name="widgetFlexAlignItems" value="flex-start" ng-model="dashboard.styles['align-content']" >   
+									<span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+									<span title="{{'dashboard_widget_flex_align_content_start_hint'|translate}}" translate>dashboard_widget_flex_align_content_start</span>
+								</label>
+								<label><input type="radio"  name="widgetFlexAlignItems" value="flex-end" ng-model="dashboard.styles['align-content']" >   
+									<span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+									<span title="{{'dashboard_widget_flex_align_content_end_hint'|translate}}" translate>dashboard_widget_flex_align_content_end</span>
+								</label>
+								<label><input type="radio"  name="widgetFlexAlignItems" value="flex-center" ng-model="dashboard.styles['align-content']" >   
+									<span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+									<span title="{{'dashboard_widget_flex_align_content_center_hint'|translate}}" translate>dashboard_widget_flex_align_content_center</span>
+								</label>
+								<label><input type="radio"  name="widgetFlexAlignItems" value="stretch" ng-model="dashboard.styles['align-content']" >   
+									<span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+									<span title="{{'dashboard_widget_flex_align_content_stretch_hint'|translate}}" translate>dashboard_widget_flex_align_content_stretch</span>
+								</label>
+								<label><input type="radio"  name="widgetFlexAlignItems" value="space-between" ng-model="dashboard.styles['align-content']" >   
+									<span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+									<span title="{{'dashboard_widget_flex_align_content_space_between_hint'|translate}}" translate>dashboard_widget_flex_align_content_space_between</span>
+								</label>
+							</div>
+						</div>						
+						<div class='inline-control'>
+							<label class='main-label' translate>dashboard_widget_flex_justify</label>
+							<div class="radio" >
+								<label><input type="radio"  name="widgetFlexJustify" value="flex-start" ng-model="dashboard.styles['justify-content']" >   
+									<span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+									<span title="{{'dashboard_widget_flex_justify_start'|translate}}"><i class='fa fa-align-left'></i></span>
+								</label>
+								<label><input type="radio"  name="widgetFlexJustify" value="flex-end" ng-model="dashboard.styles['justify-content']" >   
+									<span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+									<span title="{{'dashboard_widget_flex_justify_end'|translate}}"><i class='fa fa-align-right'></i></span>
+								</label>
+								<label><input type="radio"  name="widgetFlexJustify" value="flex-center" ng-model="dashboard.styles['justify-content']" >   
+									<span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+									<span title="{{'dashboard_widget_flex_justify_center'|translate}}"><i class='fa fa-align-center'></i></span>
+								</label>
+								<label><input type="radio"  name="widgetFlexJustify" value="flex-justify" ng-model="dashboard.styles['justify-content']" >   
+									<span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+									<span title="{{'dashboard_widget_flex_justify_justify'|translate}}"><i class='fa fa-align-justify'></i></span>
+								</label>
+							</div>
+						</div>
+						<div class='inline-control'>
+							<label class='main-label' translate>dashboard_widget_flex_align_items</label>
+							<div class="radio" >
+								<label><input type="radio"  name="widgetFlexAlignItems" value="flex-start" ng-model="dashboard.styles['align-items']" >   
+									<span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+									<span title="{{'dashboard_widget_flex_align_items_start'|translate}}"><i class='fa fa-align-left fa-rotate-90'></i></span>
+								</label>
+								<label><input type="radio"  name="widgetFlexAlignItems" value="flex-end" ng-model="dashboard.styles['align-items']" >   
+									<span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+									<span title="{{'dashboard_widget_flex_align_items_end'|translate}}"><i class='fa fa-align-right fa-rotate-90'></i></span>
+								</label>
+								<label><input type="radio"  name="widgetFlexAlignItems" value="flex-center" ng-model="dashboard.styles['align-items']" >   
+									<span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+									<span title="{{'dashboard_widget_flex_align_items_center'|translate}}"><i class='fa fa-align-center fa-rotate-90'></i></span>
+								</label>
+								<label><input type="radio"  name="widgetFlexAlignItems" value="stretch" ng-model="dashboard.styles['align-items']" >   
+									<span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+									<span title="{{'dashboard_widget_flex_align_items_stretch'|translate}}"><i class='fa fa-align-justify fa-rotate-90'></i></span>
+								</label>
+							</div>
+						</div>
+					</div>
+					<div ng-if='dashboard.widgetPositionType=="grid"'>
+						<div class="form-group  form-group-sm">
+							<div class='col-sm-12'>
+								<div class='inline-control'>
+									<div class="input-group">
+										<small class="input-group-addon" id="basic-addon1" translate >dashboard_grid_num_column</small>
+										<input type='number' class='form-control' ng-model="dashboard.grid.numColumn" placeholder="" ng-change='refreshGridPrevew()' />
+									</div>		
+									<div>&nbsp;</div>				
+									<div class="input-group">
+										<small class="input-group-addon" id="basic-addon2" translate >dashboard_grid_num_row</small>
+										<input type='number' class='form-control' ng-model="dashboard.grid.numRow" placeholder="" ng-change='refreshGridPrevew()'/>
+									</div>						
+								</div>
+							</div>
+						</div>
+						<div class="form-group  form-group-sm" ng-if='dashboard.grid.items'>
+							<div class='col-sm-8' >
+								<div class="btn-group input-group-sm" role="group" aria-label="group-ungroup" > 
+									<button type="button" class="btn btn-default  btn-sm btn-group-addon" translate>dashboard_grid_group_ungroup</button>
+									<button type="button" class="btn btn-default  btn-sm" ng-click='groupGridItems()' title="{{'dashboard_grid_group_hint'|translate}}">
+										<i class="fa fa-object-group" aria-hidden="true"></i>
+									</button>
+									<button type="button" class="btn btn-default  btn-sm" ng-click='ungroupGridItems()' title="{{'dashboard_grid_ungroup_hint'|translate}}">
+										<i class="fa fa-object-ungroup" aria-hidden="true"></i>
+									</button>
+								</div>
+							</div>
+							<div class='col-sm-4 text-right'>
+								<div class="btn-group input-group-sm" role="group" aria-label="group-ungroup" > 
+									<button type="button" class="btn btn-default  btn-sm btn-group-addon" translate>dashboard_grid_reset</button>
+									<button type="button" class="btn btn-default  btn-sm" ng-click='clearGroupGridItems()' title="{{'dashboard_grid_reset_hint'|translate}}">
+										<i class="fa fa-refresh" aria-hidden="true"></i>
+									</button>
+								</div>
+							</div>
+						</div>
+					
+						<div class='grid-layout-preview' ng-if='dashboard.grid.items'>
+							<div ng-repeat='(item_id, item) in dashboard.grid.items track by $index' id='{{item_id}}' 
+								class='grid-layout-preview-item {{gridItemStyle(item_id)}}' ng-click='selectGridItem(item_id)'>
+								{{item.label}}
+							</div>
+						</div>
+						<style>
+							{{gridPreviewStyle}}
+						</style>
+					</div>
+				</div>
+   				<div class='col-sm-4'>
+   					<small translate>dashboard_widget_position_type_help</small>
+   				</div>
+			</div>
+			<div class="form-group">
+  				<label for="dashboardBgcolor" class="col-sm-2 control-label" translate>dashboard_background_color</label>
+		   	 	<div class="col-sm-6">
+		   	 		<color-picker name='dashboardBgcolor' colorvalue='dashboard.styles["background-color"]'></color-picker>
+     			</div>
+   				<div class='col-sm-4'>
+   					<small translate>dashboard_background_color_help</small>
+   				</div>
+  			</div>
+			<div class="form-group">
+  				<label for="dashboardName" class="col-sm-2 control-label" translate>dashboard_fonts</label>
+		   	 	<div class="col-sm-6">
+		   	 		<div class='inline-control'>
+						<label class='main-label' translate>dashboard_font_title</label>
+						<!--<select class='form-control'></select> -->
+						<input type='text' class='form-control' ng-model="dashboard.fontTitleName" placeholder="{{'dashboard_font_title_placeholder'|translate}}"/>
+					</div>
+		   	 		<div class='inline-control'>
+						<label class='main-label' translate>dashboard_font_text</label>
+						<!--<select class='form-control'></select> -->
+						<input type='text' class='form-control' ng-model="dashboard.fontTextName" placeholder="{{'dashboard_font_text_placeholder'|translate}}"/>
+					</div>
+									
+     			</div>
+   				<div class='col-sm-4'>
+   					<small translate>dashboard_background_fonts_help</small><br>
+   					<a href='https://fonts.google.com/' target='_blank' style='color:#ff5252'>Google Fonts</a>
+   				</div>
+  			</div>
+		</form>
+	</div>
+	<div class="modal-footer">
+    	<button class="btn btn-link" type="button" ng-click="cancel()">Cancel</button>
+    	<button class="btn btn-default" type="button" ng-click="ok()">OK</button>
+	</div>
+</div>

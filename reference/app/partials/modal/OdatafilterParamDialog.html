@@ -1,0 +1,84 @@
+<div class="modal-header">
+	<h4 class="modal-title" translate>odatafilter_param_dialog_title</h4>
+</div>
+<div class="modal-body odatafilter-body">
+	<p><span translate>odataparam_param_dialog_intro</span></p>
+	<p><strong translate>odataparam_condition_intro</strong ></p>
+	<form class="form-inline odatafilter-form-newcondition">
+		<div class="form-group" ng-if='hasColumns'>
+ 			<label for="newConditionColumn" translate>odatafilter_column</label>
+			<div class="input-group">
+				<input type="text" class="form-control input-sm " id="newConditionColumn" placeholder="" ng-model='newCondition.column'  
+					uib-typeahead="column as column.name  for column in  getColumns($viewValue) | limitTo:8" typeahead-on-select='selectColumn($item, $model)'>
+					<span class="input-group-addon" id="basic-addon2"  title="{{columnsList}}" ><i class='fa fa-info'></i></span>
+			</div>
+		</div>
+		<div class="form-group" ng-if='!hasColumns'>
+ 			<label for="newConditionColumn" translate>odatafilter_column_name</label>
+			<input type="text" class="form-control input-sm " id="newConditionColumnName" placeholder="" ng-model='newCondition.column.name'>
+		</div>
+		<div class="form-group" ng-if='!hasColumns'>
+ 			<label for="newConditionColumn" translate>odatafilter_column_type</label>
+ 			<select class='form-control input-sm' id="newConditionColumnType" ng-model='newCondition.column.datatype' ng-change='selectColumn(newCondition.column)'>
+				<option>string</option> 				
+				<option>date</option> 				
+				<option>boolean</option> 				
+ 			</select>
+		</div>
+		<div class="form-group">
+ 			<label for="newConditionOperator" translate>odatafilter_operator</label>
+			<select ng-model="newCondition.operator" ng-options="operator.label for operator in operators track by operator.value" class='form-control input-sm '></select>
+			
+		</div>
+		<div class="form-group">
+ 			<label for="newConditionValue" translate>odatafilter_value</label>
+			<input ng-if="newCondition.column.dataType!='date'" type="text" class="form-control input-sm " id="newConditionValue" placeholder="" ng-model='newCondition.value' >
+			<input ng-if="newCondition.column.dataType=='date'" type="date" class="form-control input-sm " id="newConditionValue" placeholder="" ng-model='newCondition.value' >
+		</div>
+		<a href ng-if="newConditionGroup.length==0" ng-click='addNewCondition()' class="btn btn-default" translate>odatafilter_add_new_condition</a>
+		<a href ng-if="newConditionGroup.length>0" ng-click='addNewCondition("or")' class="btn btn-default" translate>odatafilter_add_new_condition_or</a>
+		<a href ng-if="newConditionGroup.length>0" ng-click='addNewCondition("and")' class="btn btn-default" translate>odatafilter_add_new_condition_and</a>
+	</form>
+	<p>&nbsp;</p>
+	<p><strong  translate>odataparam_current_group_intro</strong ></p>
+	<div ng-if="newConditionGroup.length==0">
+		<i class='mute' translate>odataparam_current_group_empty</i>
+	</div>
+	<div ng-if="newConditionGroup.length>0">
+		<div ng-repeat='condition in newConditionGroup track by $index'  class='odata-filter-condition-block'>
+			<div class='odata-filter-condition-item'>{{condition.condition.column.name}} {{condition.condition.operator.label}} {{condition.condition.value}}</div>
+			<div class='odata-filter-condition-logic odata-filter-condition-logic-{{condition.logic}}'  ng-if='!$last'>{{condition.logic}}</div>
+		</div>
+		<form class="form-inline text-right">
+			<a href ng-if="conditionGroups.length==0" ng-click='addNewGroup()' class="btn btn-default" translate>odatafilter_add_new_group</a>
+			<a href ng-if="conditionGroups.length>0" ng-click='addNewGroup("or")' class="btn btn-default" translate>odatafilter_add_new_group_or</a>
+			<a href ng-if="conditionGroups.length>0" ng-click='addNewGroup("and")' class="btn btn-default" translate>odatafilter_add_new_group_and</a>
+		</form>
+	</div>
+	<p><strong  translate>odataparam_group_intro</strong ></p>
+	<div ng-if="conditionGroups.length==0">
+		<i class='mute' translate>odataparam_group_empty</i>
+	</div>
+	<div class='odata-filter-group-block-panel'  ng-if="conditionGroups.length>0">
+	
+		<div ng-repeat='group in conditionGroups track by $index'  class='odata-filter-group-block'>
+			<div class='odata-filter-group-item'>
+				<div ng-repeat-start='condition in group.conditions track by $index'>
+					<div class='odata-filter-condition-item'>{{condition.condition.column.name}} {{condition.condition.operator.label}} {{condition.condition.value}}</div>
+				</div>
+				<div ng-repeat-end>
+					<div class='odata-filter-condition-logic odata-filter-condition-logic-{{condition.logic}}' ng-if='!$last'>{{condition.logic}}</div>
+				</div>
+			</div>
+			<div class='odata-filter-group-logic odata-filter-group-logic-{{group.logic}}'  ng-if='!$last'>{{group.logic}}</div>
+		</div>
+	</div>
+	<p><strong  translate>odataparam_odatafilter_intro</strong ></p>
+	<div class='odata-filter-raw-area'>
+		<textarea rows="3"  class="form-control" ng-model='odatafilter'></textarea>
+	</div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-link" type="button" ng-click="cancel()">Cancel</button>
+    <button class="btn btn-default" type="button" ng-click="ok()">OK</button>
+</div>
