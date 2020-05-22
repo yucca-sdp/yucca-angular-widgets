@@ -1,0 +1,48 @@
+
+<div class='container' id='top'>
+	<h1 class='clearfix'>
+		<span ng-bind-html="widget.name|translate"></span>
+		<span class='widget-features-panel pull-right' >
+			<i  ng-repeat='feature in widget.features track by $index'  class="widget-feature-icon" ng-class='featureStyle(feature)' aria-hidden="true" title={{feature}}></i>
+		</span>
+	</h1>
+	<section class='widget-section' >
+		<div class='clearfix' id="{{widget.name}}">
+			
+			<div class="advanced-widget-main-panel row">
+				<div class='widget-info-col col-sm-5 '>
+					<div class='widget-intro'>
+						<span ng-bind-html="widget.key+'_intro'|translate">{{widget.key}}</span>
+					</div>
+					<div class='widget-info'>
+						<ul class='list-unstyled widget-info-url-list'  >
+							<li><a href='{{widget.codeUrl}}' target='_blank'><i class='fa fa-github' ></i> <span translate>widget_reposotory_source</span> <i class='fa fa-external-link external-link-icon' ></i></a>
+							<li><a href='{{widget.storeUrl()}}' target='_blank'><i class='fa fa-table' ></i> <span translate>widget_yucca_data_source</span> <i class='fa fa-external-link external-link-icon' ></i></a>
+						</ul>
+					</div>
+					<div class='widget-code'>
+						<h4 translate>widget_code_dialog_title</h4>
+						<div class='widget-code-panel-content'>
+							<div class='prettyhtml' ng-bind-html="widgetCode""></div>
+						</div>
+					</div>
+				</div>
+				<div class='col-sm-7 widget-preview-col'>
+					<!-- <h4 translate>widget_the_widget</h4> -->
+					<div class='widget-preview-container advanced-widget-preview-container'>
+						<div bind-html-compile="getHtmlContent(widget)"></div>
+					</div>
+					<h4 translate>widget_preview_useddata</h4>
+					<div class='widget-preview-data-container advanced-widget-preview-data-container'>
+						<ng-yucca-dataset-dataexplorer-table tenantcode='{{widget.params.tenant_code.values}}' datasetcode='{{widget.params.dataset_code.values}}'/>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</section>
+</div>
+
+
+
+

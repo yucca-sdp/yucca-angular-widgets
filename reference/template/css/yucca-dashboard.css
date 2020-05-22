@@ -1,0 +1,29 @@
+*{font-family: sans-serif;}
+#yucca-dashboard .yucca-dashboard-component-card{background-color:#fff;;overflow: auto;}
+
+#yucca-dashboard .grid-panel{display: flex;}
+
+/* reset widget styles */
+#yucca-dashboard .yucca-widget  footer{display: none;}
+#yucca-dashboard .yucca-widget {width: 100%; height: 100%;box-shadow: none; background-color: #fff;}
+#yucca-dashboard .yucca-stream-tweet-stats-header,
+#yucca-dashboard .yucca-dataset-image-gallery-header,
+#yucca-dashboard .yucca-dataset-multidata-stats-header,
+#yucca-dashboard .yucca-stream-multistream-value-header,
+#yucca-dashboard .yucca-stream-monitor-header,
+#yucca-dashboard .yucca-dataset-multidata-treemap-header,
+#yucca-dashboard .yucca-dataset-treemap-header,
+#yucca-dashboard .yucca-stream-metadata-header,
+#yucca-dashboard .yucca-stream-last-message-header,
+#yucca-dashboard .yucca-stream-dataexplorer-header,
+#yucca-dashboard .yucca-stream-datamonitor-header,
+#yucca-dashboard .yucca-stream-multistream-stats-header,
+#yucca-dashboard .yucca-dataset-bullet-chart-header,
+#yucca-dashboard .yucca-dataset-sankey-header,
+#yucca-dashboard .yucca-dataset-population-pyramid-header,
+#yucca-dashboard .yucca-dataset-choropleth-map-header,
+#yucca-dashboard .yucca-dataset-forcedirected-header,
+#yucca-dashboard .yucca-dataset-dataexplorer-header{background-color: white; color: #000; border-bottom: solid 1px #ddd; font-weight: bold;}
+
+
+##DASHBOARD_CSS##

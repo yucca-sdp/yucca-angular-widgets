@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html lang="en" ng-app="YuccaReference" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" ng-app="YuccaReference" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" ng-app="YuccaReference" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" ng-app="YuccaReference" class="no-js"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>SmartData Reference Demo</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="lib/html5-boilerplate/dist/css/normalize.css">
+  <link rel="stylesheet" href="lib/nvd3/build/nv.d3.min.css">
+  <!--<link rel="stylesheet" type="text/css" href="lib/ng-prettyjson/dist/ng-prettyjson.min.css">-->
+  <!--<link rel="stylesheet" href="lib/angular-code-mirror/dist/css/angular-code-mirror.css"/>-->
+
+  <link rel="stylesheet" href="lib/leaflet/dist/leaflet.css">
+  <link rel="stylesheet" href="lib/html5-boilerplate/dist/css/main.css">
+  <link rel="stylesheet" href="lib/angular-bootstrap/ui-bootstrap-csp.css">
+  <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="lib/components-font-awesome/css/font-awesome.min.css">
+  <!-- <link rel="stylesheet" href="http://localhost:8001/style/angular-yucca.css">-->
+  <link rel="stylesheet" href="http://localhost:8001/style/yucca-widget-theme-minimal.css">
+  <link rel="stylesheet" href="css/app.css">
+  <script type="text/javascript" src="lib/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>
+   <link rel="shortcut icon" href="favicon.ico"/> 
+  
+</head>
+<body ng-controller='GlobalCtrl'>
+
+  <div class='instant-help-overlay' ng-click='toggleHelpIstant()' ng-if='help.istant' style='display: none' >
+  	<div class="instant-help-panel" help-instant-ref-id="composer-header-dashboard-tile">Qui crei la dashboard</div>
+  </div>	
+  <main-header></main-header>	
+  <!--[if lt IE 7]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+  <![endif]-->
+
+  <div ng-view class='main-container'></div>
+  <main-footer></main-footer>	
+
+  <!-- In production use:
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
+  -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.10.2/beautify-html.js"></script>
+
+  <script type="text/javascript" src="lib/stomp-websocket/lib/stomp.min.js"></script>
+  <script type="text/javascript" src="lib/d3/d3.js"></script>
+  <script type="text/javascript" src="lib/nvd3/build/nv.d3.min.js"></script>
+
+
+
+  <script type="text/javascript" src="lib/angular/angular.js"></script>
+  <script type="text/javascript" src="lib/angular-sanitize/angular-sanitize.min.js"></script>
+  <script type="text/javascript" src="lib/angular-local-storage/dist/angular-local-storage.min.js"></script>
+ 
+  <script type="text/javascript" src="lib/angular-route/angular-route.js"></script>
+  <!-- <script type="text/javascript" src="lib/angularjs-nvd3-directives/dist/angularjs-nvd3-directives.min.js"></script> -->
+  <script type="text/javascript" src="lib/angular-nvd3/dist/angular-nvd3.min.js"></script>
+  <script type="text/javascript" src="lib/leaflet/dist/leaflet.js"></script>
+  <script type="text/javascript" src="lib/angular-leaflet-directive/dist/angular-leaflet-directive.min.js"></script>
+  <script type="text/javascript" src="lib/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+  <!--<script type="text/javascript" src="lib/ng-prettyjson/dist/ng-prettyjson.min.js"></script>-->
+  <!--<script src="lib/angular-code-mirror/dist/angular-code-mirror.min.js"></script>-->
+
+  <script type="text/javascript" src="http://localhost:8001/js/yucca-constants.js"></script>
+  <script type="text/javascript" src="http://localhost:8001/js/yucca-plugin.js"></script>
+  <script type="text/javascript" src="http://localhost:8001/js/yucca-utils.js"></script>
+  <script type="text/javascript" src="http://localhost:8001/js/yucca-websocket-service.js"></script>
+  <script type="text/javascript" src="http://localhost:8001/js/yucca-services.js"></script>
+  <script type="text/javascript" src="http://localhost:8001/js/lib/treemap-directive.js"></script>
+  <script type="text/javascript" src="http://localhost:8001/js/lib/funnel-directive.js"></script>
+  <script type="text/javascript" src="http://localhost:8001/js/lib/sankey-directive.js"></script>
+  <script type="text/javascript" src="http://localhost:8001/js/lib/collapsibletree-directive.js"></script>
+  <script type="text/javascript" src="http://localhost:8001/js/lib/collapsibletreeboxes-directive.js"></script>
+  <script type="text/javascript" src="http://localhost:8001/js/lib/forcedirected-directive.js"></script>
+  <script type="text/javascript" src="http://localhost:8001/js/lib/simpleheat.js"></script>
+  
+  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-streams-tweet-stats.js"></script>
+  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-datasets-image-gallery.js"></script>
+  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-datasets-multidata-stats.js"></script>
+  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-streams-multistream-value.js"></script>
+  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-streams-last-value.js"></script>
+  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-streams-multistream-map.js"></script>
+  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-streams-monitor.js"></script>
+  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-streams-multistream-stats.js"></script>
+  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-datasets-multidata-treemap.js"></script>
+  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-datasets-bullet-chart.js"></script>
+<!--    <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-datasets-sankey-chart.js"></script>-->
+  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-datasets-population-pyramid.js"></script>
+
+  <script type="text/javascript" src="http://localhost:8001/js/widgets/basic/yucca-commons.js"></script>
+  
+  <script type="text/javascript" src="http://localhost:8001/js/widgets/controls/yucca-control-selects.js"></script>
+  <script type="text/javascript" src="http://localhost:8001/js/widgets/controls/yucca-control-filter.js"></script>
+  <script type="text/javascript" src="http://localhost:8001/js/widgets/controls/yucca-control-map-filter.js"></script>
+  
+  <script type="text/javascript" src="http://localhost:8001/js/widgets/basic/yucca-datasets-discretebar-chart.js"></script>
+  <script type="text/javascript" src="http://localhost:8001/js/widgets/basic/yucca-datasets-horizontalmultibar-chart.js"></script>
+  <script type="text/javascript" src="http://localhost:8001/js/widgets/basic/yucca-datasets-pie-chart.js"></script>
+  <script type="text/javascript" src="http://localhost:8001/js/widgets/basic/yucca-distribution-table.js"></script>
+  <script type="text/javascript" src="http://localhost:8001/js/widgets/basic/yucca-datasets-line-chart.js"></script>
+  <script type="text/javascript" src="http://localhost:8001/js/widgets/basic/yucca-datasets-multi-chart.js"></script>
+  <script type="text/javascript" src="http://localhost:8001/js/widgets/basic/yucca-datasets-multibar-chart.js"></script>
+  <script type="text/javascript" src="http://localhost:8001/js/widgets/basic/yucca-datasets-treemap-chart.js"></script>
+  <script type="text/javascript" src="http://localhost:8001/js/widgets/basic/yucca-datasets-collapsibletree-chart.js"></script>
+  <script type="text/javascript" src="http://localhost:8001/js/widgets/basic/yucca-datasets-collapsibletreeboxes-chart.js"></script>
+  <script type="text/javascript" src="http://localhost:8001/js/widgets/basic/yucca-datasets-sankey-chart.js"></script>
+  <script type="text/javascript" src="http://localhost:8001/js/widgets/basic/yucca-datasets-forcedirected-chart.js"></script>	  
+  <script type="text/javascript" src="http://localhost:8001/js/widgets/basic/yucca-datasets-dataexplorer-chart.js"></script>
+  <script type="text/javascript" src="http://localhost:8001/js/widgets/basic/yucca-datasets-singledata-chart.js"></script>
+  <script type="text/javascript" src="http://localhost:8001/js/widgets/basic/yucca-datasets-navigableexplorer-chart.js"></script>
+  <script type="text/javascript" src="http://localhost:8001/js/widgets/basic/yucca-datasets-choropleth-map-chart.js"></script>
+  <script type="text/javascript" src="http://localhost:8001/js/widgets/maps/yucca-datasets-choropleth-map.js"></script>
+  <script type="text/javascript" src="http://localhost:8001/js/widgets/basic/yucca-datasets-singlepercentage-chart.js"></script>
+  <script type="text/javascript" src="http://localhost:8001/js/widgets/basic/yucca-datasets-funnel-chart.js"></script>
+  <script type="text/javascript" src="http://localhost:8001/js/widgets/basic/yucca-datasets-boxplot-chart.js"></script>
+  <script type="text/javascript" src="http://localhost:8001/js/widgets/basic/yucca-datasets-heatmap-map-chart.js"></script>
+
+  
+  
+  <!-- 
+  <script type="text/javascript" src="lib/angular-sdp/sdp-plugin.js"></script>
+  <script type="text/javascript" src="lib/angular-sdp/sdp-constants.js"></script>
+  <script type="text/javascript" src="lib/angular-sdp/sdp-services.js"></script>
+  <script type="text/javascript" src="lib/angular-sdp/sdp-websocket-service.js"></script>
+  <script type="text/javascript" src="lib/angular-sdp/sdp-stream.js"></script>
+  <script type="text/javascript" src="lib/angular-sdp/sdp-streams-data-map.js"></script>
+  <script type="text/javascript" src="lib/angular-sdp/sdp-utils.js"></script>
+  -->
+  <script type="text/javascript" src="lib/angular-translate/angular-translate.min.js"></script>
+  <script type="text/javascript" src="lib/ngDraggable/ngDraggable.js"></script>
+  <script type="text/javascript" src="lib/angular-bind-html-compile/angular-bind-html-compile.min.js"></script>
+  <!--  <script type="text/javascript" src="lib/ng-file-upload/angular-file-upload-html5-shim.js"></script> -->
+  <script type="text/javascript" src="lib/ng-file-upload/ng-file-upload.js"></script>
+  <script type="text/javascript" src="lib/jszip/dist/jszip.min.js"></script>
+  <script type="text/javascript" src="lib/jszip-utils/dist/jszip-utils.min.js"></script>
+  
+
+  
+  <script type="text/javascript" src="js/i18n/strings_en.js"></script>
+  <script type="text/javascript" src="js/i18n/strings_it.js"></script>
+
+  
+  <script type="text/javascript" src="js/constants.js"></script>
+  <script type="text/javascript" src="js/utils.js"></script>
+  <script type="text/javascript" src="js/app.js"></script>
+  <script type="text/javascript" src="js/widgets/basic-dataset-widget.js"></script>
+  <script type="text/javascript" src="js/widgets/basic-geo-widget.js"></script>
+  <script type="text/javascript" src="js/widgets/basic-control-widget.js"></script>
+  <script type="text/javascript" src="js/widgets/basic-table-widget.js"></script>
+  <script type="text/javascript" src="js/widgets/advanced-widget.js"></script>
+  <script type="text/javascript" src="js/widgets/html-element-widget.js"></script>
+  <script type="text/javascript" src="js/widgets/widget.js"></script>
+  <script type="text/javascript" src="js/widgets/widget-demo.js"></script>
+  <script type="text/javascript" src="js/service/service.js"></script>
+  <script type="text/javascript" src="js/composer/ComposerController.js"></script>
+  <script type="text/javascript" src="js/composer/ComposerDirective.js"></script>
+
+<!-- <script type="text/javascript" src="modules/stream/stream.js"></script> -->
+<!-- <script type="text/javascript" src="modules/dataset/dataset.js"></script> -->
+  <script src="lib/google-code-prettify/bin/run_prettify.min.js"></script>
+  
+  
+  <!--script src="https://cdnjs.cloudflare.com/ajax/libs/webfont/1.6.28/webfontloader.js"></script -->
+
+</body>
+</html>

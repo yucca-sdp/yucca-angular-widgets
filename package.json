@@ -1,0 +1,43 @@
+{
+  "name": "yucca-angular-widgets",
+  "version": "0.0.1",
+  "description": "Widget for using yucca smartdataplatoform",
+  "main": "dist/angular-yucca.min.js",
+  "scripts": {
+    "reference" : "ws -p 8000 --directory reference/app",
+	"widgets" : "ws -p 8001 --directory angular-yucca/src",
+	"test" :  "ws -p 8002 --directory reference/test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/csipiemonte/yucca-angular-widgets"
+  },
+  "keywords": [
+    "Big Data",
+    "Smartdatanet",
+    "CSI Piemonte",
+    "Yucca",
+    "Stream",
+    "Dataset"
+  ],
+  "author": "Csi Piemonte",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/csipiemonte/yucca-angular-widgets/issues"
+  },
+  "homepage": "https://github.com/csipiemonte/yucca-angular-widgets",
+  "dependencies": {
+    "angular": "^1.x",
+    "angular-nvd3": "1.0.7",
+    "angular-leaflet-directive": "0.10.0",
+    "angular-sanitize": "^1.5.5"
+  },
+  "devDependencies": {
+    "gulp": "~3.9.1",
+    "gulp-uglify": "~1.5.3",
+    "gulp-concat": "2.6.0",
+    "gulp-rename": "1.2.2",
+    "gulp-bower": "0.0.13",
+    "gulp-zip": "~3.2.0"
+  }
+}

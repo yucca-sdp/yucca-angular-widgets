@@ -1,0 +1,38 @@
+<div class='' id='widgets-content'>
+	<!--<div id='left-sidebar' class='sidebar'>
+		<div class='sidemenu-item'><a class='sidemenu-item-label'>Intro</a></div>
+		<div ng-repeat='(section_key, section_items) in widgets track by $index'>
+			<div class='sidemenu-item'><a href='#{{section_key}}'class='sidemenu-item-label'>{{'components_section_' + section_key|translate}}</a></div>
+		</div>
+			
+	</div>-->
+	<div class='container' id='widgets-main-content'>
+		<h2>{{'components_section_advanced' |translate}}</h2>
+		<p class='intro'>
+			<span ng-bind-html='"advanced_widget_intro"|translate'></span>
+		</p>
+
+		<div class='widgets-toolbar'>
+			<section ng-repeat='(section_key, section_items) in widgets track by $index' class='widget-section'>
+				<div class=widget-section-content>
+					<div class='widget-menu-item' ng-repeat="widget in section_items track by $index"  >
+			  			<div class="widget-menu-item-content"  ng-click="chooseAdvancedWidget(widget.key)">
+					        <div ng-class='selectedWidgetIndex == widget.index?"active":""' class="clearfix widget-menu-item-title"  >
+					          <div ng-bind-html="widget.name|translate|string_ellipse:20" class='pull-left' title="{{widget.key|translate}}" ></div>
+					        </div>
+					        <div class='widget-menu-item-preview-panel'>
+					        	<img class="img-responsive" src="./images/widgets/{{widget.key}}.png" />
+					        </div>
+						</div>
+			      	</div>
+			      </div>
+			</section>
+	
+	    </div>
+    </div>
+
+</div>
+
+
+
+

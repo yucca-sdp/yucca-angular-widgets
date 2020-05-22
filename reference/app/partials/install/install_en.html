@@ -1,0 +1,145 @@
+<h1>Getting started</h1>
+<h2>Installazione</h2>
+<div class='panel-indent-left'>
+		Is possible download the library through <strong><a href='http://bower.io/' target='_blank'>Bower</a></strong>, 
+		or directly from <strong><a href='https://github.com/csipiemonte/yucca-angular-widgets/tree/master/' target='_blank' >Github</a></strong>,or use this <strong>
+	<a href='https://github.com/csipiemonte/yucca-angular-widgets/raw/master/yuccaAngularWidgetSeed.zip' target='_blank'>minimal seed project</a></strong> that contains all the javascript libraries and an html page with two sample widget</strong>
+	<div class='row panel-install'>
+		<div class='col-sm-6 panel-bower-install'>
+			<div class='logo-bower'></div>
+			<h3>Installation through Bower</h3>
+			<div class='panel-help'>
+				<i class="fa fa-lightbulb-o tip-icon" aria-hidden="true"></i> You don't know <strong>Bower</strong>?  Discover how to use it
+				<i class="fa fa-caret-right caret-icon" aria-hidden="true" ng-show="!showBowerInstall" ng-init="showBowerInstall=false" ng-click="showBowerInstall=true;"></i>
+				<i class="fa fa-caret-down caret-icon" aria-hidden="true" ng-show="showBowerInstall" ng-click="showBowerInstall=false;"></i>
+				
+				<div class='help-content' ng-show="showBowerInstall">
+					<p><strong><a href='http://bower.io/' target='_blank'>Bower</a></strong> is a tool that lets you download the frontend resources 
+						for html / javascript projects saving them directly into the project. Bower working through the console of  <strong>NodeJS</strong> and use <strong>Git</strong> for download the sources</p>
+				
+					<p><strong>Installation</strong></p>
+					<ol>
+					 	<li>Download and install<strong><a target='_blank' href='https://nodejs.org/en/'>NodeJS</a></strong></li>
+					 	<li>Download and install the <strong><a target='_blank' href='https://git-scm.com/'>Git client</a></strong></li>
+					 	<li>Open the command prompt of  NodeJS and install Bowetr running the command <pre><code>npm install -g bower</code></pre></li>
+					 	<li>To install the project resource use the command prompt of NodeJS and run <pre><code>bower install <i>nome_libreria</i></code></pre> from the root of the project</li>
+					</ol>
+				</div>
+			</div>
+			
+			<pre><code>$ bower install yucca-angular-widgets</code></pre>
+			<p>Bower automatically install all the dependencies . If it won't for some reason, install it manually: </p>
+			
+				
+<pre><code>$ bower install angular
+$ bower install stomp-websocket
+$ bower install d3
+$ bower install nvd3
+$ bower install angular-nvd3
+$ bower install angular-leaflet-directive</code></pre>
+		</div>
+		<div class='col-sm-6 panel-github-install'>
+			<div class='logo-github'></div>
+			<h3>Installation  through download from Github</h3>
+			
+			Start now to use the widget with this , extract the files in a folder exposed by a web server and get access via http
+			<div class='panel-feature'>
+				<i class="fa fa-rocket tip-icon" aria-hidden="true"></i>Start now to use the widget with this
+				<strong><a href='https://github.com/csipiemonte/yucca-angular-widgets/raw/master/yuccaAngularWidgetSeed.zip' target='_blank'>minimal project</a></strong>, 
+				extract the files in a folder <strong>exposed by a web server</strong> and get access via http
+				<div class='text-center'> 
+					<a href='https://github.com/csipiemonte/yucca-angular-widgets/raw/master/yuccaAngularWidgetSeed.zip' class='btn btn-default btn-action'target='_blank'><i class="fa fa-download" aria-hidden="true"></i> Download the project</a>
+				</div> 
+			</div>
+			<hr>
+			Or alternatively you can download the library of widgets from the url
+			<p>
+				<a href='https://github.com/csipiemonte/yucca-angular-widgets/tree/master/' target='_blank' >
+				https://github.com/csipiemonte/yucca-angular-widgets/tree/master/
+				</a>
+			</p>
+			<p>and install all the dependencies</p>
+			<table class='table table-condensed install-table-dependencies'>
+				<thead><tr><th>Library</th><th>Download url</th><th>Detail</th></tr></thead>
+				<tbody>
+					<tr><td>AngularJS</td><td><a href='https://code.angularjs.org/1.5.5/angular.js' target='_blank'>https://code.angularjs.org/1.5.5/angular.js</a></td><td>There is also the minimized version</td></tr>
+					<tr><td>Angular Sanitaze</td><td><a href='https://code.angularjs.org/1.5.5/angular-sanitize.js' target='_blank'>https://code.angularjs.org/1.5.5/angular-sanitize.js</a></td><td>There is also the minimized version</td></tr>
+					<tr><td>Stomp Websocket</td><td><a href='https://github.com/jmesnil/stomp-websocket' target='_blank'>https://github.com/jmesnil/stomp-websocket</a></td><td>The file are in the folder <strong>lib/</strong><td></tr>
+					<tr><td>D3.js</td><td><a href='https://github.com/d3/d3/releases' target='_blank'>https://github.com/d3/d3</a></td><td>Choose the lastest release<td></tr>
+					<tr><td>Nvd3</td><td><a href='https://github.com/novus/nvd3' target='_blank'>https://github.com/novus/nvd3</a></td><td>The file are in the folder <strong>build/</strong></td></tr>
+					<tr><td>Nvd3 angular directive</td><td><a href='https://github.com/krispo/angular-nvd3' target='_blank'>https://github.com/krispo/angular-nvd3</a></td><td>The file are in the folder <strong>dist/</strong></td></tr>
+					<tr><td>Leaflet</td><td><a href='https://github.com/Leaflet/Leaflet/releases' target='_blank'>https://github.com/Leaflet/Leaflet</a></td><td>Choose the latest release, The file are in the folder <strong>dist/</strong></td></tr>
+					<tr><td>Leaflet angular directive</td><td><a href='https://github.com/tombatossals/angular-leaflet-directive' target='_blank'>https://github.com/tombatossals/angular-leaflet-directive</a></td><td>The file are in the folder <strong>dist/</strong></td></tr>
+				</tbody>
+				
+			</table>
+		</div>
+	</div>
+</div>
+<h2>Adding dependency</h2>
+<div class='panel-indent-left'>
+	<p>
+		In the section
+		<code>
+			<strong>head</strong>
+		</code>
+		of the main site of tour portal, add
+	</p>
+<pre class="prettyprint "><code class="language-html">&lt;meta charset=&quot;utf-8&quot;&gt;  &lt;!-- it&#39;s important for d3.js --&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;bower_components/nvd3/build/nv.d3.min.css&quot;&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;bower_components/leaflet/dist/leaflet.css&quot;&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;bower_components/yucca-angular-widgets/dist/style/angular-yucca.css&quot;&gt;
+
+&lt;script type=&quot;text/javascript&quot; src=&quot;bower_components/d3/d3.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;bower_components/nvd3/build/nv.d3.min.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;bower_components/leaflet/dist/leaflet.js&quot;&gt;&lt;/script&gt;
+
+&lt;script type=&quot;text/javascript&quot; src=&quot;bower_components/angular/angular.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;bower_components/angular-sanitize/angular-sanitize.min.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;bower_components/angular-nvd3/dist/angular-nvd3.min.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;bower_components/stomp-websocket/lib/stomp.min.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;bower_components/angular-leaflet-directive/dist/angular-leaflet-directive.min.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;bower_components/yucca-angular-widgets/dist/js/angular-yucca.js&quot;&gt;&lt;/script&gt; </code></pre>
+
+</div>
+<h2>Use</h2>
+<div class='panel-indent-left'>
+	<p>
+		Add the modules
+		<code>
+		<strong>yucca.plugin</strong>
+		</code> and 
+		<code>
+		<strong>ngSanitize</strong> 
+		</code>
+		in your angular module
+	</p>
+<pre class="prettyprint "><code>angular.module('myApp', ['yucca.plugin']).controller('myCtrl', function($scope){
+	//...  You  eventual business logic
+})</code></pre>
+	<p>
+		In the 
+		<code>
+		<strong>html</strong>
+		</code> file you can use directlu the widgets
+	</p>
+<pre class="prettyprint "><code>&lt;div ng-app=&quot;myApp&quot;&gt;
+  &lt;div ng-controller=&quot;myCtrl&quot;&gt;
+    &hellip;
+    &lt;ng-yucca-dataset-image-gallery tenant_code=&#39;sandbox&#39; dataset_code=&#39;Fotoagro_576&#39;  /&gt;
+    &hellip;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+
+	<div class='panel-tip'><i class="fa fa-lightbulb-o tip-icon" aria-hidden="true"></i> 
+	You can use the widgets even if the sites <strong>do not use AngularJS</strong>: the panel that contain the widgetbecomes a mini app AngularJS.<br><strong>Download this
+	<a href='https://github.com/csipiemonte/yucca-angular-widgets/raw/master/yuccaAngularWidgetSeed.zip' target='_blank'>minimal seed project</a></strong>
+	</div>
+
+</div>
+<div class='example-section'>
+	<h2>Example</h2>
+	<div class='text-center'>
+		<a class="btn btn-default  btn-arrow-right" href="#/widget" role="button">Discover all the widgets</a>
+	</div>
+</div>

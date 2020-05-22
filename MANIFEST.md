@@ -1,0 +1,9 @@
+name,version
+angular,1.x
+angular-leaflet-directive,0.10.0
+angular-nvd3,1.0.7
+angular-sanitize,1.x
+d3,3.x
+leaflet,0.7.x
+nvd3,1.7.1
+stomp-websocket,2.3.2

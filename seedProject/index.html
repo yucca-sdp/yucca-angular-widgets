@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> 
+<html lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>SmartData Reference Essential Demo</title>
+	<meta charset="utf-8">  <!-- it's important for d3.js -->
+	<link rel="stylesheet" href="lib/nvd3/build/nv.d3.min.css">
+	<link rel="stylesheet" href="lib/leaflet/dist/leaflet.css">
+	<link rel="stylesheet" href="lib/yucca-angular-widgets/dist/style/angular-yucca.css">
+
+
+	<script type="text/javascript" src="lib/d3/d3.js"></script>
+	<script type="text/javascript" src="lib/nvd3/build/nv.d3.min.js"></script>
+	<script type="text/javascript" src="lib/leaflet/dist/leaflet.js"></script>
+
+
+	<script type="text/javascript" src="lib/angular/angular.js"></script>
+	<script type="text/javascript" src="lib/angular-sanitize/angular-sanitize.min.js"></script>
+	<script type="text/javascript" src="lib/angular-nvd3/dist/angular-nvd3.js"></script>
+	<script type="text/javascript" src="lib/stomp-websocket/lib/stomp.min.js"></script>
+	<script type="text/javascript" src="lib/angular-leaflet-directive/dist/angular-leaflet-directive.min.js"></script>
+	<script type="text/javascript" src="lib/yucca-angular-widgets/dist/js/angular-yucca.js"></script> 
+
+	<style>
+		body{font-family: sans-serif; font-size: 14px; margin: 0;}
+		.header{background-color: #f7f7f7; padding: 24px; border-bottom: solid 1px #1dbbee; clear: both; overflow:  hidden;}
+		.header h1{float: left;}
+		.header a{display: inline block; float: right; color: #333; text-decoration: none;  margin: 24px;}
+		.header a:hover{color: #1dbbee;}
+		.content{margin: 24px; }
+		.widget-container{float: left; margin: 24px 48px;}
+	</style>
+	
+	<script type="text/javascript"> 
+		angular.module('myApp', ['yucca.plugin', 'ngSanitize']).controller('myCtrl', function($scope){
+			$scope.tenant_code = 'csp';
+			$scope.stream_code = 'H';
+			$scope.smartobject_code = 'a3de712d-6801-5cc4-84b6-a10bd830469d';
+		})
+	</script>
+  
+</head>
+<body>
+	<header class='header'>
+		<h1>Widget in a non AngularJS website</h1>
+		<a href='https://www.smartdatanet.it/' target='_blank'>Smartdatanet.it</a>
+		<a href='https://userportal.smartdatanet.it/reference/#/widget' target='_blank'>Documentation</a>
+	</header>
+	<div ng-app="myApp" class='content'>
+		<div ng-controller="myCtrl">
+			<div class='widget-container'>
+				<h4>Example 1: Last Value Widget</h4>
+				<p>The attribute of the widget are set from javascript<p>
+				<ng-yucca-stream-last-value tenant_code='{{tenant_code}}' stream_code='{{stream_code}}' smartobject_code='{{smartobject_code}}' chart_color='#aa00ff' />
+			</div>
+			
+			<div class='widget-container'>
+				<h4>Example 2: Last Value Widget</h4>
+				<p>The attribute of the widget are directly write in the html<p>
+				<ng-yucca-stream-tweet-stats  widget_title='Tweet con #'  tenant_code='smartlab'  stream_code='raspberry'  smartobject_code='ClaudioTweet' />
+			</div>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<div class='container'>
+	<div class='widget-panel row'>
+		<div class='widget-intro-panel col-sm-4'>
+			<h1><span translate>{{widget.key}}</span></h1>
+			<div class='help-widget-intro' ng-bind-html='"help_intro_"+widget.key|translate'></div>
+			<h2 translate>help_datasource</h2>
+			<div ng-bind-html='"help_datasource_"+widget.key|translate'></div>
+			<h2 translate>help_listen_events</h2>
+			<div ng-bind-html='"help_listen_events_"+widget.key|translate'></div>
+			<h2 translate>help_sent_events</h2>
+			<div ng-bind-html='"help_sent_events_"+widget.key|translate'></div>
+			<h2 translate>help_related_widget</h2>
+			<div ng-bind-html='"help_related_widget_"+widget.key|translate'></div>
+		</div>
+		<div class='widget-view-panel col-sm-8' ng-if="widget.params.mandatory.datasetcode.values">
+			<h1 class='text-right' title='{{"widget_demo_intro"|translate}}'><small translate>widget_demo_title</small></h1>
+			<!-- <p translate>widget_demo_intro</p>-->
+			<div class='widget-view-panel-row'>
+				<div class='widget-code-panel'>
+					<h2><span translate>widget_code_title</span></h2>
+					<div class='prettyhtml' ng-bind-html='widgetCode()' title="{{widgetCodeRaw}}"></div>
+				</div>
+				<div class='widget-preview-panel widget-demo-panel' >
+				 	<div bind-html-compile="getHtmlContent()" ng-if='showWidget'></div>
+				</div>
+			</div>
+			<div class='widget-view-panel-row'>
+				<div class='widget-metadata-panel'>
+					<h2><span translate>widget_metadata_title</span></h2>
+					<table class='table table-condensed'>
+						<thead>
+							<th translate>widget_metadata_column_name</th>
+							<th translate>widget_metadata_column_alias</th>
+							<th translate>widget_metadata_column_type</th>
+						</thead>
+						<tbody>
+							<tr ng-repeat='col in datasetMetadata.components track by $index'>
+								<td class='nowrap' title='{{col.name}}'>{{col.name|string_ellipse: 12}}</td>
+								<td class='nowrap' title='{{col.alias}}'>{{col.alias|string_ellipse: 12}}</td>
+								<td title='{{col.datatype}}'><span class='datatype' >{{col.datatype|datatype}}</span></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class='widget-data-panel'>
+					<h2><span translate>widget_data_title</span></h2>
+					<div class='table-data-container'>
+						<ng-yucca-dataset-dataexplorer-table hellip='12'
+							tenantcode='{{widget.params.mandatory.tenantcode.values}}' 
+							datasetcode='{{widget.params.mandatory.datasetcode.values}}' 
+							usertoken='{{widget.params.advanced.usertoken.values}}' />
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<p>&nbsp;</p>
+</div>

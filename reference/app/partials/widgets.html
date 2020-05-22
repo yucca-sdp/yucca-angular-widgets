@@ -1,0 +1,54 @@
+<div class='' id='widgets-content'>
+	<!--<div id='left-sidebar' class='sidebar'>
+		<div class='sidemenu-item'><a class='sidemenu-item-label'>Intro</a></div>
+		<div ng-repeat='(section_key, section_items) in widgets track by $index'>
+			<div class='sidemenu-item'><a href='#{{section_key}}'class='sidemenu-item-label'>{{'components_section_' + section_key|translate}}</a></div>
+		</div>
+			
+	</div>-->
+	<div class='container' id='widgets-main-content'>
+		<h2>Widget</h2>
+		<p class='intro'>
+			<span ng-bind-html='"widget_intro"|translate'></span>
+		</p>
+
+		<div class='widgets-toolbar'>
+			<section ng-repeat='(section_key, section_items) in widgets track by $index' class='widget-section' ng-if='section_key != "htmlelement" '>
+				<h3 class='section-title' id='{{section_key}}'>{{'components_section_' + section_key|translate}}</h3>
+				<div class=widget-section-content>
+					<div class='widget-menu-item' ng-repeat="widget in section_items track by $index"  >
+			  			<div class="widget-menu-item-content"  >
+					        <div ng-class='selectedWidgetIndex == widget.index?"active":""' class="clearfix widget-menu-item-title"  >
+					          <div ng-bind-html="widget.key|translate|string_ellipse:18" class='pull-left' title="{{widget.key|translate}}" ng-click="chooseWidget(section_key,widget.key)"></div>
+					          <div class='pull-right'>
+					          	<!-- <i  ng-repeat='feature in widget.features track by $index'  class="widget-feature-icon" ng-class='featureStyle(feature)' aria-hidden="true" title={{feature}}></i> -->
+								<a href class='help-icon' ng-click='openWidgetHelp(widget.key)'><i class="fa fa-question-circle" aria-hidden="true"></i></a> 
+					          </div>
+					        </div>
+					        <div class='widget-menu-item-preview-panel' ng-click="chooseWidget(section_key,widget.key)">
+				  				<div ng-if='widget.badge' class='widget_badge widget_badge_{{widget.badge}}' title="{{'widget_badge_'+widget.badge + '_hint'|translate}}" > {{'widget_badge_'+widget.badge|translate}}</div>
+					        	<img class="img-responsive" src="./images/widgets/{{widget.key}}.png" />
+					        </div>
+					        <div  class='widget-menu-item-info-panel'ng-click="chooseWidget(section_key,widget.key)">
+								<div class='intro' ng-bind-html="'help_intro_'+widget.key|translate| limitTo: 240 ">{{widget.key}}</div>
+								<div>&hellip;</div>
+							</div>
+						</div>
+			    
+						<!-- <div ng-if='accordions.widget[section_key]'>
+							<div class='composer-menu-item' ng-repeat='w in section_items track by $index' ng-drag="true" ng-drag-data="w" ng-drag-start='dragdrop.isDragging=true'>
+								<span translate class='composer-menu-item-label'>{{w.key}}</span>
+								
+							</div>
+						</div>-->
+			      	</div>
+			      </div>
+			</section>
+	
+	    </div>
+    </div>
+</div>
+
+
+
+

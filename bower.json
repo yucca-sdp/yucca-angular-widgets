@@ -1,0 +1,31 @@
+{
+  "name": "yucca-angular-widgets",
+  "homepage": "http://csipiemonte.github.io/yucca-angular-widgets/",
+  "authors": [
+    "afranceschetti <alessandro.franceschetti@csi.it>"
+  ],
+  "description": "Widget for using yucca smartdataplatoform",
+  "main": "dist/angular-yucca.min.js",
+  "moduleType": [],
+  "keywords": [
+    "Big Data",
+	"Smartdatanet",
+	"CSI Piemonte",
+	"Yucca",
+	"Stream",
+	"Dataset"
+  ],
+  "license": "MIT",
+  "ignore": [
+   "*", 
+   "!dist/*"
+	
+  ],
+  "dependencies": {
+		"angular": "^1.x",
+	    "angular-nvd3":"1.0.7",
+	    "angular-leaflet-directive": "0.10.0",
+	    "stomp-websocket":"2.3.2",
+	    "angular-sanitize": "^1.5.5"
+  }
+}

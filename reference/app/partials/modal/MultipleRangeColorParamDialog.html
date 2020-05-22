@@ -1,0 +1,28 @@
+<div class="modal-header">
+    <h4 class="modal-title" translate>multiple_color_param_dialog_title</h4>
+</div>
+<div class="modal-body multipleparams_body">
+	<p><span translate>multiple_param_dialog_intro</span> <strong >{{'param_'+p.name|translate}}</strong></p>
+	<form class="form-inline multipleparams_form">
+		<div class="form-group">
+  				<label for="multipleparamValueInputColor" translate class="ng-hide">multiple_color_param_value</label>
+			<color-picker colorvalue='newValue.color'/>
+		</div>
+		<div class="form-group">
+  				<label for="multipleparamValueInputLimit" translate>multiple_color_limit_param_value</label>
+			<input type='number' class='form-control' ng-model='newValue.limit'/>
+		</div>
+		<button type="submit" class="btn btn-default" translate ng-click='addValue(newValue)'>multiple_param_add</button>
+	</form>
+	<div class='multipleparams_rows'>
+		<div class='multipleparams_row' ng-repeat='v in newValues track by $index'>
+			<div class='multipleparams_row_color_preview' style='background-color: {{v.color}}'>&nbsp;</div>
+			<div class='multipleparams_row_value'>&lt; {{v.limit}}</div>
+			<a class='multipleparams_row_deletebutton' href ng-click='removeValue($index)'><i class='fa fa-trash'></i></a>
+		</div>
+	</div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-link" type="button" ng-click="cancel()">Cancel</button>
+    <button class="btn btn-default" type="button" ng-click="ok()">OK</button>
+</div>

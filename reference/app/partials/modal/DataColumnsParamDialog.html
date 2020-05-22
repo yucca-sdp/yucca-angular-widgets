@@ -1,0 +1,92 @@
+<div class="modal-header">
+    <h4 class="modal-title" translate>dataexplorer_datacolumns_modal_title</h4>
+</div>
+<div class="modal-body">
+	<div class='inline-feedback-info' ng-if='columns.length==0'>
+		<i class='fa fa-info'></i> <span translate >dataexplorer_datacolumns_no_dataset_message</span>
+	</div>
+	<div  ng-if='columns.length>0'>
+		<div class='text-right'><a href ng-click='loadColumns()' class='btn'><i class='fa fa-refresh'></i> <span translate>reload_columns</span></a></div>
+
+		<form class="form-horizontal  form-datacolumns-dialog">
+			<div class="form-group">
+				<label class="col-sm-2 control-label text-left" translate>param_config_column_key</label>    
+				<label class="col-sm-2 control-label text-left" translate>param_config_column_label</label>    
+				<label class="col-sm-1 control-label text-left" translate>param_column_hide</label>    
+				<label class="col-sm-2 control-label text-left" translate>param_column_format_number</label>   
+				<label class="col-sm-2 control-label text-left" translate>param_column_format_date</label>    
+				<label class="col-sm-2 control-label text-left" translate>param_column_filter</label>   
+			</div>
+			<div class="form-group" ng-repeat="c in columns track by $index" ng-class='{"form-row-disabled":c.skip.table && c.skip.detail}'>
+				<label class="col-sm-2 control-label">{{c.name}}</label>    
+				<div class="col-sm-2">
+	      			<input type="text" class="form-control input-sm"  ng-model='c.label' ng-disabled="c.skip.table && c.skip.detail">
+		    	</div>
+				<div class="col-sm-1">
+					<div class='inline-control'>
+						<div class="checkbox nowrap"  title="{{'param_column_skip_table'|translate}}">
+							<label><input type="checkbox" ng-model="c.skip.table" >   
+								<span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+								<span><i class='fa fa-table'></i></span>
+							</label>
+						</div>&nbsp;
+						<div class="checkbox nowrap" title="{{'param_column_skip_detail'|translate}}">
+							<label><input type="checkbox" ng-model="c.skip.detail"  >   
+								<span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+								<span><i class='fa fa-file-o'></i></span>
+							</label>
+						</div>
+					</div>
+		    	</div>
+				<div class="col-sm-2">
+					<div class='inline-control'>
+						<div class="checkbox nowrap" title="{{'param_euro_value'|translate}}">
+							<label><input type="checkbox" ng-model="c.euroValue"  >   
+								<span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+								<span><i class='fa fa fa-euro'></i></span>
+							</label>
+						</div>&nbsp;
+						<div class="checkbox nowrap" title="{{'param_format_big_number'|translate}}">
+							<label><input type="checkbox" ng-model="c.formatBigNumber"  >   
+								<span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+								<span><i class='fa fa-compress'></i></span>
+							</label>
+						</div>&nbsp;
+			    		<div class="input-group" title='{{"param_decimal_value"|translate}}' >
+			    			<input type="number" min='0' class="form-control input-sm" placeholder='{{"param_decimal_value"|translate}}' ng-model='c.decimalValue' ng-disabled="c.euroValue">
+						</div>
+					</div>
+		    	</div>
+		    	<div class="col-sm-2 text-right">
+		    		<div ng-if='c.datatype=="string"'>
+		    			<div class='inline-control inline-control-preview'>
+				    		<i class='mute nowrap' title="Very long text">Very long&hellip;</i>&nbsp;&nbsp;<span translate title="{{'help_inline_dataexplorer_hellip'|translate}}">param_hellip_text</span>
+				    		&nbsp;<input type="number" min='0' class="form-control input-sm" ng-model='c.hellip'>
+						</div>
+		    		</div>
+		    		<div ng-if='c.datatype=="dateTime"'>
+			    		<i class='mute'>{{dateFormatPreview($index)}}</i>&nbsp;&nbsp;
+			    		<a href ng-click='chooseDateFormat($index)' title="{{'date_format_choose'|translate}}"><i class='fa fa-pencil'></i></a>
+		    		</div>
+		    	</div>
+				<div class="col-sm-2">
+					<div class='inline-control'>
+						<div class="checkbox nowrap" title="{{'param_dataexplorer_filter_value'|translate}}">
+							<label><input type="checkbox" ng-model="c.filter.show"  >   
+								<span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+								<span><i class='fa fa fa-filter'></i></span>
+							</label>
+						</div>&nbsp;
+			    		<div class="input-group" title='{{"param_label"|translate}}' >
+			    			<input type="text"class="form-control input-sm" placeholder='{{"param_label"|translate}}' ng-model='c.filter.label' ng-disabled="!c.filter.show">
+						</div>
+					</div>
+		    	</div>
+		  	</div>
+	     </form>
+	 </div>
+</div>
+<div class="modal-footer">
+	<button class="btn btn-link" type="button" ng-click="cancel()">Cancel</button>
+	<button class="btn btn-default" type="button" ng-click="ok()">OK</button>
+</div>

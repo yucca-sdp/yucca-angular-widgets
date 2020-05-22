@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> 
+<html lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Yucca Dashboard</title>
+	<meta charset="utf-8">  <!-- it's important for d3.js -->
+	<link rel="stylesheet" href="lib/nvd3/build/nv.d3.min.css">
+	<link rel="stylesheet" href="lib/leaflet/dist/leaflet.css">
+	<link rel="stylesheet" href="lib/yucca-angular-widgets/dist/style/yucca-widget-theme-minimal.css">
+
+	<link rel="stylesheet" href="css/yucca-dashboard.css">
+
+  
+</head>
+<body>
+	<div ng-app="yuccaDashboardApp" class='content' ng-controller='yuccaDashboardCtrl'>
+		<h2 id='yucca-dashboard-title'>{{dashboardTitle}}</h2>
+		<div id='yucca-dashboard'>
+##DASHBOARD_HTML##
+		</div>
+	</div>
+	<script type="text/javascript" src="lib/d3/d3.js"></script>
+	<script type="text/javascript" src="lib/nvd3/build/nv.d3.min.js"></script>
+	<script type="text/javascript" src="lib/leaflet/dist/leaflet.js"></script>
+	<script type="text/javascript" src="lib/angular/angular.js"></script>
+	<script type="text/javascript" src="lib/angular-sanitize/angular-sanitize.min.js"></script>
+	<script type="text/javascript" src="lib/angular-nvd3/dist/angular-nvd3.js"></script>
+	<script type="text/javascript" src="lib/stomp-websocket/lib/stomp.min.js"></script>
+	<script type="text/javascript" src="lib/angular-leaflet-directive/dist/angular-leaflet-directive.min.js"></script>
+
+	<script type="text/javascript" src="lib/yucca-angular-widgets/dist/js/angular-yucca.js"></script> 
+
+	<script type="text/javascript" src="js/yucca-dashboard.js"></script> 
+
+</body>
+</html>

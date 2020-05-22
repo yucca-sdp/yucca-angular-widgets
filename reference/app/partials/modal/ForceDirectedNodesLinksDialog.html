@@ -1,0 +1,69 @@
+<div class="modal-header">
+    <h4 class="modal-title" translate>forcedirected_nodes_links_dialog_title</h4>
+</div>
+<div class="modal-body">
+	<div class='inline-feedback-info' ng-if='nodes|isEmpty'>
+		<i class='fa fa-info'></i> <span translate >forcedirected_nodes_links_no_realtions_message</span>
+	</div>
+	<div  ng-if='!nodes|isEmpty'>
+		<h4 translate>forcedirected_relation_nodes</h4>
+		<form class="form-horizontal">
+			<div class="form-group  form-group-sm" ng-repeat='node in nodes track by $index'>
+				<label class="col-sm-2 control-label">{{node.name}}</label>
+				<div class='col-sm-3'>
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon5">Size</span>
+						<input type="number" min=1 class="form-control"  aria-describedby="Border size" ng-model="node.width">
+					</div>						
+				</div>
+				<div class='col-sm-3'>
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon5">Color</span>
+						<input type="color" class="form-control"   ng-model="node.color" >
+					</div>						
+				</div>
+				<div class='col-sm-4'>
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon5">Fill</span>
+						<input type="color" class="form-control"  ng-model="node.bgcolor" >
+					</div>						
+				</div>
+			</div>
+		
+		</form>
+		<h4 translate>forcedirected_relation_links</h4>
+		<form class="form-horizontal">
+			<div class="form-group  form-group-sm" ng-repeat='link in links track by $index'>
+				<label class="col-sm-2 control-label">{{link.name}}</label>
+				<div class='col-sm-3'>
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon5" translate>Size</span>
+						<input type="number" min=1 class="form-control"  aria-describedby="Border size" ng-model="link.width">
+					</div>						
+				</div>
+				<div class='col-sm-3'>
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon5">Color</span>
+						<input type="color" class="form-control"  aria-describedby="Border color" ng-model="link.color" >
+					</div>						
+				</div>
+				<div class='col-sm-4'>
+					<div class="btn-group input-group-sm" role="group" aria-label="text align" title="{{'change_style_dialog_text_align'|translate}}">
+						<button type="button" class="btn btn-default  btn-sm btn-group-addon">Style</button>
+								<button type="button" class="btn btn-default  btn-sm" ng-click="link.style='solid'" ng-class='{btn_on_off_active:link.style=="solid"}'>
+							&nbsp;<span class="icon-border-style icon-border-style-solid"></span>
+						</button>
+						<button type="button" class="btn btn-default  btn-sm" ng-click="link.style='dashed'" ng-class='{btn_on_off_active:link.style=="dashed"}'>
+							&nbsp;<span class="icon-border-style icon-border-style-dashed"></span>
+						</button>
+					</div>
+				</div>
+			</div>
+		
+		</form>
+	</div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-link" type="button" ng-click="cancel()">Cancel</button>
+    <button class="btn btn-default" type="button" ng-click="ok()">OK</button>
+</div>

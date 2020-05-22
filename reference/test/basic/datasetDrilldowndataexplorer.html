@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>SmartData Reference Essential Demo</title>
+	<meta charset="utf-8">  <!-- it's important for d3.js -->
+	<link rel="stylesheet" href="http://localhost:8000/lib/nvd3/build/nv.d3.min.css">
+	<link rel="stylesheet" href="http://localhost:8000/lib/leaflet/dist/leaflet.css">
+	<!-- link rel="stylesheet" href="http://localhost:8000/lib/yucca-angular-widgets/dist/style/angular-yucca.css"-->
+
+
+	<script type="text/javascript" src="http://localhost:8000/lib/d3/d3.js"></script>
+	<script type="text/javascript" src="http://localhost:8000/lib/nvd3/build/nv.d3.min.js"></script>
+	<script type="text/javascript" src="http://localhost:8000/lib/leaflet/dist/leaflet.js"></script>
+
+
+	<script type="text/javascript" src="http://localhost:8000/lib/angular/angular.js"></script>
+	<script type="text/javascript" src="http://localhost:8000/lib/angular-sanitize/angular-sanitize.min.js"></script>
+	<script type="text/javascript" src="http://localhost:8000/lib/angular-nvd3/dist/angular-nvd3.js"></script>
+	<script type="text/javascript" src="http://localhost:8000/lib/stomp-websocket/lib/stomp.min.js"></script>
+	<script type="text/javascript" src="http://localhost:8000/lib/angular-leaflet-directive/dist/angular-leaflet-directive.min.js"></script>
+	<!-- <script type="text/javascript" src="http://localhost:8000/lib/yucca-angular-widgets/dist/js/angular-yucca.js"></script> -->
+	
+	
+	  <script type="text/javascript" src="http://localhost:8001/js/yucca-constants.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/yucca-plugin.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/yucca-utils.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/yucca-websocket-service.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/yucca-services.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/lib/treemap-directive.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/lib/collapsibletree-directive.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/lib/sankey-directive.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/lib/forcedirected-directive.js"></script>
+	  
+	  <!-- script type="text/javascript" src="http://localhost:8001/js/lib/bullet-directive.js"></script-->
+	  <!--
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-streams-tweet-stats.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-datasets-image-gallery.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-datasets-multidata-stats.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-streams-multistream-value.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-streams-last-value.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-streams-multistream-map.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-streams-monitor.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-streams-multistream-stats.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-datasets-multidata-treemap.js"></script>
+	  -->
+	  
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/basic/yucca-datasets-discretebar-chart.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/basic/yucca-datasets-pie-chart.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/basic/yucca-datasets-line-chart.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/basic/yucca-datasets-treemap-chart.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/basic/yucca-datasets-collapsibletree-chart.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/basic/yucca-datasets-sankey-chart.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/basic/yucca-datasets-forcedirected-chart.js"></script>	  
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/basic/yucca-datasets-dataexplorer-chart.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/basic/yucca-datasets-distributionexplorer-chart.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/basic/yucca-datasets-navigableexplorer-chart.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/basic/yucca-datasets-drilldowndataexplorer-chart.js"></script>
+
+
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/basic/yucca-commons.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/controls/yucca-control-selects.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/controls/yucca-control-filter.js"></script>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="http://localhost:8001/style/yucca-widget-theme-minimal.css">
+
+	<style>
+		body{font-family: sans-serif; font-size: 14px; margin: 0;}
+		.header{background-color: #f7f7f7; padding: 12px; border-bottom: solid 1px #1dbbee; clear: both; overflow:  hidden; display: flex; align-items: middle;}
+		.header h1{font-size: 24px; margin: 0; flex-grow: 1;}
+		.header a{display: inline-block; float: right; color: #333; text-decoration: none;  margin: 0 12px;}
+		.header a:hover{color: #1dbbee;}
+		.content{margin: 12px; }
+		.widget-container{}
+		.demo-section{display: flex;}
+	</style>
+
+	<script type="text/javascript">
+		angular.module('myApp', ['yucca.plugin', 'ngSanitize']).controller('myCtrl', function($scope, $compile){
+			
+		});
+
+	</script>
+
+</head>
+<body>
+	<header class='header'>
+		<h1>Demo Nuovi Widget</h1>
+		<a href='/' target='_blank'>Home</a>
+		<a href='https://www.smartdatanet.it/' target='_blank'>Smartdatanet.it</a>
+		<a href='https://userportal.smartdatanet.it/reference/#/widget' target='_blank'>Documentation</a>
+	</header>
+	<div ng-app="myApp" class='content' ng-controller="myCtrl">
+		<div class='demo-section'>
+		
+		</div>
+		
+	
+	
+	
+		<div class='page-main' >
+			<div class=' col-sm-8 widget-container'>
+	
+				<div class='row'>					
+					<div class=' col-sm-8'>
+						<ng-yucca-dataset-drilldowndataexplorer-chart 
+							 tenant_code="regpie" 
+							 datasetcode="Flussi_turistici_provincia_6054" 
+							 tree_columns="['provincia','settore','anno','qualifica']" 
+							 value_columns="[{key:'arrivi_totali', counting_mode: 'sum'},{key:'presenza_totali', counting_mode: 'sum'}]"
+							 widget_title="DrillDown"
+							 root-label="Totale" 
+							 value_column="arrivi_totali" 
+							 widget_subtitle="Flussi turistici" 
+							 euro_value="false" 
+							 decimal_value='0'
+							 format_big_number='true'
+							 counting_mode="sum"
+							 chart_height='360'
+							 main_chart_color='#6a00ff'
+							 zzchart_colors='["#8fca40","#fff43b","#f29524","#f04090","#916ab1","#55b9fc"]'	
+							 chart_colors='["#638e00","#ff0000","#7eb600","#9ade00","#ace42e","#beea5c","#d1f08a","#e3f6b8"]'
+							 
+							/>
+					</div> 
+				</div>
+			</div>
+			<div class=' col-sm-4 widget-container'>
+				<div>
+					<h4>Control primo filtro</h4>
+					<ng-yucca-control-filter 
+						label='Anno'
+						hint='Filtra solo i dati di un determinato anno'
+						filter_type='text'
+						column="anno"
+						advanced_filter='numeric'
+					/>
+				</div>
+				<div>
+					<h4>Control secondo filtro</h4>
+					<ng-yucca-control-filter 
+						label='Settore'
+						hint='Filtra solo i dati di un determinato settore'
+						placeholder='SETTORE ALBERGHIERO'
+						filter_type='text'
+						column="settore"
+					/>
+				</div>
+				<div>
+					<h4>Control terzo filtro</h4>
+					<ng-yucca-control-filter 
+						label='Provincia'
+						hint='Filtra solo i dati di una determinata provincia'
+						placeholder='TORINO'
+						filter_type='text'
+						column="provincia"
+						advanced_filter='text'
+					/>
+				</div>
+			</div>
+		</div>
+		</div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

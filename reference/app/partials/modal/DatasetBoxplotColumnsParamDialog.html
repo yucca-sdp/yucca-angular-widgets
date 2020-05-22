@@ -1,0 +1,85 @@
+<div class="modal-header">
+	<h4 class="modal-title" translate>dataset_boxplot_columns_param_dialog_title</h4>
+</div>
+
+<div class="modal-body multipleparams_body">
+	<p><span translate>dataset_boxplot_columns_param_dialog_intro</span></p>
+	<p>&nbsp;</p>
+	<form class="form-horizontal">
+		<div class="form-group  form-group-sm">
+			<label class="col-sm-4 control-label"translate>param_config_boxplot_q1_column</label>
+			<div class='col-sm-8'>
+				<div class="input-group">
+					<input type="text" uib-typeahead="columnKey as columnKey  for columnKey in  getColumns($viewValue) | limitTo:8"
+						class="form-control" id="column_key" ng-model='boxplotColumn.Q1' placeholder="{{'param_config_column_key_placeholder'|translate}}">
+				  	<span class="input-group-addon" id="basic-addon2"  title="{{columnsList}}"><i class='fa fa-info'></i></span>
+				</div>						
+			</div>
+		</div>
+		<div class="form-group  form-group-sm">
+			<label class="col-sm-4 control-label"translate>param_config_boxplot_q2_column</label>
+			<div class='col-sm-8'>
+				<div class="input-group">
+					<input type="text" uib-typeahead="columnKey as columnKey  for columnKey in  getColumns($viewValue) | limitTo:8"
+						class="form-control" id="column_key" ng-model='boxplotColumn.Q2' placeholder="{{'param_config_column_key_placeholder'|translate}}">
+				  	<span class="input-group-addon" id="basic-addon2"  title="{{columnsList}}"><i class='fa fa-info'></i></span>
+				</div>						
+			</div>
+		</div>
+		<div class="form-group  form-group-sm">
+			<label class="col-sm-4 control-label"translate>param_config_boxplot_q3_column</label>
+			<div class='col-sm-8'>
+				<div class="input-group">
+					<input type="text" uib-typeahead="columnKey as columnKey  for columnKey in  getColumns($viewValue) | limitTo:8"
+						class="form-control" id="column_key" ng-model='boxplotColumn.Q3' placeholder="{{'param_config_column_key_placeholder'|translate}}">
+				  	<span class="input-group-addon" id="basic-addon2"  title="{{columnsList}}"><i class='fa fa-info'></i></span>
+				</div>						
+			</div>
+		</div>
+		<div class="form-group  form-group-sm">
+			<label class="col-sm-4 control-label"translate>param_config_boxplot_whisker_low_column</label>
+			<div class='col-sm-8'>
+				<div class="input-group">
+					<input type="text" uib-typeahead="columnKey as columnKey  for columnKey in  getColumns($viewValue) | limitTo:8"
+						class="form-control" id="column_key" ng-model='boxplotColumn.whisker_low' placeholder="{{'param_config_column_key_placeholder'|translate}}">
+				  	<span class="input-group-addon" id="basic-addon2"  title="{{columnsList}}"><i class='fa fa-info'></i></span>
+				</div>						
+			</div>
+		</div>
+		<div class="form-group  form-group-sm">
+			<label class="col-sm-4 control-label"translate>param_config_boxplot_whisker_high_column</label>
+			<div class='col-sm-8'>
+				<div class="input-group">
+					<input type="text" uib-typeahead="columnKey as columnKey  for columnKey in  getColumns($viewValue) | limitTo:8"
+						class="form-control" id="column_key" ng-model='boxplotColumn.whisker_high' placeholder="{{'param_config_column_key_placeholder'|translate}}">
+				  	<span class="input-group-addon" id="basic-addon2"  title="{{columnsList}}"><i class='fa fa-info'></i></span>
+				</div>						
+			</div>
+		</div>
+		<div class="form-group  form-group-sm">
+			<label class="col-sm-4 control-label"translate>param_config_boxplot_outliers_column</label>
+			<div class='col-sm-8'>
+				<div class="input-group">
+					<input type="text" uib-typeahead="columnKey as columnKey  for columnKey in  getColumns($viewValue) | limitTo:8"
+						class="form-control" id="column_key" ng-model='boxplotColumn.outliers' placeholder="{{'param_config_column_key_placeholder'|translate}}">
+				  	<span class="input-group-addon" id="basic-addon2"  title="{{columnsList}}"><i class='fa fa-info'></i></span>
+				</div>						
+			</div>
+		</div>
+		<div class="form-group  form-group-sm">
+			<label class="col-sm-4 control-label"translate>param_config_boxplot_outliers_separator_column</label>
+			<div class='col-sm-8'>
+				<div class="input-group">
+					<input type="text" uib-typeahead="columnKey as columnKey  for columnKey in  getColumns($viewValue) | limitTo:8"
+						class="form-control" id="column_key" ng-model='boxplotColumn.outliers_separator' placeholder="{{'param_config_column_key_placeholder'|translate}}">
+				  	<span class="input-group-addon" id="basic-addon2"  title="{{columnsList}}"><i class='fa fa-info'></i></span>
+				</div>						
+			</div>
+		</div>
+     </form>
+
+</div>
+<div class="modal-footer">
+    <button class="btn btn-link" type="button" ng-click="cancel()">Cancel</button>
+    <button class="btn btn-default" type="button" ng-click="ok()">OK</button>
+</div>

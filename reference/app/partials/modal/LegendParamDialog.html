@@ -1,0 +1,64 @@
+<div class="modal-header">
+    <h4 class="modal-title" translate>legend_param_dialog_title</h4>
+</div>
+<div class="modal-body">
+			<div class='modal-legend-content'>
+				<div>
+					<div class="checkbox">
+						<label><input type="checkbox" ng-model="show" ng-change="updateVisibility()">   
+							<span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+							<span translate-cloak translate>param_show_axis</span>
+						</label>
+					</div>
+					<p>&nbsp;</p>
+					<div ng-class='{"panel-disabled":!show}'>
+						<div><strong translate>legend_param_preset_position_label</strong></div>
+						<div class='modal-legend-position-buttons-container' >
+							<a href ng-click='presetPosition(12,-1,-1,12,"topleft")' class='modal-legend-position-button'>&nwarr;</a>
+							<a href ng-click='presetPosition(12,12,-1,-1,"topright")' class='modal-legend-position-button'>&nearr;</a>
+							<a href ng-click='presetPosition(-1,12,12,-1,"bottomright")' class='modal-legend-position-button'>&LowerRightArrow;</a>
+							<a href ng-click='presetPosition(-1, -1, 12,12,"bottomleft")' class='modal-legend-position-button'>&LowerLeftArrow;</a>
+						</div>
+						<p>&nbsp;</p>
+						<div ng-if='type=="chart"'><strong translate>legend_param_custom_position_label</strong></div>
+						<form ng-if='type=="chart"' class="modal-legend-position-custom form-horizontal">
+							<div class="form-group">
+								<label for="positionLegendTop" translate class="col-sm-3 control-label">Top</label>
+								<div class="col-sm-9">
+									<input type="number" class="form-control input-sm" id="positionLegendTop" placeholder="" ng-model='position.top' ng-disabled='!show' ng-change='updatePosition()'>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="positionLegendRight" translate class="col-sm-3 control-label">Right</label>
+								<div class="col-sm-9">
+									<input type="number" class="form-control input-sm" id="positionLegendRight" placeholder="" ng-model='position.right' ng-disabled='!show' ng-change='updatePosition()'>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="positionLegendBottom" translate class="col-sm-3 control-label">Bottom</label>
+								<div class="col-sm-9">
+									<input type="number" class="form-control input-sm" id="positionLegendBottom" placeholder="" ng-model='position.bottom' ng-disabled='!show' ng-change='updatePosition()'>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="positionLegendLeft" translate class="col-sm-3 control-label">Left</label>
+								<div class="col-sm-9">
+									<input type="number" class="form-control input-sm" id="positionLegendLeft" placeholder="" ng-model='position.left' ng-disabled='!show' ng-change='updatePosition()'>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div class='modal-legend-preview'>
+					<div class='modal-legend-preview-widget'>
+						<div class='modal-legend-preview-legend' ng-if='show' style='{{previewPosition}}'>
+					</div>
+				</div>
+			</div>
+					
+
+</div>
+<div class="modal-footer">
+    <button class="btn btn-link" type="button" ng-click="cancel()">Cancel</button>
+    <button class="btn btn-default" type="button" ng-click="ok()">OK</button>
+</div>

@@ -1,0 +1,49 @@
+			
+<div  class='sidebar-content'>
+	<div class='sidemenu-accordion'>
+		<span class='sidemenu-accordion-label' translate>dashboard_grid_grid_style_sidebar_title</span>
+		<a href ng-click='accordions.gridstyles=true' ng-if='!accordions.gridstyles'><i class='fa fa-chevron-down'></i></a>
+		<a href ng-click='accordions.gridstyles=false' ng-if='accordions.gridstyles'><i class='fa fa-chevron-up'></i></a>
+	</div>
+
+	<form ng-if='accordions.gridstyles'>
+	  <div class="form-group form-group-sm" >
+	  	<label for="gridStyleGap" translate>dashboard_grid_style_gap</label>
+	  	<div class="input-group input-group-xs">
+			<input type="number" class="form-control " id="gridStyleGap" ng-model='dashboard.styleGrid.gap' ng-change='refreshDashboardStyle()'>
+			<div class="input-group-btn">
+				<button type="button" class="btn btn-default btn-xs btn-help" aria-label="Help" ng-click='show_help="true"' ng-show='show_help=="false"'
+					ng-init='show_help="false"' title='Show help'
+				>&quest;</button>
+				<button type="button" class="btn btn-default btn-xs btn-help" aria-label="Help" ng-click='show_help="false"' ng-show='show_help=="true"' title='Hide help'>&quest;
+				</button>
+			</div>
+		</div>
+		<!--<span class="help-block" ng-show='show_help=="true"' ng-bind-html="'help_inline_'+s.name|translate"></span>-->
+		<span class="help-block" ng-show='show_help=="true"'>
+			<span class="help-block" ng-show='show_help=="true"' ng-bind-html="'dashboard_grid_style_gap_help'|translate"></span>
+		</span>
+		
+	  </div>
+	  <div class="form-group form-group-sm" >
+	  	<label for="gridStyleGap" class='label-with-help'><span translate>dashboard_grid_style_template_rows</span> <i class='fa fa-question-circle  help-icon' ng-click='show_help_row_template=!show_help_row_template'></i></label>
+	  	<p translate ng-if='show_help_row_template'><small>dashboard_grid_style_template_rows_help</small></p>
+	  	<div class="input-multiple">
+	  		<div class='input-grid-template-input input-group-xs' ng-repeat='r in dashboard.styleGrid.templateRows track by $index'>
+				<small>row {{$index}}</small>
+				<input type="number" class="form-control " id="gridStyleGap" ng-model='dashboard.styleGrid.templateRows[$index]' ng-change='refreshDashboardStyle()'>
+	  		</div>
+		</div>
+	  </div>
+	  <div class="form-group form-group-sm" >
+	  	<label for="gridStyleGap" class='label-with-help'><span translate>dashboard_grid_style_template_columns</span> <i class='fa fa-question-circle help-icon' ng-click='show_help_column_template=!show_help_column_template'></i></label>
+	  	<p translate ng-if='show_help_column_template'><small>dashboard_grid_style_template_columns_help</small></p>
+	  	<div class="input-multiple">
+	  		<div class='input-grid-template-input input-group-xs' ng-repeat='r in dashboard.styleGrid.templateColumns track by $index'>
+				<small>Col {{$index}}</small>
+				<input type="number" class="form-control " id="gridStyleGap" ng-model='dashboard.styleGrid.templateColumns[$index]' ng-change='refreshDashboardStyle()'>
+	  		</div>
+		</div>
+	  </div>				  
+	</form>
+</div>

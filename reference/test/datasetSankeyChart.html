@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>SmartData Reference Essential Demo</title>
+	<meta charset="utf-8">  <!-- it's important for d3.js -->
+	<link rel="stylesheet" href="http://localhost:8000/lib/nvd3/build/nv.d3.min.css">
+	<link rel="stylesheet" href="http://localhost:8000/lib/leaflet/dist/leaflet.css">
+	<link rel="stylesheet" href="http://localhost:8000/lib/yucca-angular-widgets/dist/style/angular-yucca.css">
+
+
+	<script type="text/javascript" src="http://localhost:8000/lib/d3/d3.js"></script>
+	<script type="text/javascript" src="http://localhost:8000/lib/nvd3/build/nv.d3.min.js"></script>
+	<script type="text/javascript" src="http://localhost:8000/lib/leaflet/dist/leaflet.js"></script>
+
+
+	<script type="text/javascript" src="http://localhost:8000/lib/angular/angular.js"></script>
+	<script type="text/javascript" src="http://localhost:8000/lib/angular-sanitize/angular-sanitize.min.js"></script>
+	<script type="text/javascript" src="http://localhost:8000/lib/angular-nvd3/dist/angular-nvd3.js"></script>
+	<script type="text/javascript" src="http://localhost:8000/lib/stomp-websocket/lib/stomp.min.js"></script>
+	<script type="text/javascript" src="http://localhost:8000/lib/angular-leaflet-directive/dist/angular-leaflet-directive.min.js"></script>
+	<!-- <script type="text/javascript" src="http://localhost:8000/lib/yucca-angular-widgets/dist/js/angular-yucca.js"></script> -->
+	
+	<link rel="stylesheet" href="http://localhost:8001/style/angular-yucca.css">
+	
+	  <script type="text/javascript" src="http://localhost:8001/js/yucca-constants.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/yucca-plugin.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/yucca-utils.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/yucca-websocket-service.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/yucca-services.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/lib/treemap-directive.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/lib/sankey-directive.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-streams-tweet-stats.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-datasets-image-gallery.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-datasets-multidata-stats.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-streams-multistream-value.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-streams-last-value.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-streams-multistream-map.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-streams-monitor.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-streams-multistream-stats.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-datasets-multidata-treemap.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-datasets-bullet-chart.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-datasets-sankey-chart.js"></script>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+	<style>
+		body{font-family: sans-serif; font-size: 14px; margin: 0;}
+		.header{background-color: #f7f7f7; padding: 24px; border-bottom: solid 1px #1dbbee; clear: both; overflow:  hidden;}
+		.header h1{float: left;}
+		.header a{display: inline block; float: right; color: #333; text-decoration: none;  margin: 24px;}
+		.header a:hover{color: #1dbbee;}
+		.content{margin: 24px; }
+		.widget-container{}
+	</style>
+
+	<script type="text/javascript">
+		angular.module('myApp', ['yucca.plugin', 'ngSanitize']).controller('myCtrl', function($scope, $compile){
+			$scope.tenant_code = 'csp';
+			$scope.stream_code = 'H';
+			$scope.smartobject_code = 'a3de712d-6801-5cc4-84b6-a10bd830469d';
+			var htmlDirective =  	'<div> \n' +
+				'  <ng-yucca-dataset-sankey-chart \n' +
+				'    widget_title="Scuole Piemontesi" \n' +
+				'    tenant_code="regpie" \n' +
+				'    dataset_code="ScuolePiemon_1282" \n' +
+				'    node_columns=\'["Provincia","AmbitoFunzionale","GradoScolastico","TipoDiGestione"]\'\n' + 
+				'    chart_width="550"\n' + 
+				'    chart_height="400"\n' +
+				'    debug="true"\n' + 
+				'   />\n' +
+				'</div>';
+			$scope.directiveCode = htmlDirective;
+			jQuery(document).on('show.bs.modal','#myModal', function () {
+					angular.element(document.getElementById('modal-body')).empty().append($compile(htmlDirective)($scope));
+			});
+			$scope.nodeRender = {	"Asl_medico_201":{"label":"Asl 201", "color":"#888", "fades":"true"},
+									"Asl_medico_202":{"label":"Asl 202", "color":"#888", "fades":"true"},
+									"Asl_medico_203":{"label":"Asl 203", "color":"#888", "fades":"true"},
+									"Asl_medico_204":{"label":"Asl 204", "color":"#888", "fades":"true"},
+									"Asl_medico_205":{"label":"Asl 205", "color":"#888", "fades":"true"},
+									"Asl_medico_206":{"label":"Asl 206", "color":"#888", "fades":"true"},
+									"Asl_medico_207":{"label":"Asl 207", "color":"#888", "fades":"true"},
+									"Asl_medico_208":{"label":"Asl 208", "color":"#888", "fades":"true"},
+									"Asl_medico_209":{"label":"Asl 209", "color":"#888", "fades":"true"},
+									"Asl_medico_210":{"label":"Asl 210", "color":"#888", "fades":"true"},
+									"Asl_medico_211":{"label":"Asl 211", "color":"#888", "fades":"true"},
+									"Asl_medico_212":{"label":"Asl 212", "color":"#888", "fades":"true"},
+									"Asl_medico_213":{"label":"Asl 213", "color":"#888", "fades":"true"},
+									"Id_ambito_padre_1":{"label":"Farm. Convenzionata", "color":"#4A9A49"},
+									"Id_ambito_padre_2":{"label":"Farm. Distr. Diretta", "color":"#7DC534"},
+									"Id_ambito_padre_3":{"label":"Farm. Distr. per Conto", "color":"#CEE83E"},
+									"Id_ambito_padre_4":{"label":"Visite specialistiche", "color":"#55B2F3"},
+									"Id_ambito_padre_5":{"label":"Pronto Soccorso", "color":"#FD4B9B"},
+									"Id_ambito_padre_6":{"label":"Ricovero", "color":"#FFF43B"},
+									"Id_ambito_1":{"label":"Farm. Convenzionata", "color":"#4A9A49"},
+									"Id_ambito_2":{"label":"Farm. Distr. Diretta", "color":"#7DC534"},
+									"Id_ambito_3":{"label":"Farm. Distr. per Conto", "color":"#CEE83E"},
+									"Id_ambito_4":{"label":"Diagn. per immagini", "color":"#19aeff"},
+									"Id_ambito_5":{"label":"PS Esito", "color":"#a20025"},
+									"Id_ambito_6":{"label":"PS Fasce età", "color":"#d80073"},
+									"Id_ambito_7":{"label":"Tipo di erogatore", "color":"#ffda00"},
+									"Id_ambito_8":{"label":"Regime di ricovero", "color":"#f57900"},
+									
+					};
+
+		});
+
+
+	</script>
+
+</head>
+<body>
+	<header class='header'>
+		<h1>Test Widget: SANKEY</h1>
+		<a href='/' target='_blank'>Home</a>
+		<a href='https://www.smartdatanet.it/' target='_blank'>Smartdatanet.it</a>
+		<a href='https://userportal.smartdatanet.it/reference/#/widget' target='_blank'>Documentation</a>
+	</header>
+	<div ng-app="myApp" class='content' ng-controller="myCtrl">
+		<div class='row' >
+			<div class=' col-sm-12 widget-container'>
+				<h4>In Page</h4>
+				<div>
+					<div><!-- 
+					  <ng-yucca-dataset-sankey-chart 
+					    widget_title='Scuole Piemontesi' 
+					    tenant_code='regpie' 
+					    dataset_code='ScuolePiemon_1282' 
+					    node_columns='["Provincia","AmbitoFunzionale","GradoScolastico","TipoDiGestione"]' 
+					    chart_width='550' 
+					    chart_height='400' 
+					    debug='true' 
+					   /> -->
+					   <ng-yucca-dataset-sankey-chart
+			              widget_title=''
+			              tenant_code='sandbox'
+			              dataset_code='ProvaAleSpes_1588'
+			              node_columns='["Dettaglio", "Id_ambito", "Asl_medico"]'
+			              counting_mode='sum'
+			              value_column='Valore_economico'
+			              chart_width_='1200'
+			              chart_height='720'
+			              filter='1 eq Id_ambito_padre or 2 eq Id_ambito_padre or 3 eq Id_ambito_padre'
+			              sankey_node_render='{{nodeRender}}'
+			              base_color ="#888"
+			              debug='true'
+			             />
+					</div>
+				</div> 
+			</div>
+			<div class=' col-sm-2 widget-container'>
+				<h4>In Modal View</h4>
+				<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+					Launch demo modal
+				</button>
+			</div>
+			<div class=' col-sm-5 widget-container'>
+				<h4>Directive code</h4>
+				<pre><code id='directive-code'>{{directiveCode}}</code></pre>
+			</div>
+		</div>
+		<!-- Modal -->
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		 	<div class="modal-dialog" role="document">
+		    	<div class="modal-content">
+		      		<div class="modal-header">
+		        		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        		<h4 class="modal-title" id="myModalLabel">Modal title</h4>
+		      		</div>
+		      		<div class="modal-body" id="modal-body"></div>
+		      		<div class="modal-footer">
+		        		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		      		</div>
+		    	</div>
+		  	</div>
+		</div>
+	</div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="en">
+<!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>SmartData Reference Essential Demo</title>
+<meta charset="utf-8">
+<!-- it's important for d3.js -->
+<link rel="stylesheet"
+	href="http://localhost:8000/lib/nvd3/build/nv.d3.min.css">
+<link rel="stylesheet"
+	href="http://localhost:8000/lib/leaflet/dist/leaflet.css">
+<!-- link rel="stylesheet" href="http://localhost:8000/lib/yucca-angular-widgets/dist/style/angular-yucca.css"-->
+
+
+<script type="text/javascript" src="http://localhost:8000/lib/d3/d3.js"></script>
+<script type="text/javascript"
+	src="http://localhost:8000/lib/nvd3/build/nv.d3.min.js"></script>
+<!-- <script type="text/javascript"
+	src="http://localhost:8000/lib/leaflet/dist/leaflet.js"></script>-->
+
+
+<script type="text/javascript"
+	src="http://localhost:8000/lib/angular/angular.js"></script>
+<script type="text/javascript"
+	src="http://localhost:8000/lib/angular-sanitize/angular-sanitize.min.js"></script>
+<script type="text/javascript"
+	src="http://localhost:8000/lib/angular-nvd3/dist/angular-nvd3.js"></script>
+<script type="text/javascript"
+	src="http://localhost:8000/lib/stomp-websocket/lib/stomp.min.js"></script>
+<script type="text/javascript"
+	src="http://localhost:8000/lib/angular-leaflet-directive/dist/angular-leaflet-directive.min.js"></script>
+<!-- <script type="text/javascript" src="http://localhost:8000/lib/yucca-angular-widgets/dist/js/angular-yucca.js"></script> -->
+
+
+<script type="text/javascript"
+	src="http://localhost:8001/js/yucca-constants.js"></script>
+<script type="text/javascript"
+	src="http://localhost:8001/js/yucca-plugin.js"></script>
+<script type="text/javascript"
+	src="http://localhost:8001/js/yucca-utils.js"></script>
+<script type="text/javascript"
+	src="http://localhost:8001/js/yucca-websocket-service.js"></script>
+<script type="text/javascript"
+	src="http://localhost:8001/js/yucca-services.js"></script>
+<script type="text/javascript"
+	src="http://localhost:8001/js/lib/treemap-directive.js"></script>
+<script type="text/javascript"
+	src="http://localhost:8001/js/lib/collapsibletree-directive.js"></script>
+<script type="text/javascript"
+	src="http://localhost:8001/js/lib/sankey-directive.js"></script>
+<script type="text/javascript"
+	src="http://localhost:8001/js/lib/forcedirected-directive.js"></script>
+<script type="text/javascript"
+	src="http://localhost:8001/js/lib/simpleheat.js"></script>
+
+<!-- script type="text/javascript" src="http://localhost:8001/js/lib/bullet-directive.js"></script-->
+<!--
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-streams-tweet-stats.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-datasets-image-gallery.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-datasets-multidata-stats.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-streams-multistream-value.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-streams-last-value.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-streams-multistream-map.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-streams-monitor.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-streams-multistream-stats.js"></script>
+	  <script type="text/javascript" src="http://localhost:8001/js/widgets/yucca-datasets-multidata-treemap.js"></script>
+	  -->
+
+<script type="text/javascript"
+	src="http://localhost:8001/js/widgets/basic/yucca-datasets-discretebar-chart.js"></script>
+<script type="text/javascript"
+	src="http://localhost:8001/js/widgets/basic/yucca-datasets-pie-chart.js"></script>
+<script type="text/javascript"
+	src="http://localhost:8001/js/widgets/basic/yucca-datasets-line-chart.js"></script>
+<script type="text/javascript"
+	src="http://localhost:8001/js/widgets/basic/yucca-datasets-treemap-chart.js"></script>
+<script type="text/javascript"
+	src="http://localhost:8001/js/widgets/basic/yucca-datasets-collapsibletree-chart.js"></script>
+<script type="text/javascript"
+	src="http://localhost:8001/js/widgets/basic/yucca-datasets-sankey-chart.js"></script>
+<script type="text/javascript"
+	src="http://localhost:8001/js/widgets/basic/yucca-datasets-forcedirected-chart.js"></script>
+<script type="text/javascript"
+	src="http://localhost:8001/js/widgets/basic/yucca-datasets-dataexplorer-chart.js"></script>
+<script type="text/javascript"
+	src="http://localhost:8001/js/widgets/basic/yucca-distribution-table.js"></script>
+<script type="text/javascript"
+	src="http://localhost:8001/js/widgets/basic/yucca-datasets-navigableexplorer-chart.js"></script>
+<script type="text/javascript"
+	src="http://localhost:8001/js/widgets/basic/yucca-datasets-singlepercentage-chart.js"></script>
+<script type="text/javascript"
+	src="http://localhost:8001/js/widgets/basic/yucca-datasets-singledata-chart.js"></script>
+<script type="text/javascript"
+	src="http://localhost:8001/js/widgets/basic/yucca-datasets-multibar-chart.js"></script>
+	
+	<script type="text/javascript"
+	src="http://localhost:8001/js/widgets/basic/yucca-datasets-multi-chart.js"></script>
+	<script type="text/javascript"
+	src="http://localhost:8001/js/widgets/basic/yucca-datasets-bubbles-map-chart.js"></script>
+	<script type="text/javascript"
+	src="http://localhost:8001/js/widgets/basic/yucca-datasets-heatmap-map-chart.js"></script>
+	<script type="text/javascript" 
+	src="http://localhost:8001/js/widgets/basic/yucca-datasets-choropleth-map-chart.js"></script>
+	
+
+
+<script type="text/javascript"
+	src="http://localhost:8001/js/widgets/basic/yucca-commons.js"></script>
+<script type="text/javascript"
+	src="http://localhost:8001/js/widgets/controls/yucca-control-selects.js"></script>
+<script type="text/javascript"
+	src="http://localhost:8001/js/widgets/controls/yucca-control-filter.js"></script>
+<script type="text/javascript"
+	src="http://localhost:8001/js/widgets/controls/yucca-control-filter-data-discrete.js"></script>
+<script type="text/javascript"
+	src="http://localhost:8001/js/widgets/controls/yucca-control-map-filter.js"></script>
+	
+
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+	integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
+	crossorigin="anonymous">
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+	integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
+	crossorigin="anonymous"></script>
+<link rel="stylesheet"
+	href="http://localhost:8001/style/yucca-widget-theme-minimal.css">
+
+<style>
+body {
+	font-family: sans-serif;
+	font-size: 14px;
+	margin: 0;
+}
+
+.header {
+	background-color: #f7f7f7;
+	padding: 24px;
+	border-bottom: solid 1px #1dbbee;
+	clear: both;
+	overflow: hidden;
+}
+
+.header h1 {
+	float: left;
+}
+
+.header a {
+	display: inline block;
+	float: right;
+	color: #333;
+	text-decoration: none;
+	margin: 24px;
+}
+
+.header a:hover {
+	color: #1dbbee;
+}
+
+.content {
+	margin: 24px;
+}
+
+.col-sm-3{	border: solid 1px #afa;}
+
+.widget-container {
+	border: solid 0px #faa;
+}
+.uuu .yucca-widget{color: red;}
+.yucca-control-item{white-space: nowrap; min-width: 4em; font-size: 12px;}
+
+.yucca-heatmap-map-chart .info-panel {
+    top: 200px;
+    left: -300px;
+}
+.yucca-widget.yucca-heatmap-map-chart .info-panel .ng-binding {
+    background-color: #41668e;
+    color: #fff;
+}
+</style>
+
+<script type="text/javascript">
+		angular.module('myApp', ['yucca.plugin', 'ngSanitize']).controller('myCtrl', function($scope, $compile){
+			$scope.token = '21d612a9a1cec5e98e9e33d05551229c';
+			
+			$scope.accordions = {interna2collapseOne:false,interna2collapseTwo:false};
+});
+
+
+
+		
+
+	</script>
+
+</head>
+<body>
+	<header class='header'>
+		<h1>Test Widget: DISCRETE CHART</h1>
+		<a href='/' target='_blank'>Home</a> <a
+			href='https://www.smartdatanet.it/' target='_blank'>Smartdatanet.it</a>
+		<a href='https://userportal.smartdatanet.it/reference/#/widget'
+			target='_blank'>Documentation</a>
+	</header>
+	<div ng-app="myApp" class='content' ng-controller="myCtrl"><!-- 21d612a9a1cec5e98e9e33d05551229c -->
+		<p><a href ng-click='show=true'>show</a></p>
+		<div class='row' >
+			<div class=' col-sm-4 '>
+				<a href ng-click="accordions['interna2collapseOne']=!accordions['interna2collapseOne']">toggle one</a>
+				<div class=' widget-container'>
+     			 	<ng-yucca-dataset-heatmap-map-chart tenantcode='regpie_statcovid'
+					  datasetcode='Dashboard_mappa_nuovi_positivi_10591'
+					  value_column='{"key":"positivi","label":"nuovi positivi", "countingMode":"sum"}'
+					  label_column='{"key":"codistat","label":"codistat"}'
+					  geojsons='[{"url":"http://localhost:8000/lib/yucca-angular-widgets/dist/data/piemonte_comuni_geojson.json","key":"description"}]'
+					  wwidget_title='Mappa dei nuovi positivi in Piemonte'
+				   	  area_color='#dddddd'
+					  lat_column='lat'
+					  lng_column='lng'
+					  map_legend='{"show":true,"position":"topright"}'
+					  radius='10'
+					  blur='10'
+					  gradient='{"0":"#000000","1":"#ff0000","0.1":"#000000","0.4":"#0000ff","0.6":"#00ffff","0.7":"#00ff00","0.8":"#ffff00"}'
+					  decimal_value='0'
+					  usertoken='ZP5Kg_5x1qxwFifaBfWohmdMc_oa'
+					  >
+					</ng-yucca-dataset-heatmap-map-chart> 
+   				</div>
+            </div>
+			<div class=' col-sm-4 '>
+	            <div class=' widget-container'>
+				<a href ng-click="accordions['interna2collapseTwo']=!accordions['interna2collapseTwo']">toggle two</a>
+<ng-yucca-dataset-discretebar-chart tenantcode='regpie_agri' datasetcode='Cmpsrpie_widget_1_0_0_10389'
+                  value_column='{"key":"valore","label":"valore", "countingMode":"sum"}'
+                  group_by_column='{"key":"indicatore","label":"indicatore"}' 
+                  widget_title="Quadro finanziario complessivo" 
+                  widget_intro="Il grafico presenta in sintesi gli importi stanziati dal Programma, attivati attraverso i Bandi, ammessi al finanziamento e pagati complessivamente"
+                  main_chart_color='#4e9a06'
+                  euro_value='true' decimal_value='0'
+                  x_axis='{"hide":false,"label":"","rotateLabels":0, staggerLabels: true}'
+				  orderby='indicatore'
+                  usertoken='2ea1cb94a2216edcf7a6dfd867edac0' />
+	            <!-- 	<ng-yucca-dataset-bubbles-map-chart
+					    tenantcode='regpie_statcovid'
+					    datasetcode='Dashboard_mappa_nuovi_positivi_10591'
+						value_column='{"key":"positivi","label":"nuovi positivi", "countingMode":"sum"}'
+						label_column='{"key":"codistat","label":"codistat"}'
+					    decimal_value=0
+					    format_big_number='true'
+					    area_color='#dddddd'
+					    main_chart_color='#C34CFF'
+					    lat_column='lat'
+					    radius='5'
+					    lng_column='lng'
+	  					geojsons='[{"url":"http://localhost:8000/lib/yucca-angular-widgets/dist/data/piemonte_comuni_geojson.json","key":"code"}]'
+					    usertoken='ZP5Kg_5x1qxwFifaBfWohmdMc_oa'
+					/>  -->
+				</div>
+			</div>
+			<div class=' col-sm-4 '>
+	            <!-- 
+	            <div class=' widget-container'>
+					<ng-yucca-dataset-dataexplorer-table tenantcode='regpie'
+					  datasetcode='TestDashboardMappaLongLat_10140'
+					  show_detail='false'
+					  usertoken='HTHAInHzQepkQpCC1lkJHYcBjT0a'
+					 dataexplorer_columns='[{"name":"codistat","alias":"Istat","skip":{"table":true,"detail":true}},
+					 	{"name":"comune","alias":"Comune","skip":{"table":true,"detail":true}},
+					 	{"name":"nuovipositivi","alias":"Nuovi Positivi","skip":{"table":true,"detail":true}}]'
+					 
+					 
+					 ]'
+					  ></ng-yucca-dataset-dataexplorer-table>-->
+				</div>
+			</div>
+	<div>
+
+<!-- 
+<ng-yucca-dataset-dataexplorer-table tenantcode='smartlab' datasetcode='NobelPrizeByWinner_9081' 
+dataexplorer_columns='[{"name":"id","alias":"id","datatype":"long","inOrder":0,"label":"id","skip":{table:true}},{"name":"firstname","skip":{detail:true},"alias":"Firstname","datatype":"string","inOrder":1,"label":"Firstname"},{"name":"surname","alias":"Surname","datatype":"string","inOrder":2,"label":"Surname"},{"name":"born","alias":"Born","datatype":"dateTime","inOrder":3,"label":"Born"},{"name":"died","alias":"Died","datatype":"dateTime","inOrder":4,"label":"Died"},{"name":"bornCountry","alias":"Born Country","datatype":"string","inOrder":5,"label":"Born Country"},{"name":"bornCountryCode","alias":"Born Country Code","datatype":"string","inOrder":6,"label":"Born Country Code","skip":true},{"name":"bornCity","alias":"Born City","datatype":"string","inOrder":7,"label":"Born City","skip":true},{"name":"diedCountry","alias":"Died Country","datatype":"string","inOrder":8,"label":"Died Country","skip":true},{"name":"diedCountryCode","alias":"Died Country Code","datatype":"string","inOrder":9,"label":"Died Country Code","skip":true},{"name":"diedCity","alias":"Died City","datatype":"string","inOrder":10,"label":"Died City","skip":true},{"name":"gender","alias":"Gender","datatype":"string","inOrder":11,"label":"Gender"},{"name":"year","alias":"Year","datatype":"int","inOrder":12,"label":"Year"},{"name":"category","alias":"Category","datatype":"string","inOrder":13,"label":"Category"},{"name":"overallMotivation","alias":"Overall Motivation","datatype":"string","inOrder":14,"label":"Overall Motivation","skip":true},{"name":"share","alias":"Share","datatype":"string","inOrder":15,"label":"Share","skip":true},{"name":"motivation","alias":"Motivation","datatype":"string","inOrder":16,"label":"Motivation","skip":true},{"name":"name","alias":"Name","datatype":"string","inOrder":17,"label":"Name","skip":true},{"name":"city","alias":"City","datatype":"string","inOrder":18,"label":"City","skip":true},{"name":"country","alias":"Country","datatype":"string","inOrder":19,"label":"Country","skip":true}]' 
+usertoken='LRulMu0Ie7nC2auw1q_x4MDNLkca' evt_filtertext='{"enabled":true}' evt_highlight_groupbycolumn='{"enabled":true}' show_detail="true" />
+
+<ng-yucca-dataset-multibar-chart
+  tenantcode='regp_crusgov'
+  datasetcode='MovimentiContabiliAssessoratiRegionePiemonte_9061'
+  group_by_column='{"key":"codassessorato","label":"cod_assessorato"}'
+  serie_columns='[{"type":"bar","key":"totstanziamenti","label":"Stanziamenti","countingMode":"sum","color":"#0080ff"},{"type":"bar","key":"totimpegni","label":"Impegni","countingMode":"sum","color":"#ff8080"},{"type":"bar","key":"totliquidazioni","label":"Liquidazioni","countingMode":"sum","color":"#ffff80"},{"type":"bar","key":"totmandati","label":"Mandati","countingMode":"sum","color":"#80ff80"}]'
+  series_from_values='true'
+  widget_width='752'
+  show_values='true'
+  chart_direction='vertical'
+  stacked='false'
+  label_type='value'
+  chart_legend='{"show":false,"position":{}}'
+  filter='(%272019%27 eq anno) '
+  orderby='totstanziamenti desc'
+  euro_value='true'
+  decimal_value='2'
+  format_big_number='true'
+  usertoken='GPmVlwpGA4UMiy1z8OKnvH6SS78a'
+/>
+</div>
+<div><ng-yucca-control-filter-data-discrete
+  value_columns='[
+  {"label":"ACP","filter":"%27ACP%27 eq codassessorato"},
+  {"label":"AIR","filter":"%27AIR%27 eq codassessorato"},
+  {"label":"BAI","filter":"%27BAI%27 eq codassessorato"},
+  {"label":"CTC","filter":"%27CTC%27  eq codassessorato",},
+  {"label":"DAE","filter":"%27DAE%27  eq codassessorato",},
+  {"label":"FPS","filter":"%27FPS%27  eq codassessorato",},
+  {"label":"LFU","filter":"%27LFU%27  eq codassessorato",},
+  {"label":"OTP","filter":"%27OTP%27  eq codassessorato",},
+  {"label":"PCP","filter":"%27PCP%27  eq codassessorato",},
+  {"label":"PRE","filter":"%27PRE%27 eq codassessorato"},
+  {"label":"UTE","filter":"%27UTE%27  eq codassessorato",},
+  {"label":"ND","filter":"%27ND%27 eq codassessorato"},
+  ]'
+  filter_type='multi'
+  render='control'
+  direction='column'
+/>
+</div>
+
+<div>
+<ng-yucca-control-filter-data-discrete
+event_control_id='distribuzione_fondi_aziende_sanitarie'
+value_columns='[{"label":"2018","filter":"%272018%27 eq Anno "},{"label":"2019","filter":"%272019%27 eq Anno"}]'
+filter_type='unique'
+render='control'
+/>
+</div>
+<div>
+<ng-yucca-control-filter-data-discrete
+    event_control_id='distribuzione_fondi_aziende_sanitarie'
+    value_columns='[{"label":"2018","filter":"%272018%27 eq Anno "},{"label":"2019","filter":"%272019%27 eq Anno "}]'
+    filter_type='unique'
+    render='button'
+/></div>
+<div>
+<ng-yucca-dataset-treemap-chart
+tenantcode='regp_crusgov'
+datasetcode='TrasferimentiDiRegionePiemonteVersoAziendeSanitarie20182019_9055'
+value_column='{"key":"ImportoLiquidazione","label":"Liquidato", "countingMode":"sum"}'
+value_column2='{"key":"TotaleQuietanzato","label":"Quietanzato", "countingMode":"sum"}'
+tree_columns='[{"key":"Provincia","label":"Provincia"},{"key":"RagioneSociale","label":"Ragione
+Sociale"}]'
+main_chart_color='#33C534'
+chart_colors='[]'
+show_values='true'
+euro_value='true'
+root_label='Distribuzione provinciale fondi'
+decimal_value='2'
+format_big_number='true'
+euro_value2='true'
+decimal_value2='2'
+format_big_number2='true'
+evt_accepted_control_ids='["distribuzione_fondi_aziende_sanitarie"]'
+usertoken='GPmVlwpGA4UMiy1z8OKnvH6SS78a'
+/>-->
+</div>
+
+			<!-- 
+			
+			
+			<ng-yucca-dataset-singlepercentage-chart
+  tenantcode='regpie_agri_svil'
+  datasetcode='Psr_tema_sez3_8812'
+  full_color='#4e9a06'
+  value_column='{"key":"Valore","label":"Valore"}'
+  label_column='{"key":"Tema","label":"Tema"}'
+  show_label='true'
+  show_max_value='false'
+  decimal_value='0'
+  text_after='%'
+  num_rows='10'
+  widget_height='10'
+  usertoken='2ea1cb94a2216edcf7a6dfd867edac0'
+/> --></div>
+				<div>			</div>
+<!-- 
+<ng-yucca-dataset-line-chart
+  tenantcode='regp_crusgov'
+  datasetcode='Andamentospesamensile_8787'
+  time_column='{"key":"Mese","label":"Mese"}'
+  serie_columns='[{"type":"line","key":"NumeroImpegni","label":"Numero
+  Impegni","countingMode":"sum","color":"#0f24bb","classed":"solid","strokeWidth":1},{"type":"line","key":"NumeroLiquidazioni","label":"Numero
+  Liquidazioni","countingMode":"sum","color":"#ce2d04","strokeWidth":1,"classed":"solid"},{"type":"line","key":"NumeroMandati","label":"Numero
+  Mandati","countingMode":"sum","strokeWidth":1,"classed":"solid","color":"#1a7702"},{"type":"line","key":"ImportoImpegni","label":"Importo
+  Impegni","countingMode":"sum","strokeWidth":2,"classed":"dashed","color":"#0bd2d2","interpolate":"linear"},{"type":"line","key":"ImportoLiquidazioni","label":"Importo
+  Liquidazioni","countingMode":"sum","strokeWidth":2,"classed":"dashed","color":"#f9a891"},{"type":"line","key":"ImportoMandati","label":"Importo
+  Mandati","countingMode":"sum","strokeWidth":8,"classed":"dotted","color":"#67f960"}]'
+  widget_width='679'
+  decimal_value='0'
+  chart_legend='{"show":true,"position":{"top":12,"right":12}}'
+  format_big_number='true'
+  usertoken='276097d026ea5e45bb9d8921a05314d1'
+/>-->
+<!-- 
+
+serie_columns='[{"type":"line","key":"NumeroImpegni","label":"Numero
+  Impegni","countingMode":"sum","color":"#0f24bb","classed":"solid","strokeWidth":1},{"type":"line","key":"NumeroLiquidazioni","label":"Numero
+  Liquidazioni","countingMode":"sum","color":"#ce2d04","strokeWidth":1,"classed":"solid"},{"type":"line","key":"NumeroMandati","label":"Numero
+  Mandati","countingMode":"sum","strokeWidth":1,"classed":"solid","color":"#1a7702"},{"type":"line","key":"ImportoImpegni","label":"Importo
+  Impegni","countingMode":"sum","strokeWidth":2,"classed":"dashed","color":"#0bd2d2"},{"type":"line","key":"ImportoLiquidazioni","label":"Importo
+  Liquidazioni","countingMode":"sum","strokeWidth":2,"classed":"dashed","color":"#f9a891"},{"type":"line","key":"ImportoMandati","label":"Importo
+  Mandati","countingMode":"sum","strokeWidth":8,"classed":"dashed","color":"#67f960"}]'
+
+<ng-yucca-dataset-sankey-chart
+    tenantcode='regp_crusgov' 
+    datasetcode='PartecipateFlussiDiSpesa_8747'
+    main_chart_color='#3BBA3B'
+    value_column='{"key":"Importoimpegnatocompetenzatitolo","label":"Spesa titolo partecipata", "countingMode":"sum"}'
+    node_columns='[{"key":"AnnoSpesaTotale","label":"Spesa Totale"},{"key":"DescTitolo","label":"Descrizione Spesa"},{"key":"RagioneSociale","label":"Ragione Sociale"}]'
+    filter='(%272018%27 eq Anno) '
+    usertoken='{{token}}'
+    debug='true'
+/>     -->
+			</div>
+
+
+<!-- 
+<ng-yucca-dataset-multibar-chart 
+    tenantcode='regp_crusgov' 
+    datasetcode='Cruscotto_fesr_totale_asse_pa_vs_imprese_modificato_8754' 
+    group_by_column='{"key":"asse","label":"Asse"}' 
+    serie_columns='[{"type":"bar","key":"target2023","label":"target2023","countingMode":"max","color":"#3bba3b"},{"type":"bar","key":"totale_concesso","label":"Totale Concesso","countingMode":"sum","color":"#fa9a00"},{"type":"bar","key":"totale_pagamenti","label":"Totale Pagamenti","countingMode":"sum","color":"#fcc87f"}]' 
+    widget_width='633' 
+    series_from_values='true'
+    decimal_value='0' 
+    format_big_number='true' 
+    show_values='true'
+    usertoken='21d612a9a1cec5e98e9e33d05551229c'
+    reduce_x_ticks='true'
+   
+/>-->
+
+
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

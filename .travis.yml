@@ -1,0 +1,13 @@
+sudo: false
+language: node_js
+notifications:
+  email: false
+node_js:
+  - '4'
+before_script:
+  - npm install -g gulp
+  - npm install -g bower
+  - bower install --config.interactive=false
+script: 
+  - gulp
+  - cd reference && bower install

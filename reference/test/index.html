@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>SmartData Reference Test</title>
+	<meta charset="utf-8">  <!-- it's important for d3.js -->
+
+	<style>
+		body{font-family: sans-serif; font-size: 14px; margin: 0;}
+		.header{background-color: #f7f7f7; padding: 24px; border-bottom: solid 1px #1dbbee; clear: both; overflow:  hidden;}
+		.header h1{float: left;}
+		.header a{display: inline block; float: right; color: #333; text-decoration: none;  margin: 24px;}
+		.header a:hover{color: #1dbbee;}
+		.content{margin: 24px; }
+		code{font-weight: bold;}
+	</style>
+
+</head>
+<body>
+	<header class='header'>
+		<h1>Widget in a non AngularJS website</h1>
+		<a href='https://www.smartdatanet.it/' target='_blank'>Smartdatanet.it</a>
+		<a href='https://userportal.smartdatanet.it/reference/#/widget' target='_blank'>Documentation</a>
+	</header>
+	<div class='content'>
+		<div class='panel panel-default'>
+			<h4>Prepare</h4>
+			<ol>
+				<li>Launch a web server undert the folder <code>yucca-angular-widgets\reference\app</code> on port <code>8000</code></li>
+				<li>Launch a web server undert the folder <code>yucca-angular-widgets\angular-yucca\src</code> on port <code>8001</code></li>
+				<li>Launch a web server undert the folder <code>yucca-angular-widgets\reference\test</code> on port <code>8002</code></li>
+				<li>Open <a href='http://localhost:8002/'>http://localhost:8002/</a></li>
+			</ol>
+			
+		</div>
+		<div class='panel panel-default'>
+			<h4>Test Pages on single widget</h4>
+			<ol>
+				<li><a href='datasetImageGallery.html'>GALLERY - datasetImageGallery</a></li>
+				<li><a href='datasetMultidataStats.html'>MULTIDATA - datasetMultidataStats</a></li>
+				<li><a href='streamLastValue.html'>LAST VALUE -  streamLastValue</a></li>
+				<li><a href='streamMonitor.html'>MONITOR -  streamMonitor</a></li>
+				<li><a href='streamMultistreamStats.html'>MAP -  streamMultistreamStats</a></li>
+				<li><a href='datasetMultidataTreemap.html'>MULTIDATA TREEMAP -  datasetMultidataTreemap</a></li>
+				<li><a href='datasetTreemap.html'>TREEMAP -  datasetTreemap</a></li>
+				<li><a href='datasetBulletChart.html'>BULLET -  datasetBulletChart</a></li>
+				<li><a href='datasetSankeyChart.html'>SANKEY -  datasetSankeyChart</a></li>
+				<li><a href='datasetPopulationPyramid.html'>POPULATION PYRAMID -  datasetPopulationPyramid</a></li>
+				<li><a href='datasetChoroplethMap.html'>CHOROPLETH MAP -  datasetChoroplethMap</a></li>
+				<li><a href='basic/datasetDataExplorerChart.html'>DATAEXPLORER -  datasetDataExplorer</a></li>
+				
+				
+			
+			</ol>
+			<h4>Test Pages with multiple widget</h4>
+			<ol>
+				<li><a href='datasetImageGallery-streamMultistreamStats.html'>GALLERY - datasetImageGallery with MAP -  streamMultistreamStats</a></li>
+				<li><a href='streamMonitor-streamLastValue.html'>MONITOR - streamMonitor with LAST VALUE -  streamLastValue</a></li>
+			</ol>
+			
+		</div>
+
+
+
+	</div>
+</body>
+</html>
