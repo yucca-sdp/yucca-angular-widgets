@@ -1,3 +1,8 @@
+/**
+ * SPDX-License-Identifier: EUPL-1.2
+ * (C) Copyright 2019 - 2021 Regione Piemonte
+ */
+
 var Constants = Constants || {};
 
 
@@ -40,6 +45,11 @@ Constants.MAP_TILES_CARTO_DB_POSITRON_URL = "http://{s}.basemaps.cartocdn.com/li
 
 
 
+
+/**
+ * SPDX-License-Identifier: EUPL-1.2
+ * (C) Copyright 2019 - 2021 Regione Piemonte
+ */
 
 angular.module('yucca.plugin', [
  // 'sdp.stream',
@@ -85,6 +95,20 @@ yuccaWidgetsFilter.filter('format_big_number', function() {
 	return function(input, lang, decimal) {
 		return $yuccaHelpers.render.format_big_number(input, decimal, lang);
 	}
+});
+
+yuccaWidgetsModule.directive('ngEnter', function () {
+    return function (scope, element, attrs) {
+        element.bind("keydown keypress", function (event) {
+            if(event.which === 13) {
+                scope.$apply(function (){
+                    scope.$eval(attrs.ngEnter);
+                });
+
+                event.preventDefault();
+            }
+        });
+    };
 });
 
 //yuccaWidgetsFilter.filter('format_big_number', function() {
@@ -137,6 +161,11 @@ yuccaWidgetsFilter.filter('string_ellipse', function () {
     };
 });
 
+/**
+ * SPDX-License-Identifier: EUPL-1.2
+ * (C) Copyright 2019 - 2021 Regione Piemonte
+ */
+
 var yuccaServices = yuccaServices || angular.module('yucca.services', []);
 
 
@@ -163,7 +192,7 @@ yuccaServices.factory('metadataService',["$http","$q", function($http, $q) {
 	};
 	
 	metadataService.getStreamMetadata = function(tenant_code, stream_code, smartobject_code, user_token) {
-		var URLBaseQuery = Constants.API_METADATA_URL + "detail/"+tenant_code + "/" + smartobject_code + "/"  + stream_code+'?';
+		var URLBaseQuery ="https:" +  Constants.API_METADATA_URL + "detail/"+tenant_code + "/" + smartobject_code + "/"  + stream_code+'?';
 		console.debug(URLBaseQuery);
 		return loadMetadata(URLBaseQuery, user_token);
 
@@ -174,7 +203,7 @@ yuccaServices.factory('metadataService',["$http","$q", function($http, $q) {
 		if(!apiMetadataUrl)
 			apiMetadataUrl = Constants.API_METADATA_URL;
 
-		var URLBaseQuery = apiMetadataUrl + "detail/"+tenant_code + "/" + dataset_code + '?';
+		var URLBaseQuery = "https:" + apiMetadataUrl + "detail/"+tenant_code + "/" + dataset_code + '?';
 		return loadMetadata(URLBaseQuery, user_token, apiMetadataUrl,useCache);
 	};
 	
@@ -486,6 +515,11 @@ yuccaServices.factory('dataService',["$http","$q", "$yuccaHelpers" ,
 	return dataService;
 }]);
 
+
+/**
+ * SPDX-License-Identifier: EUPL-1.2
+ * (C) Copyright 2019 - 2021 Regione Piemonte
+ */
 
 var yuccaUtilsModule = angular.module('yucca.utils', []);
 
@@ -808,7 +842,10 @@ yuccaUtilsModule.factory('$yuccaHelpers', [function () {
 						for (var i = 0; i < data[0].values.length; i++) {
 							csv += data[0].values[i].label;
 							for (var j = 0; j < data.length; j++){
-								csv += ";" + data[j].values[i].value;
+								if(data[j].values[i].value && !isNaN(data[j].values[i].value))
+									csv += ";" + parseFloat(data[j].values[i].value).toLocaleString();
+								else
+									csv += ";" + data[j].values[i].value;
 							}
 							csv  += "\r\n";
 						}
@@ -945,10 +982,13 @@ yuccaUtilsModule.factory('$yuccaHelpers', [function () {
 					}
 					return result;
 				},
-				safeNumber : function(input, decimal, isEuro,formatBigNumber) {
+				safeNumber : function(input, decimal, isEuro,formatBigNumber, textAfter) {
+
 					var result = input;
 					if(!isNaN(input) ){
-						if(input)
+						if(input=== parseInt(input, 10))
+							input = parseInt(input);
+						else
 							input = parseFloat(input);
 						if(isEuro){
 							result = this.formatEuro(input, decimal,formatBigNumber);
@@ -959,7 +999,7 @@ yuccaUtilsModule.factory('$yuccaHelpers', [function () {
 									decimal=0;
 								else if(Math.abs(input)<1){
 									decimal= -1*Math.log10(input) +1;
-									if(decimal < 0)
+									if(decimal < 0 || decimal==Infinity)
 										decimal = 0;
 									else if(decimal>20)
 										decimal =20;
@@ -972,9 +1012,12 @@ yuccaUtilsModule.factory('$yuccaHelpers', [function () {
 								result = this.format_big_number(result, decimal);
 							}
 							else
-								result = new Number(result).toLocaleString();
+								if(result>3000) // to avoid year written like 2.019
+									result = new Number(result).toLocaleString();
 						}
 					}
+					if(textAfter)
+						result += ' ' + textAfter;
 					return result;
 				},
 				format_big_number:function(input, decimal, lang) {
@@ -1589,13 +1632,14 @@ yuccaUtilsModule.factory('$yuccaHelpers', [function () {
 							keys.push({k:rows[r][columns[c].key], c: columns[c], d:c});
 						}
 						var value = 1;
+						//console.log("aaaaaaaaaaaa",rows[r][valueColumn.key]);
 						if(valueColumn.countingMode== 'sum')
-							value = rows[r][valueColumn.key];
+							value = rows[r][valueColumn.key]==null?0:rows[r][valueColumn.key];
 
 						if(valueColumn2){
 							var value2 = 1;
 							if(valueColumn2.countingMode== 'sum')
-								value2 = rows[r][valueColumn2.key];
+								value2 = rows[r][valueColumn2.key]==null?0:rows[r][valueColumn2.key];
 						}				
 						tree = this.initTreeNode(tree, keys, value,value2, valueFormat, valueFormat2);
 					}
@@ -1625,13 +1669,13 @@ yuccaUtilsModule.factory('$yuccaHelpers', [function () {
 
 					cur.value += parseFloat(value);
 					if(typeof valueFormat != 'undefined' && valueFormat)
-						cur.formattedValue = self.render.safeNumber(cur.value, valueFormat.decimalValue, valueFormat.isEuro,valueFormat.formatBigNumber);
+						cur.formattedValue = self.render.safeNumber(cur.value, valueFormat.decimalValue, valueFormat.isEuro,valueFormat.formatBigNumber, valueFormat.textAfter);
 					else
 						cur.formattedValue = cur.value;
 					if(value2){
 						cur.value2 += parseFloat(value2);
 						if(typeof valueFormat2 != 'undefined' && valueFormat2)
-							cur.formattedValue2 = self.render.safeNumber(cur.value2, valueFormat2.decimalValue, valueFormat2.isEuro,valueFormat2.formatBigNumber);
+							cur.formattedValue2 = self.render.safeNumber(cur.value2, valueFormat2.decimalValue, valueFormat2.isEuro,valueFormat2.formatBigNumber, valueFormat.textAfter);
 						else
 							cur.formattedValue2 = cur.value2;
 
@@ -1767,55 +1811,59 @@ yuccaUtilsModule.factory('$yuccaHelpers', [function () {
 					var linksDictionary = [];
 					var nodeIndex = 0;
 					for(var i=0; i<rows.length; i++){
-						for(var j=0; j<columns.length; j++){
-							if(typeof(matrix[columns[j].key]) == "undefined")
-								matrix[columns[j].key] = [];
-							if( typeof(uniqueNode[columns[j].key +"_"+rows[i][columns[j].key]]) == "undefined"){
-								var c = mainColor;
-//								if(colors && colors[j])
-//								c = colors[j];
-								var node = {"name": ""+rows[i][columns[j].key], "index": nodeIndex, "label": ""+rows[i][columns[j].key], "color": c,"fades":true};
-								console.debug("render",columns[j]+"_"+node.name);
-								if(typeof render!= 'undefined' && typeof render[columns[j].key+"_"+node.name] != 'undefined'){
-									var r = render[columns[j].key+"_"+node.name];
-									if(typeof r.label!=undefined)
-										node.label = r.label;
-									if(typeof r.color!=undefined)
-										node.color = r.color;
-									if(r.fades=="true")
-										node.fades = true;
-									else
-										node.fades = false;
+						if(rows[i][columnValue]){
+							for(var j=0; j<columns.length; j++){
+								if(typeof(matrix[columns[j].key]) == "undefined")
+									matrix[columns[j].key] = [];
+								if( typeof(uniqueNode[columns[j].key +"_"+rows[i][columns[j].key]]) == "undefined"){
+									var c = mainColor;
+	//								if(colors && colors[j])
+	//								c = colors[j];
+									var node = {"name": ""+rows[i][columns[j].key], "index": nodeIndex, "label": ""+rows[i][columns[j].key], "color": c,"fades":true};
+									console.debug("render",columns[j]+"_"+node.name);
+									if(typeof render!= 'undefined' && typeof render[columns[j].key+"_"+node.name] != 'undefined'){
+										var r = render[columns[j].key+"_"+node.name];
+										if(typeof r.label!=undefined)
+											node.label = r.label;
+										if(typeof r.color!=undefined)
+											node.color = r.color;
+										if(r.fades=="true")
+											node.fades = true;
+										else
+											node.fades = false;
+									}
+									nodes.push(node);
+									matrix[columns[j].key].push({"node":rows[i][columns[j].key],"index": nodeIndex});
+									nodeIndex++;
 								}
-								nodes.push(node);
-								matrix[columns[j].key].push({"node":rows[i][columns[j].key],"index": nodeIndex});
-								nodeIndex++;
+								uniqueNode[columns[j].key +"_"+rows[i][columns[j].key]] = 0;
 							}
-							uniqueNode[columns[j].key +"_"+rows[i][columns[j].key]] = 0;
 						}
 					}
 					console.debug("nodes", nodes);
 					console.debug("matrix", matrix);
 
 					for(var i=0; i<rows.length; i++){
-						for(var j=0; j<columns.length; j++){
-							if(j<columns.length-1){
-								var key= columns[j].key;
-								for(var k=0; k<matrix[key].length; k++){
-									var source = matrix[key][k];
-									for(var m=0; m<matrix[columns[j+1].key].length; m++){
-										var target = matrix[columns[j+1].key][m];
-										if(typeof(linksDictionary[key+"|"+source.node+"|"+target.node]) == "undefined")
-											linksDictionary[key+"|"+source.node+"|"+target.node] = {"source": source.index, "target":target.index, "value": 0};
-										if(rows[i][columns[j].key] == source.node && rows[i][columns[j+1].key]  == target.node){
-											var add = countingMode=='sum'?parseFloat(rows[i][columnValue]):1;
-											linksDictionary[key+"|"+source.node+"|"+target.node].value += add;
+						if(rows[i][columnValue]){
+							for(var j=0; j<columns.length; j++){
+								if(j<columns.length-1){
+									var key= columns[j].key;
+									for(var k=0; k<matrix[key].length; k++){
+										var source = matrix[key][k];
+										for(var m=0; m<matrix[columns[j+1].key].length; m++){
+											var target = matrix[columns[j+1].key][m];
+											if(typeof(linksDictionary[key+"|"+source.node+"|"+target.node]) == "undefined")
+												linksDictionary[key+"|"+source.node+"|"+target.node] = {"source": source.index, "target":target.index, "value": 0};
+											if(rows[i][columns[j].key] == source.node && rows[i][columns[j+1].key]  == target.node){
+												var value = rows[i][columnValue]?parseFloat(rows[i][columnValue]):0;
+												var add = countingMode=='sum'?value:1;
+												linksDictionary[key+"|"+source.node+"|"+target.node].value += add;
+											}
 										}
 									}
+	
 								}
-
 							}
-
 						}
 
 					}
@@ -2222,6 +2270,11 @@ yuccaUtilsModule.factory('$yuccaHelpers', [function () {
 }]);
 
 
+/**
+ * SPDX-License-Identifier: EUPL-1.2
+ * (C) Copyright 2019 - 2021 Regione Piemonte
+ */
+
 var WebsocketStompSingleton= (function() {    
 	var clientInstance = null; //private variable to hold the
 	//only instance of client that will exits.
@@ -2327,6 +2380,11 @@ var WebsocketStompSingleton= (function() {
 })();
 
 
+/**
+ * SPDX-License-Identifier: EUPL-1.2
+ * (C) Copyright 2019 - 2021 Regione Piemonte
+ */
+
 yuccaWidgetsModule.directive('collapsibleTree', function($timeout,$rootScope) {
 	return {
 		restrict : 'E',
@@ -2375,7 +2433,9 @@ yuccaWidgetsModule.directive('collapsibleTree', function($timeout,$rootScope) {
 				console.log("width in", width);
 
 				console.log("ssdata", scope.data);
-				var tree = d3.layout.tree().size([ height, width ]);
+				var tree = d3.layout.tree().size([ height, width ]).sort(function(a,b){
+				      return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+			    });
 
 				var diagonal = d3.svg.diagonal().projection(function(d) {
 					return [ d.y, d.x ];
@@ -2756,6 +2816,11 @@ yuccaWidgetsModule.directive('collapsibleTree', function($timeout,$rootScope) {
 	};
 });
 
+/**
+ * SPDX-License-Identifier: EUPL-1.2
+ * (C) Copyright 2019 - 2021 Regione Piemonte
+ */
+
 yuccaWidgetsModule.directive('collapsibleTreeBoxes',
 		function($timeout, $rootScope) {
 			return {
@@ -2816,7 +2881,9 @@ yuccaWidgetsModule.directive('collapsibleTreeBoxes',
 						height = height - margin.top - margin.bottom;
 						console.log("width in", width);
 
-						tree = d3.layout.tree().size([ height, width ]);
+						tree = d3.layout.tree().size([ height, width ]).sort(function(a,b){
+						      return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+					    });
 						root = scope.data;
 
 						root.x0 = height / 2;
@@ -3339,6 +3406,11 @@ yuccaWidgetsModule.directive('collapsibleTreeBoxes',
 				}
 			}
 		});
+/**
+ * SPDX-License-Identifier: EUPL-1.2
+ * (C) Copyright 2019 - 2021 Regione Piemonte
+ */
+
 yuccaWidgetsModule.directive('forcedirectedChart', function() {
     return {
       restrict: 'E',
@@ -3614,6 +3686,11 @@ yuccaWidgetsModule.directive('forcedirectedChart', function() {
     };
 
   });
+/**
+ * SPDX-License-Identifier: EUPL-1.2
+ * (C) Copyright 2019 - 2021 Regione Piemonte
+ */
+
 yuccaWidgetsModule.directive('funnelChart', function($timeout,$rootScope) {
 	return {
 		restrict : 'E',
@@ -4089,6 +4166,11 @@ yuccaWidgetsModule.directive('funnelChart', function($timeout,$rootScope) {
 		}
 	};
 });
+/**
+ * SPDX-License-Identifier: EUPL-1.2
+ * (C) Copyright 2019 - 2021 Regione Piemonte
+ */
+
 yuccaWidgetsModule.directive('sankeyChart', function() {
 	return {
 		restrict : 'E',
@@ -4586,6 +4668,11 @@ d3.sankey = function() {
 
 	  return sankey;
 	};
+/**
+ * SPDX-License-Identifier: EUPL-1.2
+ * (C) Copyright 2019 - 2021 Regione Piemonte
+ */
+
 'use strict';
 
 if (typeof module !== 'undefined') module.exports = simpleheat;
@@ -4728,6 +4815,11 @@ simpleheat.prototype = {
         }
     }
 };
+/**
+ * SPDX-License-Identifier: EUPL-1.2
+ * (C) Copyright 2019 - 2021 Regione Piemonte
+ */
+
 yuccaWidgetsModule.directive('treemapChart', function($timeout,$rootScope, $sce) {
 	return {
 		restrict : 'E',
@@ -4847,8 +4939,12 @@ yuccaWidgetsModule.directive('treemapChart', function($timeout,$rootScope, $sce)
 				var textvalues = "";
 				var text = "";
 				if(d && d._children){
-					for (var i = 0; i < d._children.length; i++) {
-						var c = d._children[i];
+					var orderedChildren = angular.copy(d._children);
+					orderedChildren = orderedChildren.sort(function(a,b) {
+					    return a.value > b.value?-1:1;
+					});
+					for (var i = 0; i < orderedChildren.length; i++) {
+						var c = orderedChildren[i];
 						var fColor = c.color?guessForegroundColor(c.color):"#333";
 						var value = safeNumber(c.value, scope.numberFormat);
 						textvalues+= "<span class='treemap-column' style='background-color: " + c.color + "; color: " + fColor + "'>"+c.name+"</span>"+
@@ -4945,7 +5041,11 @@ yuccaWidgetsModule.directive('treemapChart', function($timeout,$rootScope, $sce)
 					var display = function(d) {
 						console.log("ttt ddd ",d)
 						grandparent.datum(d.parent).on("click", transition).select("text").text(name(d));
-	
+						if(d.absolutedepth>0)
+							grandparent.attr("style","cursor:pointer");
+						else
+							grandparent.attr("style","cursor:default");
+
 						var g1 = svg.insert("g", ".grandparent").datum(d).attr("class", "depth").attr("parentname",d.name).attr("id", "absoluteparent")
 							.attr("absolutedepth", function(d){return d.absolutedepth;});
 						var g = g1.selectAll("g").data(d._children).enter().append("g");
@@ -4959,7 +5059,7 @@ yuccaWidgetsModule.directive('treemapChart', function($timeout,$rootScope, $sce)
 							return d._children || [ d ];
 						}).enter().append("rect").attr("class", "child").attr("style",function(d){return color(d);}).call(rect);
 	
-						g.append("rect").attr("class", "parent").attr("style",function(d){return color(d);}).call(rect).append("title").text(function(d) {
+						g.append("rect").attr("class", "parent").attr("style",function(d){return color(d) + ";" + cursorDrilldown(d);}).call(rect).append("title").text(function(d) {
 							return tooltip(d);
 						});
 						
@@ -5028,11 +5128,12 @@ yuccaWidgetsModule.directive('treemapChart', function($timeout,$rootScope, $sce)
 					};
 					
 					function tooltip(d){
+						console.log("tooltip", d);
 						//var t = root.valueLabel + " " + d.name.trim() + " : " + d.value.toFixed();
 						
 						var value = safeNumber(d.value, scope.numberFormat);
 
-						var t = root.valueLabel + ": " + value;
+						var t = d.name + " - " + root.valueLabel + ": " + value;
 						//if(typeof d.label != 'undefined')
 						//	t = d.label;
 						if(d.fourthElement){
@@ -5062,12 +5163,29 @@ yuccaWidgetsModule.directive('treemapChart', function($timeout,$rootScope, $sce)
 							c = ColorLuminance(c,lum);
 						}
 						else if(d.value2){
-							var value2percent = d.value2/d.parent.value2
-							var lum = value2percent;
-							//console.log("l", value2percent, lum);
-							c = ColorLuminance(c,lum);
+							var maxValueParent,minValueParent;
+							for (var i = 0; i < d.parent.children.length; i++) {
+								var childValue2 = d.parent.children[i].value2;
+								if(!maxValueParent || maxValueParent<childValue2)
+									maxValueParent = childValue2;
+								if(!minValueParent || minValueParent>childValue2)
+									minValueParent = childValue2;
+							}
+							//var value2percent = d.value2/d.parent.value2;
+							var value2percent = .2 + .8*d.value2/maxValueParent;
+							var lum = 1-value2percent;
+							c = colorShadeRgba(c,value2percent );
 						}
 						return "fill:" +c;
+					}
+					
+					function cursorDrilldown(d) {
+						console.log("Drilldown", d)
+						if(d._children)
+							return "cursor: pointer;";
+						else
+							return "cursor: default;";
+
 					}
 					
 					function textColor(d){
@@ -5182,7 +5300,29 @@ yuccaWidgetsModule.directive('treemapChart', function($timeout,$rootScope, $sce)
 
 				return rgb;
 			}
+			
+			function colorShade(col, amt) {
+				  col = col.replace(/^#/, '')
+				  if (col.length === 3) col = col[0] + col[0] + col[1] + col[1] + col[2] + col[2]
 
+				  let [r, g, b] = col.match(/.{2}/g);
+				  ([r, g, b] = [parseInt(r, 16) + amt, parseInt(g, 16) + amt, parseInt(b, 16) + amt])
+
+				  r = Math.max(Math.min(255, r), 0).toString(16)
+				  g = Math.max(Math.min(255, g), 0).toString(16)
+				  b = Math.max(Math.min(255, b), 0).toString(16)
+
+				  const rr = (r.length < 2 ? '0' : '') + r
+				  const gg = (g.length < 2 ? '0' : '') + g
+				  const bb = (b.length < 2 ? '0' : '') + b
+
+				  return '#${rr}${gg}${bb}'
+			}
+			function colorShadeRgba(col, percent) {
+				 var rgb = d3.rgb(col);
+				  return 'rgba(' + rgb.r + ','+ rgb.g + ','+ rgb.b + ',' + percent.toFixed(2) + ')';
+			}			
+			
 			var safeNumber = function(input, format) {
 				var result = input;
 				if(!isNaN(input) ){
@@ -5261,6 +5401,11 @@ yuccaWidgetsModule.directive('treemapChart', function($timeout,$rootScope, $sce)
 		}
 	};
 });
+/**
+ * SPDX-License-Identifier: EUPL-1.2
+ * (C) Copyright 2019 - 2021 Regione Piemonte
+ */
+
 yuccaWidgetsModule.directive('ngYuccaDatasetBulletChart', ['metadataService','dataService', '$yuccaHelpers', '$timeout', '$compile',
     function (metadataService, dataService,$yuccaHelpers, $timeout, $compile) {
     'use strict';
@@ -5611,6 +5756,11 @@ yuccaWidgetsTemplatesModule.run(["$templateCache", function($templateCache) {
 }]);
 
 
+/**
+ * SPDX-License-Identifier: EUPL-1.2
+ * (C) Copyright 2019 - 2021 Regione Piemonte
+ */
+
 yuccaWidgetsModule.directive('ngYuccaDatasetImageGallery', ['metadataService','dataService', '$yuccaHelpers', '$interval', 'leafletData', '$compile', '$timeout',
     function (metadataService, dataService,$yuccaHelpers, $interval, leafletData, $compile, $timeout) {
     'use strict';
@@ -5864,6 +6014,11 @@ yuccaWidgetsTemplatesModule.run(["$templateCache", function($templateCache) {
 }]);
 
 
+/**
+ * SPDX-License-Identifier: EUPL-1.2
+ * (C) Copyright 2019 - 2021 Regione Piemonte
+ */
+
 yuccaWidgetsModule.directive('ngYuccaDatasetMultidataStats', ['metadataService','dataService', '$yuccaHelpers',
     function (metadataService, dataService,$yuccaHelpers) {
     'use strict';
@@ -5878,6 +6033,9 @@ yuccaWidgetsModule.directive('ngYuccaDatasetMultidataStats', ['metadataService',
         	var user_token =  attr.userToken;
             scope.panel = $yuccaHelpers.attrs.safe(attr.landingPanel, 'chart');
             var filter  = attr.filter;
+            
+        	var showValues = attr.showValues==="true"?true:false;
+
             
             var firstGroupColumn =  $yuccaHelpers.attrs.safe(attr.firstGroupColumn, null);
             var firstGroupColors =  scope.$eval(attr.firstGroupColors);
@@ -5971,7 +6129,7 @@ yuccaWidgetsModule.directive('ngYuccaDatasetMultidataStats', ['metadataService',
     	            },
     	            x: function(d){return d.label;},
     	            y: function(d){return d.value;},
-    	            showValues: true,
+    	            showValues: showValues,
 	                valueFormat: function(d){return  $yuccaHelpers.render.safeNumber(d, decimalValue, scope.isEuroValue(),formatBigNumber);},	         
 	                //valueFormat: function(d){return parseFloat(d);},
 	                duration: 500,
@@ -6173,6 +6331,11 @@ yuccaWidgetsTemplatesModule.run(["$templateCache", function($templateCache) {
     );
 }]);
 
+
+/**
+ * SPDX-License-Identifier: EUPL-1.2
+ * (C) Copyright 2019 - 2021 Regione Piemonte
+ */
 
 yuccaWidgetsModule.directive('ngYuccaDatasetMultidataTreemap', ['metadataService','dataService', '$yuccaHelpers',
     function (metadataService, dataService,$yuccaHelpers) {
@@ -6419,6 +6582,11 @@ yuccaWidgetsTemplatesModule.run(["$templateCache", function($templateCache) {
     );
 }]);
 
+
+/**
+ * SPDX-License-Identifier: EUPL-1.2
+ * (C) Copyright 2019 - 2021 Regione Piemonte
+ */
 
 yuccaWidgetsModule.directive('ngYuccaDatasetPopulationPyramid', ['metadataService','dataService', '$yuccaHelpers','$rootScope',
     function (metadataService, dataService,$yuccaHelpers,$rootScope) {
@@ -6722,6 +6890,11 @@ yuccaWidgetsTemplatesModule.run(["$templateCache", function($templateCache) {
 }]);
 
 
+/**
+ * SPDX-License-Identifier: EUPL-1.2
+ * (C) Copyright 2019 - 2021 Regione Piemonte
+ */
+
 yuccaWidgetsModule.directive('ngYuccaStreamLastValue', ['metadataService','dataService', '$yuccaHelpers', '$interval', '$window',
     function (metadataService, dataService,$yuccaHelpers,$interval,$window) {
     'use strict';
@@ -7013,6 +7186,11 @@ yuccaWidgetsTemplatesModule.run(["$templateCache", function($templateCache) {
     );
 }]);
 
+
+/**
+ * SPDX-License-Identifier: EUPL-1.2
+ * (C) Copyright 2019 - 2021 Regione Piemonte
+ */
 
 yuccaWidgetsModule.directive('ngYuccaStreamMonitor', ['metadataService','dataService', '$yuccaHelpers', '$interval', '$window',
     function (metadataService, dataService,$yuccaHelpers,$interval,  $window) {
@@ -7354,6 +7532,11 @@ yuccaWidgetsTemplatesModule.run(["$templateCache", function($templateCache) {
 }]);
 
 
+/**
+ * SPDX-License-Identifier: EUPL-1.2
+ * (C) Copyright 2019 - 2021 Regione Piemonte
+ */
+
 yuccaWidgetsModule.directive('ngYuccaStreamMultistreamMap', ['metadataService','dataService', '$yuccaHelpers',
     function (metadataService, dataService,$yuccaHelpers) {
     'use strict';
@@ -7441,6 +7624,11 @@ yuccaWidgetsTemplatesModule.run(["$templateCache", function($templateCache) {
     );
 }]);
 
+
+/**
+ * SPDX-License-Identifier: EUPL-1.2
+ * (C) Copyright 2019 - 2021 Regione Piemonte
+ */
 
 yuccaWidgetsModule.directive('ngYuccaStreamMultistreamStats', ['metadataService','dataService', '$yuccaHelpers', 'leafletData',
     function (metadataService, dataService, $yuccaHelpers, leafletData) {
@@ -7748,6 +7936,11 @@ yuccaWidgetsTemplatesModule.run(["$templateCache", function($templateCache) {
 }]);
 
 
+/**
+ * SPDX-License-Identifier: EUPL-1.2
+ * (C) Copyright 2019 - 2021 Regione Piemonte
+ */
+
 yuccaWidgetsModule.directive('ngYuccaStreamMultistreamValue', ['metadataService','dataService', '$yuccaHelpers',
     function (metadataService, dataService,$yuccaHelpers) {
     'use strict';
@@ -7925,6 +8118,11 @@ yuccaWidgetsTemplatesModule.run(["$templateCache", function($templateCache) {
     );
 }]);
 
+
+/**
+ * SPDX-License-Identifier: EUPL-1.2
+ * (C) Copyright 2019 - 2021 Regione Piemonte
+ */
 
 yuccaWidgetsModule.directive('ngYuccaStreamTweetStats', ['metadataService','dataService', '$yuccaHelpers',
     function (metadataService, dataService,$yuccaHelpers) {
@@ -8190,648 +8388,10 @@ yuccaWidgetsTemplatesModule.run(["$templateCache", function($templateCache) {
     );
 }]);
 
-yuccaWidgetsModule.directive('ngYuccaControlFilterDataDiscrete', ['$yuccaHelpers', '$rootScope',
-    function ($yuccaHelpers,$rootScope) {
-    'use strict';
-
-    return {
-        restrict: 'E',
-        scope: {},
-        templateUrl:'template/control_filter_data_discrete.html',
-        link: function(scope, elem, attr) {
-        	console.log("ngYuccaControlFilter - attr", attr);
-
-          var widgetType = 'ngYuccaControlFilter';
-          scope.widgetId = $yuccaHelpers.attrs.safe(attr.widgetId,widgetType+new Date().getTime());
-          var eventControlId = $yuccaHelpers.attrs.safe(attr.eventControlId,"EventControl");
-
-
-          scope.label =  $yuccaHelpers.attrs.safe(attr.label, null);
-          scope.hint =  $yuccaHelpers.attrs.safe(attr.hint, null);
-          scope.debug = attr.debug==="true"?true:false;
-          scope.debugMessages = [];
-
-          scope.discreteFilterType = $yuccaHelpers.attrs.safe(attr.filterType, 'multi'); // multi - unique
-	      scope.columns =  attr.valueColumns?scope.$eval(attr.valueColumns):null;
-	      if(scope.columns){
-	    	  for (var i = 0; i < scope.columns.length; i++) {
-	    		  if(scope.columns[i].selected){
-	    			  scope.columns[i].selectedText = scope.columns[i].key;
-	    		  }
-	    	  }
-	      }
-
-          scope.flexDirection = $yuccaHelpers.attrs.safe(attr.direction, null) == null?'':'yucca-control-direction-' + attr.direction;
-          scope.flexAlignItems = $yuccaHelpers.attrs.safe(attr.alignItems, null) == null?'yucca-control-align-items-center':'yucca-control-align-items-' + attr.alignItems;
-
-          scope.filter = {};
-          var override = attr.override=="true"?true:false;
-          var oldFilterValue = null;
-          
- 		  scope.render = $yuccaHelpers.attrs.safe(attr.render, 'control'); // control button
-		  if(scope.render == 'control'){
-			  scope.render = scope.discreteFilterType == 'multi'?'checkbox':'radio';
-		  }
-          //var filters = []; 
-		  scope.select = function(columnIndex){
-			  console.log("columns",scope.columns );
-			  //scope.columns[columnIndex].selected = true;
-			  refreshFilter();
-			  
-		  }
-
-		  scope.toggleSelect = function(columnIndex){
-			  console.log("columns",scope.columns );
-			  if(scope.discreteFilterType != 'multi'){
-				for(var i=0; i<scope.columns.length; i++)
-					scope.columns[i].selected = false;
-			  }
-			  scope.columns[columnIndex].selected = !scope.columns[columnIndex].selected;
-			  refreshFilter();
-		  }
-
-		  
-          var refreshFilter = function(){
-			 console.log("filterText",scope.filter, oldFilterValue);
-			 var  logicOperator = " or "; 
-			 var filter = ""; 
-			 for(var i=0; i<scope.columns.length; i++){
-				 if(scope.columns[i].selected){
-					 filter += scope.columns[i].filter + logicOperator;
-				 }
-			 }
-			 filter = filter.substring(0,filter.length - logicOperator.length);
-
-			 if(!angular.equals(oldFilterValue,filter)){
-				 var event = $yuccaHelpers.event.createEvent(scope.widgetId,widgetType,"dataset.filter.odata", {"filter":filter,"override":override}, eventControlId);
-				 $rootScope.$broadcast ('yucca-widget-event', event);
-	        	 oldFilterValue = angular.copy(filter);
-			 }
-		  }
-		  
-
-		  
-		}
-
-    };
-}]);
-
-yuccaWidgetsTemplatesModule.run(["$templateCache", function($templateCache) {
-  $templateCache.put("template/control_filter_data_discrete.html",
-		'<div class="yucca-widget yucca-control-filter-data-discrete" id="{{widgetId}}">\n' +
-		'   <div class="yucca-control-main-header">'+
-		'     <div class="yucca-control-main-label" for="yucca-control-{{widgetId}}">{{label}}</div>' + 
-		'     <div class="yucca-control-main-hint">{{hint}}</div>' +
-		'   </div>'+
-		'	<div class="yucca-control-type-radio" ng-if="render==\'radio\' || render==\'checkbox\'">' +
-		'      <div class="yucca-control-items {{flexDirection}} {{flexAlignItems}}">' +
-		' 	   <div class="{{render}} yucca-control-item" ng-repeat="c in columns track by $index">' + 
-		'          <label><input type="{{render}}" ng-click="toggleSelect($index)" name="yucca-control-{{widgetId}}" ng-value="c.key" ng-model="c.selectedText" selected="{{c.selected}}"} >' + 
-		'     	      <span class="cr"><!--<span class="cr-img"></span>--><i class="cr-icon glyphicon glyphicon-ok"></i></span><span>{{c.label}}<span>'+
-		'          </label>'+
-	    '       </div>'+
-	    '     </div>' +
-		'	</div>\n' + 
-		'	<div class="yucca-control-type-button" ng-if="render==\'button\'">' +
-		'     <div class="yucca-control-items {{flexDirection}} {{flexAlignItems}}">' +
-		' 	  	<div class="yucca-control-select-button" ng-repeat="c in columns track by $index" ng-class="{\'active\': c.selected}">' + 
-		'     		<a href ng-click="toggleSelect($index)">{{c.label}}</a>'+
-	    '   	</div>'+
-	    '     </div>'+
-		'</div>\n' + 
-
-		
-        '</div>\n'
-    );
-}]);
-
-
-yuccaWidgetsModule.directive('ngYuccaControlFilter', ['$yuccaHelpers', '$rootScope',
-    function ($yuccaHelpers,$rootScope) {
-    'use strict';
-
-    return {
-        restrict: 'E',
-        scope: {},
-        templateUrl:'template/control_filter.html',
-        link: function(scope, elem, attr) {
-        	console.log("ngYuccaControlFilter - attr", attr);
-
-          var widgetType = 'ngYuccaControlFilter';
-          scope.widgetId = $yuccaHelpers.attrs.safe(attr.widgetId,widgetType+new Date().getTime());
-          var eventControlId = $yuccaHelpers.attrs.safe(attr.eventControlId,"EventControl");
-
-          scope.label =  $yuccaHelpers.attrs.safe(attr.label, null);
-          scope.placeholder =  $yuccaHelpers.attrs.safe(attr.placeholder, (scope.label==null?"":scope.label));
-          scope.hint =  $yuccaHelpers.attrs.safe(attr.hint, null);
-          scope.debug = attr.debug==="true"?true:false;
-          scope.debugMessages = [];
-
-          scope.filterType = $yuccaHelpers.attrs.safe(attr.filterType, 'text');
-          scope.advancedFilter =  $yuccaHelpers.attrs.safe(attr.advancedFilter, 'none');
-
-          scope.doubleRangeValues=[0,100];
-          scope.filter = {};
-//          scope.rangeSteps = new Array();
-//          scope.selectedSteps = [-1,11];
-//          for (var i = 0; i < 10; i++) {
-//        	  scope.rangeSteps.push({"stepIndex":i, "selected": true, "style": "selected"});
-//          }
-//          
-//          scope.selectRangeStep = function(index){
-//        	  console.log("selectRangeStep ", index);
-//        	  //scope.rangeSteps[index].selected = !scope.rangeSteps[index].selected;
-//        	  if(scope.selectedSteps[0]==-1)
-//        		  scope.selectedSteps[0] = index;
-//        	  else if(scope.selectedSteps[1] == 11)
-//        		scope.selectedSteps[1] = index;
-//        	  else if(index<scope.selectedSteps[1])
-//        		scope.selectedSteps[0] = index
-//        	  else
-//        	  	scope.selectedSteps[1] = index;
-//        		  
-//        	  console.log("s",scope.selectedSteps);
-//        	  
-//        	  refreshStepStyle();
-//        	  //scope.rangeSteps[index].style = scope.rangeSteps[index].selected?"selected":"";
-//          }
-//          
-//          scope.rangeStepHover  = function(index){
-//        	  scope.rangeSteps[index].hover = true;
-//        	  refreshStepStyle();
-//          };
-//
-//          scope.rangeStepOut  = function(index){
-//        	  scope.rangeSteps[index].hover = false;
-//        	  refreshStepStyle();
-//          };
-//          
-//          var refreshStepStyle  = function(){
-//        	  var hoverIndex = -1
-//        	  var beforeMin = false;
-//        	  var afterMax = false;
-//        	  for (var i = 0; i < scope.rangeSteps.length; i++) {
-//        		  if(scope.rangeSteps[i].hover){
-//        			  hoverIndex = i;
-//        			  beforeMin
-//        			  break;
-//        		  }
-//        	  }
-//          		
-//        	  for (var i = 0; i < scope.rangeSteps.length; i++) {
-//        		  var step = scope.rangeSteps[i];
-//        		  if(hoverIndex>0){
-//        			  if(i<scope.selectedSteps[0] || i<hoverIndex)
-//        				  scope.rangeSteps[i].style = "";
-//        			  else if(i>scope.selectedSteps[1] || i>hoverIndex){
-//        				  scope.rangeSteps[i].style = "";
-//        			  }
-//        			  else{ scope.rangeSteps[i].style = "selected";}
-//        		  }
-//        		  else{
-//        			  if(i<scope.selectedSteps[0] || i>scope.selectedSteps[1])
-//        				  scope.rangeSteps[i].style = "";
-//        			  else{
-//        				  scope.rangeSteps[i].style = "selected";
-//        			  }
-//        		  }
-//        	  }
-//          };
-        		  
-          var oldFilterValue = null;
-		  scope.filterText = function(){
-			 console.log("filterText",scope.filter, oldFilterValue);
-			 if(!angular.equals(oldFilterValue,scope.filter)){
-				 var event = $yuccaHelpers.event.createEvent(scope.widgetId,widgetType,"dataset.filter.text", {"column": attr.column, "value" :scope.filter.value}, eventControlId);
-				 if(scope.advancedFilter)
-					 event.data.advanced = scope.filter.advanced;
-				 $rootScope.$broadcast ('yucca-widget-event', event);
-	        	 oldFilterValue = angular.copy(scope.filter);
-			 }
-		  }
-		  
-		  scope.filterRange = function(){
-			  console.log("filterRange",scope.doubleRangeValues);
-			  var event = $yuccaHelpers.event.createEvent(scope.widgetId,widgetType,"dataset.filter.range", {"values": scope.doubleRangeValues});
-			  $rootScope.$broadcast ('yucca-widget-event', event);
-		  }
-		  
-		  scope.resetAdvanced = function(){
-			  scope.filter = {};
-			  scope.filterText();
-		  }
-		  
-		}
-
-    };
-}]);
-
-yuccaWidgetsTemplatesModule.run(["$templateCache", function($templateCache) {
-  $templateCache.put("template/control_filter.html",
-		'<div class="yucca-widget yucca-control-filter" id="{{widgetId}}">\n' +
-		'	<div class="yucca-control-type-select" ng-if="filterType==\'text\'">' +
-		'     <div class="yucca-control-main-label" for="yucca-filter-text-{{widgetId}}">{{label}}</div>' + 
-		'     <div class="yucca-control-main-hint">{{hint}}</div>' + 
-		'	  <input type="text" class="yucca-control-filter-text" ng-blur="filterText()" ng-model="filter.value" name="yucca-filter-text" id="yucca-filter-text-{{widgetId}}" placeholder="{{placeholder}}"/>' + 
-		'     <div class="yucca-control-filter-text-advanced" ng-if="advancedFilter==\'text\'">'+
-		'       <div class="radio">' + 
-		'          <label><input type="radio" name="adv_text_radio_{{widgetId}}" value="exact" ng-model="filter.advanced" ng-change="filterText()" >' + 
-		'     	      <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span><span>Exact<span>'+
-		'          </label>'+
-	    '       </div>'+
-		'       <div class="radio">' + 
-		'          <label><input type="radio" name="adv_text_radio_{{widgetId}}" value="startWith" ng-model="filter.advanced" ng-change="filterText()" >' + 
-		'     	      <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span><span>Start with<span>'+
-		'          </label>'+
-	    '       </div>'+
-		'       <div class="radio">' + 
-		'          <label><input type="radio" name="adv_text_radio_{{widgetId}}" value="endWith" ng-model="filter.advanced" ng-change="filterText()" >' + 
-		'     	      <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span><span>End with<span>'+
-		'          </label>'+
-	    '       </div>'+
-	    '       <div class="yucca-control-reset-link"><a href ng-click="resetAdvanced()">Reset</a></div>' +
-		'    </div> '	+
-		'    <div class="yucca-control-filter-text-advanced" ng-if="advancedFilter==\'numeric\'">'+
-		'       <div class="radio">' + 
-		'          <label><input type="radio" name="adv_text_radio_{{widgetId}}" value="gt" ng-model="filter.advanced" ng-change="filterText()" >' + 
-		'     	      <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span><span>&gt;<span>'+
-		'          </label>'+
-	    '       </div>'+
-		'       <div class="radio">' + 
-		'          <label><input type="radio" name="adv_text_radio_{{widgetId}}" value="ge" ng-model="filter.advanced" ng-change="filterText()" >' + 
-		'     	      <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span><span>&ge;<span>'+
-		'          </label>'+
-	    '       </div>'+
-		'       <div class="radio">' + 
-		'          <label><input type="radio" name="adv_text_radio_{{widgetId}}" value="lt" ng-model="filter.advanced" ng-change="filterText()" >' + 
-		'     	      <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span><span>&lt;<span>'+
-		'          </label>'+
-	    '       </div>'+
-		'       <div class="radio">' + 
-		'          <label><input type="radio" name="adv_text_radio_{{widgetId}}" value="le" ng-model="filter.advanced" ng-change="filterText()" >' + 
-		'     	      <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span><span>&le;<span>'+
-		'          </label>'+
-	    '       </div>'+
-	    '       <div class="yucca-control-reset-link"><a href ng-click="resetAdvanced()">Reset</a></div>' +
-		'     </div> '	+
-		'	</div>\n' + 
-		'	<div class="yucca-control-type-select" ng-if="filterType==\'range\'">' +
-		'     <div class="yucca-control-select-title">'+
-		'        <span class="yucca-control-select-label">{{label}}</span>' + 
-		'        <span class="yucca-control-select-hint">{{hint}}</span>'+
-		'     </div>' + 
-		'     <div class="yucca-widget-range">'+ 
-		'	      <label for="yucca-filter-range-1-{{widgetId}}" class="yucca-widget-double-range-value">Min</label>' +
-		'         <input type="range" class="yucca-widget-filter-range" ng-change="filterRange()" ng-model-options="{ debounce: 1500 }"  ng-model="doubleRangeValues[0]" name="yucca-filter-range-1" id="yucca-filter-range-1-{{widgetId}}"/>' + 
-		'         <div class="yucca-widget-range-value">{{doubleRangeValues[0]}} %</div>'+
-		'     </div>' +
-		'     <div class="yucca-widget-range">'+ 
-		'	      <label for="yucca-filter-range-2-{{widgetId}}" class="yucca-widget-double-range-value">Max</label>' +
-		'         <input type="range" class="yucca-widget-filter-range" ng-change="filterRange()" ng-model-options="{ debounce: 1500 }"  ng-model="doubleRangeValues[1]" name="yucca-filter-range-2" id="yucca-filter-range-2-{{widgetId}}"/>' + 
-		'         <div class="yucca-widget-range-value">{{doubleRangeValues[1]}} %</div>'+
-		'     </div>' +
-		'	</div>\n' + 
-		'	<div class="yucca-control-type-select" ng-if="filterType==\'range2\'">' +
-		'     <div class="yucca-control-select-title">'+
-		'        <span class="yucca-control-select-label">{{label}}</span>' + 
-		'        <span class="yucca-control-select-hint">{{hint}}</span>'+
-		'     </div>' + 
-		'     <div class="yucca-widget-double-range">'+ 
-		'	      <input type="range" class="yucca-widget-filter-range yucca-widget-double-range-first" ng-change="filterRange()" max="{{doubleRangeValues[1]}}" ng-model="doubleRangeValues[0]" name="yucca-filter-text" id="yucca-filter-text-{{widgetId}}"/>' + 
-		'	      <input type="range" class="yucca-widget-filter-range yucca-widget-double-range-second" ng-change="filterRange()" min="{{doubleRangeValues[0]}}" ng-model="doubleRangeValues[1]" name="yucca-filter-text" id="yucca-filter-text-{{widgetId}}" />' + 
-		'     </div>' +
-		'     <div class="yucca-widget-double-range-values">'+
-		'         <div class="yucca-widget-double-range-values-first">Min: {{doubleRangeValues[0]}} %</div>'+
-		'         <div class="yucca-widget-double-range-values-second">Max: {{doubleRangeValues[1]}} %</div>'+
-		'     </div>' +
-		'	</div>\n' + 
-		'	<div class="yucca-control-type-select" ng-if="filterType==\'range1\'">' +
-		'     <div class="yucca-control-select-title">'+
-		'        <span class="yucca-control-select-label">{{label}}</span>' + 
-		'        <span class="yucca-control-select-hint">{{hint}}</span>'+
-		'     </div>' + 
-		'     <div class="yucca-widget-slide">'+ 
-		'	      <div class="yucca-widget-slide-step {{r.style}}" ng-mouseover="rangeStepHover($index)" ng-mouseout="rangeStepOut($index)" ng-click="selectRangeStep($index)" ng-repeat="r in rangeSteps track by $index">&nbsp;</div>'+ 
-		'     </div>' +
-		'     <div class="yucca-widget-double-range-values">'+
-		'         <div class="yucca-widget-double-range-values-first">Min: {{selectedSteps[0]}} %</div>'+
-		'         <div class="yucca-widget-double-range-values-second">Max: {{selectedSteps[1]}} %</div>'+
-		'     </div>' +
-		'	</div>\n' + 
-		
-        '</div>\n'
-    );
-}]);
-
-
-yuccaWidgetsModule.directive('ngYuccaControlMapFilter', ['metadataService','dataService', '$yuccaHelpers', '$http',  '$timeout', '$compile', '$rootScope',
-    function (metadataService, dataService,$yuccaHelpers,$http,$timeout,$compile,$rootScope) {
-    'use strict';
-
-    return {
-        restrict: 'E',
-        scope: {},
-        templateUrl:'template/control_map_filter.html',
-        link: function(scope, elem, attr) {
-
-            var widgetType = 'YuccaControlMapFilter';
-            var widgetId = widgetType+new Date().getTime();
-            var eventControlId = $yuccaHelpers.attrs.safe(attr.eventControlId,"EventControl");
-
-            scope.label =  $yuccaHelpers.attrs.safe(attr.label, null);
-            scope.hint =  $yuccaHelpers.attrs.safe(attr.hint, null);
-            
-            var width = $yuccaHelpers.attrs.num(attr.width, null, null, 300);
-            var height = $yuccaHelpers.attrs.num(attr.height, null, null, 400);
-
-            var centered;
-            
-        	scope.debug = attr.debug==="true"?true:false;
-            scope.debugMessages = [];
-
-            var borderColor =  $yuccaHelpers.attrs.safe(attr.borderColor, "#fff");
-            var selectedColor =  $yuccaHelpers.attrs.safe(attr.selectedColor, "#aaa");
-            var unselectedColor =  $yuccaHelpers.attrs.safe(attr.unselectedColor, "#ddd");
-
-            scope.controlMapMapId = "controlMap"+new Date().getTime();
-
-            var geojsons = scope.$eval(attr.geojsons);
-            if(!geojsons || !geojsons.length || geojsons.lenght==0)
-            	geojsons = [{}];
-            
-            for (var gIndex = 0; gIndex < geojsons.length; gIndex++) {
-            	var g = geojsons[gIndex];
-            	if(!g.url)
-            		g.url="lib/yucca-angular-widgets/dist/data/piemonte_province_geojson.json";
-            	if(!g.key)
-            		g.key = "name";
-            	if(!g.render)
-            		g.render = {};
-            	if(!g.render.line)
-            		g.render.line = {}
-            	if(!g.render.line.weight)
-            		g.render.line.weight = 1;
-            	if(!g.render.line.opacity)
-            		g.render.line.opacity = 1;
-            	if(!g.render.line.dashcolor)
-            		g.render.line.dashcolor = '#0e232e';
-            	if(!g.render.line.dasharray)
-            		g.render.line.dasharray = 1;
-            	if(!g.render.areas)
-            		g.render.areas = {}
-            	if(!g.render.areas.fillopacity)
-            		g.render.areas.fillopacity = .7;
-            	
-			}
-            var geojson_data = null;
-            
-
-            
-            scope.geojson= null;
-            var mapLatLngs = null;
-			scope.isLoading = true;
-
-			var activeGeojson = 0;
-			
-			
-			var svg = d3.select('svg').attr('width', width).attr('height', height);
-			var g = svg.append('g');
-			var mapLayer = g.append('g').classed('map-layer', true);
-
-			d3.json(geojsons[activeGeojson].url, function(error, mapData) {
-				// create a first guess for the projection
-				 for (var k in mapData.features) {
-					 mapData.features[k].properties.selected=false;
-            	 }
-			     var center = d3.geo.centroid(mapData)
-			     var scale  = 1;
-			     var offset = [width/2, height/2];
-			     var projection = d3.geo.mercator().scale(scale).center(center).translate(offset);
-
-			     // create the path
-			     var path = d3.geo.path().projection(projection);
-
-			      // using the path determine the bounds of the current map and use 
-			      // these to determine better values for the scale and translation
-			     var bounds  = path.bounds(mapData);
-			     console.log("bounds", bounds);
-			     scale = 1 / Math.max((bounds[1][0]-bounds[0][0])*1.1/width, (bounds[1][1]-bounds[0][1])*1.1/height);
-			     offset  = [width - (bounds[0][0] + bounds[1][0])/2,height*1.1-(bounds[0][1] + bounds[1][1])/2];
-			      // new projection
-			     projection = d3.geo.mercator().center(center).scale(scale).translate(offset);
-			     path = path.projection(projection);				
-				 // Update color scale domain based on data
-				 //color.domain([0, d3.max(features, nameLength)]);
-
-				 //mapLayer.append("rect").attr('width', width).attr('height', height);
-				 // Draw each province as a path
-				 mapLayer.selectAll('path')
-				      .data(mapData.features)
-				      .enter().append('path')
-				      .attr('d', path)
-				      .attr('vector-effect', 'non-scaling-stroke')
-				      .style('fill', fillFn)
-				      .style('stroke', borderColor)
-				      .on('mouseover', highlightFeature)
-				      .on('mouseout', resetHighlight)
-				      .on('click', onAreaClick);
-				  
-				 scope.isLoading = false;
-			});
-
-			function fillFn(d){return unselectedColor;}
-			
-			scope.info = {"show": true};
-			scope.updateInfo = function(show, content){
-				$timeout(function(){
-					scope.info.show= show;
-					scope.info.content = content;
-				},100);
-			}
-			var resetAllSelection = function(){
-        	   console.log("reset",scope.geojson);
-        	   for (var k in scope.geojson.data.features) {
-        		   scope.geojson.data.features[k].properties.selected=false;
-        	   }
-			};
-
-			var highlightFeature = function(d) {
-        	   d3.select(this).style('fill', selectedColor);
-        	   scope.updateInfo(true, d.properties.code + " " + d.properties.name);
-			};
-
-			var resetHighlight = function(d) {
-        	  	mapLayer.selectAll('path').style('fill', function(d){return d.properties.selected?selectedColor: unselectedColor;});
-        	  	scope.updateInfo(false, "");
-			};
-             
-             var switchOnLayer = function(layer){
-            	 layer.setStyle({weight: 1, dashArray: '', fillOpacity: 0.7, fillColor: selectedColor});
-             }
-
-             var switchOffLayer = function(layer){
-            	 layer.setStyle({weight: 1, dashArray: '', fillOpacity: 0.7, fillColor: unselectedColor});
-             }
-
-             
-             scope.filter = {};
-             var currentSelected = null;
-             function onAreaClick(d){
-            	 console.log("onAreaClick", d);
-            	 if(currentSelected!=null){
-            		 currentSelected.properties.selected = false;
-            	 }
-            	 d.properties.selected = !d.properties.selected;
-            	 currentSelected = d;
-            	 resetHighlight();
-//            	 if(selectedLayer){
-//            		 selectedLayer.feature.properties.selected = false;
-//            		 switchOffLayer(selectedLayer);
-//            	 }
-//            	 e.target.feature.properties.selected = true;
-            	
-//                selectedLayer = e.target;
-//                switchOnLayer(e.target);
-
-          		var event = $yuccaHelpers.event.createEvent(scope.widgetId,widgetType,"dataset.filter.text", {"column": attr.column, "value" :d.properties[geojsons[activeGeojson].key]}, eventControlId);
-         		$rootScope.$broadcast ('yucca-widget-event', event);
-            	 
-             }
-             console.log("attrs", attr);
-             scope.MAP_PIEDMONT_CENTER =  {lat: 45.3522366, lng: 7.515388499999972, zoom: 7};
-
-
-        }
-
-    };
-}]);
-
-
-yuccaWidgetsTemplatesModule.run(["$templateCache", function($templateCache) {
-  $templateCache.put("template/control_map_filter.html",
-    '<div class="yucca-widget  yucca-control-map-filter">\n' +
-	'    <div class="yucca-control-main-label" for""yucca-filter-text-{{widgetId}}"">{{label}}</div>' + 
-	'    <div class="yucca-control-main-hint">{{hint}}</div>' + 
-    '    <div class="yucca-widget-control-content">\n' +
-    '        <section>\n' +
-    '           <div ng-if="isLoading" class="yucca-dataset-discretebar-chart-loading" >\n' +
-    '             <div class="yucca-widget-spinner"><div class="bullet1"></div><div class="bullet2"></div><div class="bullet3"></div></div>\n' +
-    '           </div>\n' +
-    '           <svg ng-show="!isLoading"></svg>\n' + 
-    '           <div class="info-panel" ng-show="info.show"><span>{{info.content}}</span></div>  '+ 
-    '        </section>\n' + 
-    '        <section class="yucca-widget-debug" ng-show="debug && debugMessages.length>0">\n' +
-    '          	<ul><li ng-repeat="m in debugMessages track by $index">{{m}}</li></ul>\n' +
-    '        </section>\n' +
-    '    </div>\n' +
-    '    <widget-footer ng-if="showFooter" widget-footer-text="{{footerText}}"><widget-footer>\n' +
-    '</div>\n'
-    );
-}]);
-
-
-yuccaWidgetsModule.directive('ngYuccaControlSelect', ['$yuccaHelpers', '$rootScope',
-    function ($yuccaHelpers,$rootScope) {
-    'use strict';
-
-    return {
-        restrict: 'E',
-        scope: {},
-        templateUrl:'template/control_select.html',
-        link: function(scope, elem, attr) {
-        	console.log("ngYuccaControlSelect - attr", attr);
-
-          var widgetType = 'ngYuccaControlSelect';
-          scope.widgetId = $yuccaHelpers.attrs.safe(attr.widgetId,widgetType+new Date().getTime());
-
-          var eventControlId = $yuccaHelpers.attrs.safe(attr.eventControlId,"EventControl");
-          scope.label =  $yuccaHelpers.attrs.safe(attr.label, null);
-          scope.hint =  $yuccaHelpers.attrs.safe(attr.hint, null);
-		  scope.selectEmptyLabel = $yuccaHelpers.attrs.safe(attr.selectEmptyLabel,null);
-          scope.debug = attr.debug==="true"?true:false;
-          scope.debugMessages = [];
-          scope.selected = {};
-          scope.selected.key = attr.selectedValue;
-          scope.flexDirection = $yuccaHelpers.attrs.safe(attr.direction, null) == null?'':'yucca-control-direction-' + attr.direction;
-          scope.flexAlignItems = $yuccaHelpers.attrs.safe(attr.alignItems, null) == null?'yucca-control-align-items-center':'yucca-control-align-items-' + attr.alignItems;
-          
-          
-		  scope.columns = null;
-		  var eventType = null;
-		  var eventData = null;
-		  if(attr.groupByColumns){
-			  scope.columns =  attr.groupByColumns?scope.$eval(attr.groupByColumns):null;
-			  eventType = "dataset.change.group_by_column";
-		  }
-		  else if(attr.valueColumns){		
-		      scope.columns =  attr.valueColumns?scope.$eval(attr.valueColumns):null;
-			  eventType = "dataset.change.value_column";
-		  }
-			
-		  if(scope.selected.key){
-			  for (var i = 0; i < scope.columns.length; i++) {
-				  if(scope.columns[i].key == scope.selected.key){
-					  scope.selectedIndex = i;
-					  break;
-				  }
-			  }
-		  }
-		  console.log("columns", scope.columns);
-		  scope.render = $yuccaHelpers.attrs.safe(attr.render, 'select'); // select, radio, button
-
-
-		  scope.select = function(key){
-			  console.log("select",key);
-			  scope.selected.key = key;
-			  var eventValue = null;
-			  for (var i = 0; i < scope.columns.length; i++) {
-				if(scope.columns[i].key == key)
-					eventValue = scope.columns[i];
-			  }
-         	  var event = $yuccaHelpers.event.createEvent(scope.widgetId,widgetType,eventType, eventValue, eventControlId);
-        	  console.log("event",event);
-        	  $rootScope.$broadcast ('yucca-widget-event', event);
-
-		  }
-		}
-
-    };
-}]);
-
-yuccaWidgetsTemplatesModule.run(["$templateCache", function($templateCache) {
-  $templateCache.put("template/control_select.html",
-		'<div class="yucca-widget yucca-control-select" id="{{widgetId}}">\n' +
-		'   <div class="yucca-control-main-header">'+
-		'     <div class="yucca-control-main-label" for="yucca-control-{{widgetId}}">{{label}}</div>' + 
-		'     <div class="yucca-control-main-hint">{{hint}}</div>' +
-//		'	  <div class="yucca-control-reset-link"><a href ng-click="reset()">Reset</a></div>' +
-		'   </div>'+
-		'	<div class="yucca-control-type-select" ng-if="render==\'select\'">' +
-		'	  <select ng-change="select(selected.key)" class="yucca-select" ng-model="selected.key" id="yucca-control-{{widgetId}}">'+
-		'       <option disabled selected value>{{selectEmptyLabel}}</option>' +
-		'		<option ng-repeat="c in columns  track by $index" value="{{c.key}}">{{c.label}}</option>'+ 
-		'	  </select>' + 
-		'	</div>\n' + 
-		'	<div class="yucca-control-type-radio" ng-if="render==\'radio\'">' +
-		'      <div class="yucca-control-items {{flexDirection}} {{flexAlignItems}}">' +
-		' 	   <div class="radio yucca-control-item" ng-repeat="c in columns track by $index">' + 
-		'          <label><input type="radio" ng-change="select(c.key)" name="yucca-control-{{widgetId}}" ng-value="c.key" ng-model="selected.key" >' + 
-		'     	      <span class="cr"><!--<span class="cr-img"></span>--><i class="cr-icon glyphicon glyphicon-ok"></i></span><span>{{c.label}}<span>'+
-		'          </label>'+
-	    '       </div>'+
-	    '     </div>' +
-		'	</div>\n' + 
-		'	<div class="yucca-control-type-button" ng-if="render==\'button\'">' +
-		'     <div class="yucca-control-items {{flexDirection}} {{flexAlignItems}}">' +
-		' 	  	<div class="yucca-control-select-button" ng-repeat="c in columns track by $index" ng-class="{\'active\': c.key==selected.key}">' + 
-		'     		<a href ng-click="select(c.key)">{{c.label}}</a>'+
-	    '   	</div>'+
-	    '     </div>'+
-		'</div>\n' + 
-    '</div>\n'
-    );
-}]);
-
+/**
+ * SPDX-License-Identifier: EUPL-1.2
+ * (C) Copyright 2019 - 2021 Regione Piemonte
+ */
 
 yuccaWidgetsModule.directive('widgetHeader',
     function () {
@@ -8910,6 +8470,11 @@ yuccaWidgetsModule.directive('two', function(oneDirective) {
  
     });     
 });
+/**
+ * SPDX-License-Identifier: EUPL-1.2
+ * (C) Copyright 2019 - 2021 Regione Piemonte
+ */
+
 yuccaWidgetsModule.directive('ngYuccaDatasetBoxplotChart', ['metadataService','dataService', '$yuccaHelpers', '$rootScope','$timeout',
     function (metadataService, dataService,$yuccaHelpers, $rootScope, $timeout) {
     'use strict';
@@ -9299,6 +8864,11 @@ yuccaWidgetsTemplatesModule.run(["$templateCache", function($templateCache) {
     );
 }]);
 
+
+/**
+ * SPDX-License-Identifier: EUPL-1.2
+ * (C) Copyright 2019 - 2021 Regione Piemonte
+ */
 
 yuccaWidgetsModule.directive('ngYuccaDatasetBubblesMapChart', ['metadataService','dataService', '$yuccaHelpers', '$http', '$timeout', '$compile', '$rootScope',
     function (metadataService, dataService,$yuccaHelpers,$http,$timeout,$compile,$rootScope) {
@@ -9794,6 +9364,11 @@ yuccaWidgetsTemplatesModule.run(["$templateCache", function($templateCache) {
 }]);
 
 
+/**
+ * SPDX-License-Identifier: EUPL-1.2
+ * (C) Copyright 2019 - 2021 Regione Piemonte
+ */
+
 yuccaWidgetsModule.directive('ngYuccaDatasetChoroplethMapChart', ['metadataService','dataService', '$yuccaHelpers', '$http', '$timeout', '$compile', '$rootScope',
     function (metadataService, dataService,$yuccaHelpers,$http,$timeout,$compile,$rootScope) {
     'use strict';
@@ -10131,8 +9706,9 @@ yuccaWidgetsModule.directive('ngYuccaDatasetChoroplethMapChart', ['metadataServi
 			var highlightFeature = function(d) {
 				var color = $yuccaHelpers.d3color.darker(getValueColor(d), 0.3);
 				d3.select(this).style('fill', color);
-				scope.updateInfo(true, d.properties.name  + (d.properties.label?" - " + d.properties.label:"") +
-						(d.properties.value?
+				var name = d.properties.name || d.properties.description;
+				scope.updateInfo(true, name  + (d.properties.label?" - " + d.properties.label:"") +
+						(typeof d.properties.value != 'undefined'?
 						": " + $yuccaHelpers.render.safeNumber(d.properties.value, decimalValue, scope.isEuroValue(),formatBigNumber):": no data"));
           		var event = $yuccaHelpers.event.createEvent(scope.widgetId,widgetType,"dataset.highlight.group_by_column", 
           				{"key": d.properties[geojsons[activeGeojson].key], "color" :color}, eventControlId);
@@ -10319,6 +9895,11 @@ yuccaWidgetsTemplatesModule.run(["$templateCache", function($templateCache) {
 }]);
 
 
+/**
+ * SPDX-License-Identifier: EUPL-1.2
+ * (C) Copyright 2019 - 2021 Regione Piemonte
+ */
+
 yuccaWidgetsModule.directive('ngYuccaDatasetCollapsibletreeChart', ['metadataService','dataService', '$yuccaHelpers', '$timeout', '$compile', '$rootScope',
     function (metadataService, dataService,$yuccaHelpers, $timeout, $compile, $rootScope) {
     'use strict';
@@ -10359,6 +9940,8 @@ yuccaWidgetsModule.directive('ngYuccaDatasetCollapsibletreeChart', ['metadataSer
             scope.isEuroValue = function(){
             	return euroValue == "true";
             };
+
+            var textAfter = $yuccaHelpers.attrs.safe(attr.textAfter, '');
 
             var chartColors =  scope.$eval(attr.chartColors);
             var mainChartColor =  $yuccaHelpers.attrs.safe(attr.mainChartColor, "#00bbf0");
@@ -10498,7 +10081,7 @@ yuccaWidgetsModule.directive('ngYuccaDatasetCollapsibletreeChart', ['metadataSer
 	    			for(var i=0; i<odataResult.length; i++)
 	    				allData = allData.concat(odataResult[i].data.d.results);
 	    				
-	    			var valueFormat = {decimalValue: decimalValue, isEuro: scope.isEuroValue(), formatBigNumber: formatBigNumber};
+	    			var valueFormat = {decimalValue: decimalValue, isEuro: scope.isEuroValue(), formatBigNumber: formatBigNumber, textAfter:textAfter};
 
 	    			scope.collapsibletreeData = $yuccaHelpers.data.aggregationTree(rootLabel, allData, treeColumns, valueColumn, null, valueFormat);
 	    			console.log("tree fuori", scope.collapsibletreeData);
@@ -10562,6 +10145,11 @@ yuccaWidgetsTemplatesModule.run(["$templateCache", function($templateCache) {
 }]);
 
 
+/**
+ * SPDX-License-Identifier: EUPL-1.2
+ * (C) Copyright 2019 - 2021 Regione Piemonte
+ */
+
 yuccaWidgetsModule.directive('ngYuccaDatasetCollapsibletreeboxesChart', ['metadataService','dataService', '$yuccaHelpers', '$timeout', '$compile', '$rootScope',
     function (metadataService, dataService,$yuccaHelpers, $timeout, $compile, $rootScope) {
     'use strict';
@@ -10602,6 +10190,8 @@ yuccaWidgetsModule.directive('ngYuccaDatasetCollapsibletreeboxesChart', ['metada
             scope.isEuroValue = function(){
             	return euroValue == "true";
             };
+            
+            var textAfter = $yuccaHelpers.attrs.safe(attr.textAfter, '');
 
             var chartColors =  scope.$eval(attr.chartColors);
             var mainChartColor =  $yuccaHelpers.attrs.safe(attr.mainChartColor, "#00bbf0");
@@ -10741,7 +10331,7 @@ yuccaWidgetsModule.directive('ngYuccaDatasetCollapsibletreeboxesChart', ['metada
 	    			for(var i=0; i<odataResult.length; i++)
 	    				allData = allData.concat(odataResult[i].data.d.results);
 	    				
-	    			var valueFormat = {decimalValue: decimalValue, isEuro: scope.isEuroValue(), formatBigNumber: formatBigNumber};
+	    			var valueFormat = {decimalValue: decimalValue, isEuro: scope.isEuroValue(), formatBigNumber: formatBigNumber, textAfter:textAfter};
 
 	    			scope.collapsibletreeData = $yuccaHelpers.data.aggregationTree(rootLabel, allData, treeColumns, valueColumn, null, valueFormat);
 	    			console.log("tree fuori", scope.collapsibletreeData);
@@ -10803,6 +10393,11 @@ yuccaWidgetsTemplatesModule.run(["$templateCache", function($templateCache) {
     );
 }]);
 
+
+/**
+ * SPDX-License-Identifier: EUPL-1.2
+ * (C) Copyright 2019 - 2021 Regione Piemonte
+ */
 
 yuccaWidgetsModule.directive('ngYuccaDatasetDataexplorerTable', ['metadataService','dataService', '$yuccaHelpers', '$timeout', '$compile',
     function (metadataService, dataService,$yuccaHelpers, $timeout, $compile) {
@@ -11153,13 +10748,26 @@ yuccaWidgetsModule.directive('ngYuccaDatasetDataexplorerTable', ['metadataServic
             	scope.tableData.data = scope.tableData.data.sort(compareData);
             }
             
-            var compareData = function( a, b ) {
+            var compareData = function( aString, bString ) {
             	var res = 0
+            	var a = aString.cols[sort.predicate].val;
+            	var b = bString.cols[sort.predicate].val;
+            	if(columnMap[sort.predicate].datatype == "int" ||
+            			columnMap[sort.predicate].datatype == "long"){
+            		a = parseInt(a.replace(/\./g, ''));
+            		b = parseInt(b.replace(/\./g, ''));
+            	}
+            	else if(columnMap[sort.predicate].datatype == "float" ||
+            			columnMap[sort.predicate].datatype == "double"){
+            		a = parseFloat(a.replace(/\./g, ''));
+            		b = parseFloat(b.replace(/\./g, ''));
+            	}
+
             	if(!sort.reverse){
-            		res= a.cols[sort.predicate].val < b.cols[sort.predicate].val?-1:1;
+            		res= a < b?-1:1;
             	}
             	else{
-            		res= a.cols[sort.predicate].val > b.cols[sort.predicate].val?-1:1;
+            		res= a > b?-1:1;
             	}
             	return res;
             }
@@ -11282,7 +10890,7 @@ yuccaWidgetsTemplatesModule.run(["$templateCache", function($templateCache) {
     '               <div class="yucca-widget-dataexplorer-pagination-total">Total <strong>{{filtered.rows.length}}</strong></div>' +
     '                <a href ng-if="pagination.current>1" ng-click="pagination.current=pagination.current-1" title="Previous" class="yucca-widget-dataexplorer-pagination-prev">&lt;</a> ' +
     '                  {{pagination.current}}/{{numberOfPages()}}\n' +
-    '			     <a href ng-if="pagination.current < filtered.rows.length/pagination.pagesize - 1" ng-click="pagination.current=pagination.current+1" title="Next"  class="yucca-widget-dataexplorer-pagination-prev">&gt;</a>' +
+    '			     <a href ng-if="pagination.current < filtered.rows.length/pagination.pagesize" ng-click="pagination.current=pagination.current+1" title="Next"  class="yucca-widget-dataexplorer-pagination-prev">&gt;</a>' +
     '   	      </div>\n' +
     '   	    </div>\n' +
     '           <div class="yucca-widget-table-detail-panel" ng-if="detail"><a class="yucca-widget-table-close" href ng-click="hideDetail()">&times</a>'+
@@ -11304,6 +10912,11 @@ yuccaWidgetsTemplatesModule.run(["$templateCache", function($templateCache) {
 }]);
 
 	
+/**
+ * SPDX-License-Identifier: EUPL-1.2
+ * (C) Copyright 2019 - 2021 Regione Piemonte
+ */
+
 yuccaWidgetsModule.directive('ngYuccaDatasetDiscretebarChart', ['metadataService','dataService', '$yuccaHelpers', '$rootScope','$timeout',
     function (metadataService, dataService,$yuccaHelpers, $rootScope, $timeout) {
     'use strict';
@@ -11594,7 +11207,7 @@ yuccaWidgetsModule.directive('ngYuccaDatasetDiscretebarChart', ['metadataService
 	    					scope.options.chart.margin = {};
 	    				scope.options.chart.margin.left = fakeText.node().getComputedTextLength()+6;
 	    				console.log("maxLabel",maxLabel, fakeText.node().getComputedTextLength());
-	    				d3.select("#"+ scope.widgetId + "-fake").remove();
+	    				d3.select("#"+ scope.widgetId + "-fake svg").remove();
 	    			}
 
 	    	        console.log("discrete chartData",scope.chartData);
@@ -11674,6 +11287,11 @@ yuccaWidgetsTemplatesModule.run(["$templateCache", function($templateCache) {
     );
 }]);
 
+
+/**
+ * SPDX-License-Identifier: EUPL-1.2
+ * (C) Copyright 2019 - 2021 Regione Piemonte
+ */
 
 yuccaWidgetsModule.directive('ngYuccaDatasetDrilldowndataexplorerChart', ['metadataService','dataService', '$yuccaHelpers', '$timeout', '$compile', '$rootScope',
     function (metadataService, dataService,$yuccaHelpers, $timeout, $compile, $rootScope) {
@@ -12017,6 +11635,11 @@ yuccaWidgetsTemplatesModule.run(["$templateCache", function($templateCache) {
 }]);
 
 
+/**
+ * SPDX-License-Identifier: EUPL-1.2
+ * (C) Copyright 2019 - 2021 Regione Piemonte
+ */
+
 yuccaWidgetsModule.directive('ngYuccaDatasetForcedirectedChart', ['metadataService','dataService', '$yuccaHelpers', '$timeout', '$compile', '$rootScope',
     function (metadataService, dataService,$yuccaHelpers, $timeout, $compile, $rootScope) {
     'use strict';
@@ -12251,6 +11874,11 @@ yuccaWidgetsTemplatesModule.run(["$templateCache", function($templateCache) {
     );
 }]);
 
+
+/**
+ * SPDX-License-Identifier: EUPL-1.2
+ * (C) Copyright 2019 - 2021 Regione Piemonte
+ */
 
 yuccaWidgetsModule.directive('ngYuccaDatasetFunnelChart', ['metadataService','dataService', '$yuccaHelpers', '$rootScope','$timeout',
     function (metadataService, dataService,$yuccaHelpers, $rootScope, $timeout) {
@@ -12545,6 +12173,11 @@ yuccaWidgetsTemplatesModule.run(["$templateCache", function($templateCache) {
     );
 }]);
 
+
+/**
+ * SPDX-License-Identifier: EUPL-1.2
+ * (C) Copyright 2019 - 2021 Regione Piemonte
+ */
 
 yuccaWidgetsModule.directive('ngYuccaDatasetHeatmapMapChart', ['metadataService','dataService', '$yuccaHelpers', '$http', '$timeout', '$compile', '$rootScope',
     function (metadataService, dataService,$yuccaHelpers,$http,$timeout,$compile,$rootScope) {
@@ -13076,6 +12709,11 @@ yuccaWidgetsTemplatesModule.run(["$templateCache", function($templateCache) {
 }]);
 
 
+/**
+ * SPDX-License-Identifier: EUPL-1.2
+ * (C) Copyright 2019 - 2021 Regione Piemonte
+ */
+
 yuccaWidgetsModule.directive('ngYuccaDatasetHorizontalmultibarChart', ['metadataService','dataService', '$yuccaHelpers', '$rootScope','$timeout',
     function (metadataService, dataService,$yuccaHelpers, $rootScope, $timeout) {
     'use strict';
@@ -13475,6 +13113,11 @@ yuccaWidgetsTemplatesModule.run(["$templateCache", function($templateCache) {
 }]);
 
 
+/**
+ * SPDX-License-Identifier: EUPL-1.2
+ * (C) Copyright 2019 - 2021 Regione Piemonte
+ */
+
 yuccaWidgetsModule.directive('ngYuccaDatasetLineChart', ['metadataService','dataService', '$yuccaHelpers', '$timeout', '$compile',
     function (metadataService, dataService,$yuccaHelpers, $timeout, $compile) {
     'use strict';
@@ -13547,6 +13190,7 @@ yuccaWidgetsModule.directive('ngYuccaDatasetLineChart', ['metadataService','data
             	yAxisAttr = {hide:false, label: ""};
     		
             //var serieStyles = scope.$eval(attr.serieStyles);
+        	var interpolate =  attr.interpolate;
 
         	scope.options = {
     			chart: {
@@ -13577,6 +13221,9 @@ yuccaWidgetsModule.directive('ngYuccaDatasetLineChart', ['metadataService','data
 	     
 	            }
 	        };
+            if(interpolate)
+            	scope.options.chart.interpolate = interpolate;
+
         	// range 0->1
 
         	var legendAttr= scope.$eval(attr.chartLegend);
@@ -13828,6 +13475,11 @@ yuccaWidgetsTemplatesModule.run(["$templateCache", function($templateCache) {
 }]);
 
 
+/**
+ * SPDX-License-Identifier: EUPL-1.2
+ * (C) Copyright 2019 - 2021 Regione Piemonte
+ */
+
 yuccaWidgetsModule.directive('ngYuccaDatasetMultiChart', ['metadataService','dataService', '$yuccaHelpers', '$rootScope','$timeout',
     function (metadataService, dataService,$yuccaHelpers, $rootScope, $timeout) {
     'use strict';
@@ -13862,12 +13514,27 @@ yuccaWidgetsModule.directive('ngYuccaDatasetMultiChart', ['metadataService','dat
             if(datasetcode==null )
         		scope.debugMessages.push("Invalid dataset code");
             
-            var euroValue = $yuccaHelpers.attrs.safe(attr.euroValue, false);
-            var decimalValue = $yuccaHelpers.attrs.safe(attr.decimalValue, 2);
-            var formatBigNumber = $yuccaHelpers.attrs.safe(attr.formatBigNumber, false);
-            scope.isEuroValue = function(){
-            	return euroValue == "true";
-            };
+//            var euroValueX = $yuccaHelpers.attrs.safe(attr.euroValueX, false);
+//            var decimalValueX = $yuccaHelpers.attrs.safe(attr.decimalValueX, 2);
+//            var formatBigNumberX = $yuccaHelpers.attrs.safe(attr.formatBigNumberX, false);
+//            scope.isEuroValueX = function(){
+//            	return euroValueX == "true";
+//            };
+//            var euroValueY = $yuccaHelpers.attrs.safe(attr.euroValueY, false);
+//            var decimalValueY = $yuccaHelpers.attrs.safe(attr.decimalValueY, 2);
+//            var formatBigNumberY = $yuccaHelpers.attrs.safe(attr.formatBigNumberY, false);
+//            scope.isEuroValueY = function(){
+//            	return euroValueY == "true";
+//            };
+//
+//            var euroValueY2 = $yuccaHelpers.attrs.safe(attr.euroValueY2, false);
+//            var decimalValueY2 = $yuccaHelpers.attrs.safe(attr.decimalValueY2, 2);
+//            var formatBigNumberY2 = $yuccaHelpers.attrs.safe(attr.formatBigNumberY2, false);
+//            scope.isEuroValueY2 = function(){
+//            	return euroValueY2 == "true";
+//            };
+
+            
             var skipZeroValues =  attr.skipZeroValues==="true"?true:false;
             //var countingMode  = $yuccaHelpers.attrs.safe(attr.countingMode, "count");
             //var groupOperation = $yuccaHelpers.attrs.safe(attr.groupOperation, "sum");
@@ -13901,7 +13568,14 @@ yuccaWidgetsModule.directive('ngYuccaDatasetMultiChart', ['metadataService','dat
             var yAxisAttr = scope.$eval(attr.yAxis);
             if(typeof yAxisAttr == 'undefined')
             	yAxisAttr = {show:false, label: ""};
+
+            var yAxisAttr2 = scope.$eval(attr.y2Axis);
+            if(typeof yAxisAttr2 == 'undefined')
+            	yAxisAttr2 = {show:false, label: ""};
             
+        	var interpolate =  attr.interpolate;
+
+
             var serieStyles = scope.$eval(attr.serieStyles);
             
             console.log("serieStyles",serieStyles);
@@ -13916,9 +13590,17 @@ yuccaWidgetsModule.directive('ngYuccaDatasetMultiChart', ['metadataService','dat
                     chart: {
                         type: 'multiChart',
                         duration: 500,
-    	                valueFormat: function(d){return  $yuccaHelpers.render.safeNumber(d, decimalValue, scope.isEuroValue(),formatBigNumber);},
+    	                valueFormat: function(d){
+    	                	return  d;//$yuccaHelpers.render.safeNumber(d, decimalValueY, scope.isEuroValueY(),formatBigNumberY);
+    	                },
+    	                //line1:{padData:true},
     	                yAxis1:{
-    	                	tickFormat:(function (d) {return $yuccaHelpers.render.safeNumber(d, decimalValue, scope.isEuroValue(),formatBigNumber);}),
+    	                	tickFormat:(function (d) {
+	    	            		return $yuccaHelpers.render.safeNumber(d, 
+	    	            				yAxisAttr.decimal_value, 
+	    	            				yAxisAttr.is_euro_value,
+	    	            				yAxisAttr.format_big_number);
+    	                		}),
         	                rotateLabels:yAxisAttr.rotateLabels?yAxisAttr.rotateLabels:0,
         	    			axisLabel:yAxisAttr.label?yAxisAttr.label:"",
         	    			staggerLabels: yAxisAttr.staggerLabels?true:false
@@ -13931,23 +13613,64 @@ yuccaWidgetsModule.directive('ngYuccaDatasetMultiChart', ['metadataService','dat
     	    	            	if(groupByDatetime)
     	    	            		return $yuccaHelpers.utils.formatDate(d);
     	    	            	else
-    	    	            		return $yuccaHelpers.render.safeNumber(d, decimalValue, scope.isEuroValue(),formatBigNumber);
+    	    	            		return $yuccaHelpers.render.safeNumber(d, 
+    	    	            				xAxisAttr.decimal_value, 
+    	    	            				xAxisAttr.is_euro_value,
+    	    	            				xAxisAttr.format_big_number);
     	    	            }),
     					},
     	                yAxis2:{
-    	                	tickFormat:(function (d) {return $yuccaHelpers.render.safeNumber(d, decimalValue, scope.isEuroValue(),formatBigNumber);}),
+    	                	tickFormat:(function (d) {
+	    	            		return $yuccaHelpers.render.safeNumber(d, 
+	    	            				yAxisAttr2.decimal_value, 
+	    	            				yAxisAttr2.is_euro_value,
+	    	            				yAxisAttr2.format_big_number);
+
+    	                	}),
     						axisLabel:yAxisAttr.label?yAxisAttr.label:""
     					},
-    	    	        reduceXTicks: attr.reduceXTicks == "true",
+    	    	        //reduceXTicks: attr.reduceXTicks == "true",
 
                     }
                 };
+            
           
+            if(interpolate)
+            	scope.options.chart.interpolate = interpolate;
 
 
+            // fix right margin 
+            $timeout(function(){
+    			var maxLabel = "";
+    			if(scope.chartData && scope.chartData.length>0){
+    				for (var j = 0; j < scope.chartData.length; j++) {
+    					if(scope.chartData[j].yAxis == "2"){
+    						for(var i=0; i<scope.chartData[j].values.length; i++){
+    							var label = $yuccaHelpers.render.safeNumber(scope.chartData[j].values[i].y, 
+    									yAxisAttr2.decimal_value, 
+	    	            				yAxisAttr2.is_euro_value,
+	    	            				yAxisAttr2.format_big_number);
+    							if(label.length>maxLabel.length)
+    								maxLabel = label;
+    						}
+    						
+    					}
+    				}
+    				var fakeText = d3.select("#"+ scope.widgetId + "-fake").insert("svg").append("text").text(maxLabel);
+    				if(!scope.options.chart.margin)
+    					scope.options.chart.margin = {};
+    				scope.options.chart.margin.right = fakeText.node().getComputedTextLength()+6;
+    				console.log("maxLabel",maxLabel, fakeText.node().getComputedTextLength());
+    				d3.select("#"+ scope.widgetId + "-fake svg").remove();
+    			}
+
+            	
+            	
+            	scope.options.chart.margin={right: 100}});
+            
+            
         	var legendAttr= scope.$eval(attr.chartLegend);
-        	if(legendAttr && legendAttr.show){
-        		
+        	if(legendAttr && legendAttr.show){        		
         		//var legend = {margin:{top: legendAttr.position.top,right: legend.position.right,bottom: legend.position.bottom,left: legend.position.left}};
         		var legend = {margin: legendAttr.position};
         		scope.options.chart.legend = legend;
@@ -14140,6 +13863,7 @@ yuccaWidgetsTemplatesModule.run(["$templateCache", function($templateCache) {
     '        	<div ng-if="!isLoading" class="yucca-widget-chart" >\n' +
     '				<div><nvd3 options="options" data="chartData" ></nvd3></div>\n' +
     '       	</div>\n' +
+    '           <div id="{{widgetId}}-fake" class="nvd3"></div>' + 
     '        </section>\n' +
     '        <section class="yucca-widget-debug" ng-if="debug && debugMessages.length>0">\n' +
     '          	<ul><li ng-repeat="m in debugMessages track by $index">{{m}}</li></ul>\n' +
@@ -14150,6 +13874,11 @@ yuccaWidgetsTemplatesModule.run(["$templateCache", function($templateCache) {
     );
 }]);
 
+
+/**
+ * SPDX-License-Identifier: EUPL-1.2
+ * (C) Copyright 2019 - 2021 Regione Piemonte
+ */
 
 yuccaWidgetsModule.directive('ngYuccaDatasetMultibarChart', ['metadataService','dataService', '$yuccaHelpers', '$rootScope','$timeout',
     function (metadataService, dataService,$yuccaHelpers, $rootScope, $timeout) {
@@ -14648,6 +14377,11 @@ yuccaWidgetsTemplatesModule.run(["$templateCache", function($templateCache) {
 }]);
 
 
+/**
+ * SPDX-License-Identifier: EUPL-1.2
+ * (C) Copyright 2019 - 2021 Regione Piemonte
+ */
+
 yuccaWidgetsModule.directive('ngYuccaDatasetNavigableexplorerTable', ['metadataService','dataService', '$yuccaHelpers', '$timeout', '$rootScope',
     function (metadataService, dataService,$yuccaHelpers, $timeout, $rootScope) {
     'use strict';
@@ -14740,7 +14474,7 @@ yuccaWidgetsModule.directive('ngYuccaDatasetNavigableexplorerTable', ['metadataS
 			    		   }
 			    		   else if(event.eventtype == 'dataset.filter.text'){
 			    			   filterMap[event.sourceId] = event.data;
-			    			   filter = $yuccaHelpers.event.updateTextFilter(attr.Filter, filterMap, columnDataTypeMap);
+			    			   filter = $yuccaHelpers.event.updateTextFilter(attr.filter, filterMap, columnDataTypeMap);
 			    			   loadData();
 			    		   }
 			    		   else if(event.eventtype == 'dataset.filter.odata'){
@@ -14764,12 +14498,23 @@ yuccaWidgetsModule.directive('ngYuccaDatasetNavigableexplorerTable', ['metadataS
        		scope.tableData = [];
        		var odataResult = null;
        		scope.totalResult = 0;
+       		var columnDataTypeMap = {};
+
         	var loadData = function(){
         		scope.tableData = [];
     			scope.isLoading = true;
         		dataService.getDataEntities(attr.datasetcode,user_token,filter,  0, 1, null,apiDataUrl,cache).then(function(firstData){
         			console.log("loadData", firstData);
 	    			var maxData = firstData.data.d.__count>10000?10000:firstData.data.d.__count;
+	    			if(maxData>0){
+	    				var d = firstData.data.d.results[0];
+	    				for (var k in d) {
+	    				    if (d.hasOwnProperty(k) && k!='__metadata'){
+	    				    	columnDataTypeMap[k] = typeof d[k];
+	    				    } 
+	    				}
+	    				console.log("columnDataTypeMap ", columnDataTypeMap);
+	    			}
 	    			dataService.getMultipleDataEnties(attr.datasetcode, user_token, filter,  orderby, maxData,apiDataUrl,cache).then( function(result) {
 	    				scope.isLoading = false;
 	    				console.info("navigableexplorer:loadData", result);
@@ -14823,8 +14568,10 @@ yuccaWidgetsModule.directive('ngYuccaDatasetNavigableexplorerTable', ['metadataS
         		var total = 0;
         		if(tree.children){
 	        		for (var i = 0; i < tree.children.length; i++) {
-	        			if(tree.children[i].children)
-		    				return sumChildresValue(tree.children[i].name, tree.children[i], valueIndex);
+	        			if(tree.children[i].children){
+	        				//	return sumChildresValue(tree.children[i].name, tree.children[i], valueIndex);
+	        				total += sumChildresValue(tree.children[i].name, tree.children[i], valueIndex)
+	        			}
 						else{
 							if(valueIndex == 2)
 								total += tree.children[i].value2;
@@ -14835,9 +14582,9 @@ yuccaWidgetsModule.directive('ngYuccaDatasetNavigableexplorerTable', ['metadataS
         		}
         		else{
 					if(valueIndex == 2)
-						total = tree.value2;
+						total += tree.value2;
 					else
-						total = tree.value;
+						total += tree.value;
         			
         		}
         		return total;
@@ -14951,6 +14698,11 @@ yuccaWidgetsTemplatesModule.run(["$templateCache", function($templateCache) {
 	
 }]);
 
+
+/**
+ * SPDX-License-Identifier: EUPL-1.2
+ * (C) Copyright 2019 - 2021 Regione Piemonte
+ */
 
 yuccaWidgetsModule.directive('ngYuccaDatasetPieChart', ['metadataService','dataService', '$yuccaHelpers', '$rootScope','$timeout',
     function (metadataService, dataService,$yuccaHelpers, $rootScope, $timeout) {
@@ -15135,9 +14887,13 @@ yuccaWidgetsModule.directive('ngYuccaDatasetPieChart', ['metadataService','dataS
         	
         	var legendAttr= scope.$eval(attr.chartLegend);
         	if(legendAttr && legendAttr.show){
-        		var legend = {margin: legendAttr.position};
+        		var legend = {};
+        		if(legendAttr.margin)
+        			legend.margin =  legendAttr.margin
         		scope.options.chart.legend = legend;
         		scope.options.chart.showLegend = true;
+        		if(legendAttr.position &&  (legendAttr.position=='top' || legendAttr.position=='right' || legendAttr.position=='left' || legendAttr.position=='bottom'))
+        			scope.options.chart.legendPosition = legendAttr.position;
         	}
         	else
         		scope.options.chart.showLegend = false;
@@ -15332,6 +15088,11 @@ yuccaWidgetsTemplatesModule.run(["$templateCache", function($templateCache) {
     );
 }]);
 
+
+/**
+ * SPDX-License-Identifier: EUPL-1.2
+ * (C) Copyright 2019 - 2021 Regione Piemonte
+ */
 
 yuccaWidgetsModule.directive('ngYuccaDatasetSankeyChart', ['metadataService','dataService', '$yuccaHelpers', '$timeout', '$compile', '$rootScope',
     function (metadataService, dataService,$yuccaHelpers, $timeout, $compile, $rootScope) {
@@ -15569,6 +15330,11 @@ yuccaWidgetsTemplatesModule.run(["$templateCache", function($templateCache) {
 }]);
 
 
+/**
+ * SPDX-License-Identifier: EUPL-1.2
+ * (C) Copyright 2019 - 2021 Regione Piemonte
+ */
+
 yuccaWidgetsModule.directive('ngYuccaDatasetSingledata', ['metadataService','dataService', '$yuccaHelpers', '$timeout', '$compile',
     function (metadataService, dataService,$yuccaHelpers, $timeout, $compile) {
     'use strict';
@@ -15608,6 +15374,13 @@ yuccaWidgetsModule.directive('ngYuccaDatasetSingledata', ['metadataService','dat
             scope.isEuroValue = function(){
             	return euroValue == "true";
             };
+            
+            var groupedQuery = $yuccaHelpers.attrs.safe(attr.groupedQuery, false);
+            var  groupByColumn= scope.$eval(attr.groupByColumn);
+            if(groupByColumn==null )
+        		scope.debugMessages.push("Invalid group by column");
+
+
             var valueColumn =scope.$eval(attr.valueColumn);
             scope.hideLabel = attr.hideLabel && attr.hideLabel  == 'true';
             console.log("hideLabel ",scope.hideLabel );
@@ -15632,6 +15405,14 @@ yuccaWidgetsModule.directive('ngYuccaDatasetSingledata', ['metadataService','dat
 			    			   filterMap[event.sourceId] = event.data;
 			    			   filter = $yuccaHelpers.event.updateTextFilter(attr.Filter, filterMap, columnDataTypeMap);
 			    			   loadData();
+			    		   }
+			    		   else if(event.eventtype == 'dataset.change.value_column'){
+			    			   valueColumn.key = event.data.key;
+			    			   valueColumn.label = event.data.label;
+			    			   if(groupedQuery)	
+			    				   loadDataGrouped();
+			    			   else
+			    				   prepareData();
 			    		   }
 			    		   else if(event.eventtype == 'dataset.filter.odata'){
 			    			   filter = "";
@@ -15671,25 +15452,15 @@ yuccaWidgetsModule.directive('ngYuccaDatasetSingledata', ['metadataService','dat
        		};
        		
        		var v;
+       		var odataResult = null;
+
         	var loadData = function(){
         		scope.tableData = [];
     			scope.isLoading = true;
         		dataService.getDataEntities(attr.datasetcode,user_token,filter,  0, 1, null,apiDataUrl,cache).then(function(firstData){
         			console.log("loadData", firstData);
-        			v = firstData.data.d.results[0][valueColumn.key];
-        			v = 1*v;
-        			if(!isNaN(parseFloat(v))){
-        				if(growAnimation){
-        					delta = parseInt(v/100);
-        					scope.value = 0;
-        					growloop();
-        				}
-        				else
-        					scope.value =  $yuccaHelpers.render.safeNumber(v, decimalValue, euroValue,formatBigNumber);
-        			}
-        			else
-        				scope.value = v;
-	   				scope.isLoading = false;
+        			odataResult = firstData;
+        			prepareData();
 	           },function(result){
 	   				scope.isLoading = false;
 	   				console.error("Load data error",result);
@@ -15698,8 +15469,51 @@ yuccaWidgetsModule.directive('ngYuccaDatasetSingledata', ['metadataService','dat
         		
         		
         	};
+        	
+        	var prepareData = function(){
+        		v = odataResult.data.d.results[0][valueColumn.key];
+    			v = 1*v;
+    			if(!isNaN(parseFloat(v))){
+    				if(growAnimation){
+    					delta = parseInt(v/100);
+    					scope.value = 0;
+    					growloop();
+    				}
+    				else
+    					scope.value =  $yuccaHelpers.render.safeNumber(v, decimalValue, euroValue,formatBigNumber);
+    			}
+    			else
+    				scope.value = v;
+   				scope.isLoading = false;
+        	}
 
-        	loadData();
+        	var loadDataGrouped = function(){
+    			scope.isLoading = true;
+           		odataResult = null;
+           		var group_by=groupByColumn.key;
+           		var group_operators= valueColumn.countingMode + "," + valueColumn.key;
+        		dataService.getDataEntitiesStats(attr.datasetcode,user_token, group_by,group_operators,filter,  0, 1000, null,apiDataUrl,cache).then(function(result){
+        			console.log("loadDataGrouped", result);
+		            
+		                if(result != null){
+			    			scope.isLoading = true;
+			    			var valueColumn4GroupBy = {"key":valueColumn.key + '_sts', "label":valueColumn.label, "countingMode":valueColumn.countingMode};
+			    			scope.chartData = $yuccaHelpers.data.aggregationSeriesKeyValue(result.data.d.results, [valueColumn4GroupBy], groupByColumn.key, chartColors,attr.mainChartColor);
+			    			console.log("discrete chartData",scope.chartData);
+			    			scope.isLoading = false;
+		                }
+	                },function(result){
+		   				scope.isLoading = false;
+		   				console.error("loadDataGrouped error",result);
+		   				scope.debugMessages.push("Load data error " +result );
+	                }
+	            );        		
+        	};
+        	if(groupedQuery)
+        		loadDataGrouped();
+        	else
+        		loadData();
+
             console.log("attrs", attr);
         }
         
@@ -15740,6 +15554,11 @@ yuccaWidgetsTemplatesModule.run(["$templateCache", function($templateCache) {
 }]);
 
 	
+/**
+ * SPDX-License-Identifier: EUPL-1.2
+ * (C) Copyright 2019 - 2021 Regione Piemonte
+ */
+
 yuccaWidgetsModule.directive('ngYuccaDatasetSinglepercentageChart', ['metadataService','dataService', '$yuccaHelpers', '$timeout', '$compile','$http', '$sce','$location',
     function (metadataService, dataService,$yuccaHelpers, $timeout, $compile, $http,$sce,$location) {
     'use strict';
@@ -15970,6 +15789,8 @@ yuccaWidgetsModule.directive('ngYuccaDatasetSinglepercentageChart', ['metadataSe
         	var loadData = function(){
         		scope.tableData = [];
     			scope.isLoading = true;
+           		scope.charts = new Array();
+
         		dataService.getDataEntities(attr.datasetcode,user_token,filter,  0, rows, orderby).then(function(result){
 					console.log("loadData", result);
 					$timeout(function(){
@@ -16149,6 +15970,11 @@ yuccaWidgetsTemplatesModule.run(["$templateCache", function($templateCache) {
 }]);
 
 	
+/**
+ * SPDX-License-Identifier: EUPL-1.2
+ * (C) Copyright 2019 - 2021 Regione Piemonte
+ */
+
 yuccaWidgetsModule.directive('ngYuccaDatasetStackedBarChart', ['metadataService','dataService', '$yuccaHelpers', '$timeout', '$compile',
     function (metadataService, dataService,$yuccaHelpers, $timeout, $compile) {
     'use strict';
@@ -16308,6 +16134,11 @@ yuccaWidgetsTemplatesModule.run(["$templateCache", function($templateCache) {
 }]);
 
 
+/**
+ * SPDX-License-Identifier: EUPL-1.2
+ * (C) Copyright 2019 - 2021 Regione Piemonte
+ */
+
 yuccaWidgetsModule.directive('ngYuccaDatasetTreemapChart', ['metadataService','dataService', '$yuccaHelpers', '$timeout', '$compile', '$rootScope',
     function (metadataService, dataService,$yuccaHelpers, $timeout, $compile, $rootScope) {
     'use strict';
@@ -16350,7 +16181,7 @@ yuccaWidgetsModule.directive('ngYuccaDatasetTreemapChart', ['metadataService','d
             };
             var skipZeroValues =  attr.skipZeroValues==="true"?true:false;
 
-            scope.numberFormat = {"euro": euroValue == "true", decimal: decimalValue, bigNumber: formatBigNumber};
+            scope.numberFormat = {"euro": euroValue, decimal: decimalValue, bigNumber: formatBigNumber};
 
             var euroValue2 = $yuccaHelpers.attrs.safe(attr.euroValue2, false);
             var decimalValue2 = $yuccaHelpers.attrs.safe(attr.decimalValue2, 2);
@@ -16358,7 +16189,7 @@ yuccaWidgetsModule.directive('ngYuccaDatasetTreemapChart', ['metadataService','d
             scope.isEuroValue2 = function(){
             	return euroValue2 == "true";
             };
-            scope.numberFormat2 = {"euro": euroValue2 == "true", decimal: decimalValue2, bigNumber: formatBigNumber2};
+            scope.numberFormat2 = {"euro": euroValue2, decimal: decimalValue2, bigNumber: formatBigNumber2};
 
             //var countingMode  = $yuccaHelpers.attrs.safe(attr.countingMode, "count");
             var showLegend =  attr.showLegend==="false"?false:true;
@@ -16506,7 +16337,10 @@ yuccaWidgetsModule.directive('ngYuccaDatasetTreemapChart', ['metadataService','d
 	    			  
 	    			var colors = $yuccaHelpers.render.safeColors(scope.treemapData.children.length, scope.$eval(attr.chartColors),attr.mainChartColor);
 	    			for (var i = 0; i < scope.treemapData.children.length; i++) {
-	    				scope.treemapData.children[i].color = colors[i];
+	    				if(attr.mainChartColor && valueColumn2)
+	    					scope.treemapData.children[i].color = $yuccaHelpers.d3color.darker(attr.mainChartColor, .2);
+	    				else
+	    					scope.treemapData.children[i].color = colors[i];
 					}
 	    			
 	    	        console.log("chartData",scope.treemapData);
@@ -16553,6 +16387,11 @@ yuccaWidgetsTemplatesModule.run(["$templateCache", function($templateCache) {
     );
 }]);
 
+
+/**
+ * SPDX-License-Identifier: EUPL-1.2
+ * (C) Copyright 2019 - 2021 Regione Piemonte
+ */
 
 yuccaWidgetsModule.directive('ngYuccaDistributionTable', ['metadataService','dataService', '$yuccaHelpers', '$timeout', '$compile',
     function (metadataService, dataService,$yuccaHelpers, $timeout, $compile) {
@@ -16847,6 +16686,679 @@ yuccaWidgetsTemplatesModule.run(["$templateCache", function($templateCache) {
     );
 }]);
 
+
+/**
+ * SPDX-License-Identifier: EUPL-1.2
+ * (C) Copyright 2019 - 2021 Regione Piemonte
+ */
+
+yuccaWidgetsModule.directive('ngYuccaControlFilterDataDiscrete', ['$yuccaHelpers', '$rootScope',
+    function ($yuccaHelpers,$rootScope) {
+    'use strict';
+
+    return {
+        restrict: 'E',
+        scope: {},
+        templateUrl:'template/control_filter_data_discrete.html',
+        link: function(scope, elem, attr) {
+        	console.log("ngYuccaControlFilter - attr", attr);
+
+          var widgetType = 'ngYuccaControlFilter';
+          scope.widgetId = $yuccaHelpers.attrs.safe(attr.widgetId,widgetType+new Date().getTime());
+          var eventControlId = $yuccaHelpers.attrs.safe(attr.eventControlId,"EventControl");
+
+
+          scope.label =  $yuccaHelpers.attrs.safe(attr.label, null);
+          scope.hint =  $yuccaHelpers.attrs.safe(attr.hint, null);
+          scope.debug = attr.debug==="true"?true:false;
+          scope.debugMessages = [];
+
+          scope.discreteFilterType = $yuccaHelpers.attrs.safe(attr.filterType, 'multi'); // multi - unique
+	      scope.columns =  attr.valueColumns?scope.$eval(attr.valueColumns):null;
+	      if(scope.columns){
+	    	  for (var i = 0; i < scope.columns.length; i++) {
+	    		  if(scope.columns[i].selected){
+	    			  scope.columns[i].selectedText = scope.columns[i].key;
+	    		  }
+	    	  }
+	      }
+
+          scope.flexDirection = $yuccaHelpers.attrs.safe(attr.direction, null) == null?'':'yucca-control-direction-' + attr.direction;
+          scope.flexAlignItems = $yuccaHelpers.attrs.safe(attr.alignItems, null) == null?'yucca-control-align-items-center':'yucca-control-align-items-' + attr.alignItems;
+
+          scope.filter = {};
+          var override = attr.override=="true"?true:false;
+          var oldFilterValue = null;
+          
+ 		  scope.render = $yuccaHelpers.attrs.safe(attr.render, 'control'); // control button
+		  if(scope.render == 'control'){
+			  scope.render = scope.discreteFilterType == 'multi'?'checkbox':'radio';
+		  }
+          //var filters = []; 
+		  scope.select = function(columnIndex){
+			  console.log("columns",scope.columns );
+			  //scope.columns[columnIndex].selected = true;
+			  refreshFilter();
+			  
+		  }
+
+		  scope.toggleSelect = function(columnIndex){
+			  console.log("columns",scope.columns );
+			  if(scope.discreteFilterType != 'multi'){
+				for(var i=0; i<scope.columns.length; i++)
+					scope.columns[i].selected = false;
+			  }
+			  scope.columns[columnIndex].selected = !scope.columns[columnIndex].selected;
+			  refreshFilter();
+		  }
+
+		  
+          var refreshFilter = function(){
+			 console.log("filterText",scope.filter, oldFilterValue);
+			 var  logicOperator = " or "; 
+			 var filter = ""; 
+			 for(var i=0; i<scope.columns.length; i++){
+				 if(scope.columns[i].selected){
+					 filter += scope.columns[i].filter + logicOperator;
+				 }
+			 }
+			 filter = filter.substring(0,filter.length - logicOperator.length);
+
+			 if(!angular.equals(oldFilterValue,filter)){
+				 var event = $yuccaHelpers.event.createEvent(scope.widgetId,widgetType,"dataset.filter.odata", {"filter":filter,"override":override}, eventControlId);
+				 $rootScope.$broadcast ('yucca-widget-event', event);
+	        	 oldFilterValue = angular.copy(filter);
+			 }
+		  }
+		  
+
+		  
+		}
+
+    };
+}]);
+
+yuccaWidgetsTemplatesModule.run(["$templateCache", function($templateCache) {
+  $templateCache.put("template/control_filter_data_discrete.html",
+		'<div class="yucca-widget yucca-control-filter-data-discrete" id="{{widgetId}}">\n' +
+		'   <div class="yucca-control-main-header">'+
+		'     <div class="yucca-control-main-label" for="yucca-control-{{widgetId}}">{{label}}</div>' + 
+		'     <div class="yucca-control-main-hint">{{hint}}</div>' +
+		'   </div>'+
+		'	<div class="yucca-control-type-radio" ng-if="render==\'radio\' || render==\'checkbox\'">' +
+		'      <div class="yucca-control-items {{flexDirection}} {{flexAlignItems}}">' +
+		' 	   <div class="{{render}} yucca-control-item" ng-repeat="c in columns track by $index">' + 
+		'          <label><input type="{{render}}" ng-click="toggleSelect($index)" name="yucca-control-{{widgetId}}" ng-value="c.key" ng-model="c.selectedText" selected="{{c.selected}}"} >' + 
+		'     	      <span class="cr"><!--<span class="cr-img"></span>--><i class="cr-icon glyphicon glyphicon-ok"></i></span><span>{{c.label}}<span>'+
+		'          </label>'+
+	    '       </div>'+
+	    '     </div>' +
+		'	</div>\n' + 
+		'	<div class="yucca-control-type-button" ng-if="render==\'button\'">' +
+		'     <div class="yucca-control-items {{flexDirection}} {{flexAlignItems}}">' +
+		' 	  	<div class="yucca-control-select-button" ng-repeat="c in columns track by $index" ng-class="{\'active\': c.selected}">' + 
+		'     		<a href ng-click="toggleSelect($index)">{{c.label}}</a>'+
+	    '   	</div>'+
+	    '     </div>'+
+		'</div>\n' + 
+
+		
+        '</div>\n'
+    );
+}]);
+
+
+/**
+ * SPDX-License-Identifier: EUPL-1.2
+ * (C) Copyright 2019 - 2021 Regione Piemonte
+ */
+
+yuccaWidgetsModule.directive('ngYuccaControlFilter', ['$yuccaHelpers', '$rootScope',
+    function ($yuccaHelpers,$rootScope) {
+    'use strict';
+
+    return {
+        restrict: 'E',
+        scope: {},
+        templateUrl:'template/control_filter.html',
+        link: function(scope, elem, attr) {
+        	console.log("ngYuccaControlFilter - attr", attr);
+
+          var widgetType = 'ngYuccaControlFilter';
+          scope.widgetId = $yuccaHelpers.attrs.safe(attr.widgetId,widgetType+new Date().getTime());
+          var eventControlId = $yuccaHelpers.attrs.safe(attr.eventControlId,"EventControl");
+
+          scope.label =  $yuccaHelpers.attrs.safe(attr.label, null);
+          scope.placeholder =  $yuccaHelpers.attrs.safe(attr.placeholder, (scope.label==null?"":scope.label));
+          scope.hint =  $yuccaHelpers.attrs.safe(attr.hint, null);
+          scope.debug = attr.debug==="true"?true:false;
+          scope.debugMessages = [];
+
+          scope.filterType = $yuccaHelpers.attrs.safe(attr.filterType, 'text');
+          scope.advancedFilter =  $yuccaHelpers.attrs.safe(attr.advancedFilter, 'none');
+
+          scope.doubleRangeValues=[0,100];
+          scope.filter = {};
+//          scope.rangeSteps = new Array();
+//          scope.selectedSteps = [-1,11];
+//          for (var i = 0; i < 10; i++) {
+//        	  scope.rangeSteps.push({"stepIndex":i, "selected": true, "style": "selected"});
+//          }
+//          
+//          scope.selectRangeStep = function(index){
+//        	  console.log("selectRangeStep ", index);
+//        	  //scope.rangeSteps[index].selected = !scope.rangeSteps[index].selected;
+//        	  if(scope.selectedSteps[0]==-1)
+//        		  scope.selectedSteps[0] = index;
+//        	  else if(scope.selectedSteps[1] == 11)
+//        		scope.selectedSteps[1] = index;
+//        	  else if(index<scope.selectedSteps[1])
+//        		scope.selectedSteps[0] = index
+//        	  else
+//        	  	scope.selectedSteps[1] = index;
+//        		  
+//        	  console.log("s",scope.selectedSteps);
+//        	  
+//        	  refreshStepStyle();
+//        	  //scope.rangeSteps[index].style = scope.rangeSteps[index].selected?"selected":"";
+//          }
+//          
+//          scope.rangeStepHover  = function(index){
+//        	  scope.rangeSteps[index].hover = true;
+//        	  refreshStepStyle();
+//          };
+//
+//          scope.rangeStepOut  = function(index){
+//        	  scope.rangeSteps[index].hover = false;
+//        	  refreshStepStyle();
+//          };
+//          
+//          var refreshStepStyle  = function(){
+//        	  var hoverIndex = -1
+//        	  var beforeMin = false;
+//        	  var afterMax = false;
+//        	  for (var i = 0; i < scope.rangeSteps.length; i++) {
+//        		  if(scope.rangeSteps[i].hover){
+//        			  hoverIndex = i;
+//        			  beforeMin
+//        			  break;
+//        		  }
+//        	  }
+//          		
+//        	  for (var i = 0; i < scope.rangeSteps.length; i++) {
+//        		  var step = scope.rangeSteps[i];
+//        		  if(hoverIndex>0){
+//        			  if(i<scope.selectedSteps[0] || i<hoverIndex)
+//        				  scope.rangeSteps[i].style = "";
+//        			  else if(i>scope.selectedSteps[1] || i>hoverIndex){
+//        				  scope.rangeSteps[i].style = "";
+//        			  }
+//        			  else{ scope.rangeSteps[i].style = "selected";}
+//        		  }
+//        		  else{
+//        			  if(i<scope.selectedSteps[0] || i>scope.selectedSteps[1])
+//        				  scope.rangeSteps[i].style = "";
+//        			  else{
+//        				  scope.rangeSteps[i].style = "selected";
+//        			  }
+//        		  }
+//        	  }
+//          };
+        		  
+          var oldFilterValue = null;
+		  scope.filterText = function(){
+			 console.log("filterText",scope.filter, oldFilterValue);
+			 if(attr.textcase == "uppercase")
+				 scope.filter.value = scope.filter.value.toUpperCase();
+			 else if(attr.textcase == "lowercase")
+				 scope.filter.value = scope.filter.value.toLowerCase();
+			 
+			 if(!angular.equals(oldFilterValue,scope.filter)){
+				 var event = $yuccaHelpers.event.createEvent(scope.widgetId,widgetType,"dataset.filter.text", {"column": attr.column, "value" :scope.filter.value}, eventControlId);
+				 if(scope.advancedFilter)
+					 event.data.advanced = scope.filter.advanced;
+				 $rootScope.$broadcast ('yucca-widget-event', event);
+	        	 oldFilterValue = angular.copy(scope.filter);
+			 }
+		  }
+		  
+		  scope.filterRange = function(){
+			  console.log("filterRange",scope.doubleRangeValues);
+			  var event = $yuccaHelpers.event.createEvent(scope.widgetId,widgetType,"dataset.filter.range", {"values": scope.doubleRangeValues});
+			  $rootScope.$broadcast ('yucca-widget-event', event);
+		  }
+		  
+		  scope.resetAdvanced = function(){
+			  scope.filter = {};
+			  scope.filterText();
+		  }
+		  
+		}
+
+    };
+}]);
+
+yuccaWidgetsTemplatesModule.run(["$templateCache", function($templateCache) {
+  $templateCache.put("template/control_filter.html",
+		'<div class="yucca-widget yucca-control-filter" id="{{widgetId}}">\n' +
+		'	<div class="yucca-control-type-select" ng-if="filterType==\'text\'">' +
+		'     <div class="yucca-control-main-label" for="yucca-filter-text-{{widgetId}}">{{label}}</div>' + 
+		'     <div class="yucca-control-main-hint">{{hint}}</div>' + 
+		'	  <input type="text" class="yucca-control-filter-text" ng-blur="filterText()" ng-enter="filterText()" ng-model="filter.value" name="yucca-filter-text" id="yucca-filter-text-{{widgetId}}" placeholder="{{placeholder}}"/>' + 
+		'     <div class="yucca-control-filter-text-advanced" ng-if="advancedFilter==\'text\'">'+
+		'       <div class="radio">' + 
+		'          <label><input type="radio" name="adv_text_radio_{{widgetId}}" value="exact" ng-model="filter.advanced" ng-change="filterText()" >' + 
+		'     	      <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span><span>Exact<span>'+
+		'          </label>'+
+	    '       </div>'+
+		'       <div class="radio">' + 
+		'          <label><input type="radio" name="adv_text_radio_{{widgetId}}" value="startWith" ng-model="filter.advanced" ng-change="filterText()" >' + 
+		'     	      <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span><span>Start with<span>'+
+		'          </label>'+
+	    '       </div>'+
+		'       <div class="radio">' + 
+		'          <label><input type="radio" name="adv_text_radio_{{widgetId}}" value="endWith" ng-model="filter.advanced" ng-change="filterText()" >' + 
+		'     	      <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span><span>End with<span>'+
+		'          </label>'+
+	    '       </div>'+
+	    '       <div class="yucca-control-reset-link"><a href ng-click="resetAdvanced()">Reset</a></div>' +
+		'    </div> '	+
+		'    <div class="yucca-control-filter-text-advanced" ng-if="advancedFilter==\'numeric\'">'+
+		'       <div class="radio">' + 
+		'          <label><input type="radio" name="adv_text_radio_{{widgetId}}" value="gt" ng-model="filter.advanced" ng-change="filterText()" >' + 
+		'     	      <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span><span>&gt;<span>'+
+		'          </label>'+
+	    '       </div>'+
+		'       <div class="radio">' + 
+		'          <label><input type="radio" name="adv_text_radio_{{widgetId}}" value="ge" ng-model="filter.advanced" ng-change="filterText()" >' + 
+		'     	      <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span><span>&ge;<span>'+
+		'          </label>'+
+	    '       </div>'+
+		'       <div class="radio">' + 
+		'          <label><input type="radio" name="adv_text_radio_{{widgetId}}" value="lt" ng-model="filter.advanced" ng-change="filterText()" >' + 
+		'     	      <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span><span>&lt;<span>'+
+		'          </label>'+
+	    '       </div>'+
+		'       <div class="radio">' + 
+		'          <label><input type="radio" name="adv_text_radio_{{widgetId}}" value="le" ng-model="filter.advanced" ng-change="filterText()" >' + 
+		'     	      <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span><span>&le;<span>'+
+		'          </label>'+
+	    '       </div>'+
+	    '       <div class="yucca-control-reset-link"><a href ng-click="resetAdvanced()">Reset</a></div>' +
+		'     </div> '	+
+		'	</div>\n' + 
+		'	<div class="yucca-control-type-select" ng-if="filterType==\'range\'">' +
+		'     <div class="yucca-control-select-title">'+
+		'        <span class="yucca-control-select-label">{{label}}</span>' + 
+		'        <span class="yucca-control-select-hint">{{hint}}</span>'+
+		'     </div>' + 
+		'     <div class="yucca-widget-range">'+ 
+		'	      <label for="yucca-filter-range-1-{{widgetId}}" class="yucca-widget-double-range-value">Min</label>' +
+		'         <input type="range" class="yucca-widget-filter-range" ng-change="filterRange()" ng-model-options="{ debounce: 1500 }"  ng-model="doubleRangeValues[0]" name="yucca-filter-range-1" id="yucca-filter-range-1-{{widgetId}}"/>' + 
+		'         <div class="yucca-widget-range-value">{{doubleRangeValues[0]}} %</div>'+
+		'     </div>' +
+		'     <div class="yucca-widget-range">'+ 
+		'	      <label for="yucca-filter-range-2-{{widgetId}}" class="yucca-widget-double-range-value">Max</label>' +
+		'         <input type="range" class="yucca-widget-filter-range" ng-change="filterRange()" ng-model-options="{ debounce: 1500 }"  ng-model="doubleRangeValues[1]" name="yucca-filter-range-2" id="yucca-filter-range-2-{{widgetId}}"/>' + 
+		'         <div class="yucca-widget-range-value">{{doubleRangeValues[1]}} %</div>'+
+		'     </div>' +
+		'	</div>\n' + 
+		'	<div class="yucca-control-type-select" ng-if="filterType==\'range2\'">' +
+		'     <div class="yucca-control-select-title">'+
+		'        <span class="yucca-control-select-label">{{label}}</span>' + 
+		'        <span class="yucca-control-select-hint">{{hint}}</span>'+
+		'     </div>' + 
+		'     <div class="yucca-widget-double-range">'+ 
+		'	      <input type="range" class="yucca-widget-filter-range yucca-widget-double-range-first" ng-change="filterRange()" max="{{doubleRangeValues[1]}}" ng-model="doubleRangeValues[0]" name="yucca-filter-text" id="yucca-filter-text-{{widgetId}}"/>' + 
+		'	      <input type="range" class="yucca-widget-filter-range yucca-widget-double-range-second" ng-change="filterRange()" min="{{doubleRangeValues[0]}}" ng-model="doubleRangeValues[1]" name="yucca-filter-text" id="yucca-filter-text-{{widgetId}}" />' + 
+		'     </div>' +
+		'     <div class="yucca-widget-double-range-values">'+
+		'         <div class="yucca-widget-double-range-values-first">Min: {{doubleRangeValues[0]}} %</div>'+
+		'         <div class="yucca-widget-double-range-values-second">Max: {{doubleRangeValues[1]}} %</div>'+
+		'     </div>' +
+		'	</div>\n' + 
+		'	<div class="yucca-control-type-select" ng-if="filterType==\'range1\'">' +
+		'     <div class="yucca-control-select-title">'+
+		'        <span class="yucca-control-select-label">{{label}}</span>' + 
+		'        <span class="yucca-control-select-hint">{{hint}}</span>'+
+		'     </div>' + 
+		'     <div class="yucca-widget-slide">'+ 
+		'	      <div class="yucca-widget-slide-step {{r.style}}" ng-mouseover="rangeStepHover($index)" ng-mouseout="rangeStepOut($index)" ng-click="selectRangeStep($index)" ng-repeat="r in rangeSteps track by $index">&nbsp;</div>'+ 
+		'     </div>' +
+		'     <div class="yucca-widget-double-range-values">'+
+		'         <div class="yucca-widget-double-range-values-first">Min: {{selectedSteps[0]}} %</div>'+
+		'         <div class="yucca-widget-double-range-values-second">Max: {{selectedSteps[1]}} %</div>'+
+		'     </div>' +
+		'	</div>\n' + 
+		
+        '</div>\n'
+    );
+}]);
+
+
+/**
+ * SPDX-License-Identifier: EUPL-1.2
+ * (C) Copyright 2019 - 2021 Regione Piemonte
+ */
+
+yuccaWidgetsModule.directive('ngYuccaControlMapFilter', ['metadataService','dataService', '$yuccaHelpers', '$http',  '$timeout', '$compile', '$rootScope',
+    function (metadataService, dataService,$yuccaHelpers,$http,$timeout,$compile,$rootScope) {
+    'use strict';
+
+    return {
+        restrict: 'E',
+        scope: {},
+        templateUrl:'template/control_map_filter.html',
+        link: function(scope, elem, attr) {
+
+            var widgetType = 'YuccaControlMapFilter';
+            var widgetId = widgetType+new Date().getTime();
+            var eventControlId = $yuccaHelpers.attrs.safe(attr.eventControlId,"EventControl");
+
+            scope.label =  $yuccaHelpers.attrs.safe(attr.label, null);
+            scope.hint =  $yuccaHelpers.attrs.safe(attr.hint, null);
+            
+            var width = $yuccaHelpers.attrs.num(attr.width, null, null, 300);
+            var height = $yuccaHelpers.attrs.num(attr.height, null, null, 400);
+
+            var centered;
+            
+        	scope.debug = attr.debug==="true"?true:false;
+            scope.debugMessages = [];
+
+            var borderColor =  $yuccaHelpers.attrs.safe(attr.borderColor, "#fff");
+            var selectedColor =  $yuccaHelpers.attrs.safe(attr.selectedColor, "#aaa");
+            var unselectedColor =  $yuccaHelpers.attrs.safe(attr.unselectedColor, "#ddd");
+
+            scope.controlMapMapId = "controlMap"+new Date().getTime();
+
+            var geojsons = scope.$eval(attr.geojsons);
+            if(!geojsons || !geojsons.length || geojsons.lenght==0)
+            	geojsons = [{}];
+            
+            for (var gIndex = 0; gIndex < geojsons.length; gIndex++) {
+            	var g = geojsons[gIndex];
+            	if(!g.url)
+            		g.url="lib/yucca-angular-widgets/dist/data/piemonte_province_geojson.json";
+            	if(!g.key)
+            		g.key = "name";
+            	if(!g.render)
+            		g.render = {};
+            	if(!g.render.line)
+            		g.render.line = {}
+            	if(!g.render.line.weight)
+            		g.render.line.weight = 1;
+            	if(!g.render.line.opacity)
+            		g.render.line.opacity = 1;
+            	if(!g.render.line.dashcolor)
+            		g.render.line.dashcolor = '#0e232e';
+            	if(!g.render.line.dasharray)
+            		g.render.line.dasharray = 1;
+            	if(!g.render.areas)
+            		g.render.areas = {}
+            	if(!g.render.areas.fillopacity)
+            		g.render.areas.fillopacity = .7;
+            	
+			}
+            var geojson_data = null;
+            
+
+            
+            scope.geojson= null;
+            var mapLatLngs = null;
+			scope.isLoading = true;
+
+			var activeGeojson = 0;
+			
+			
+			var svg = d3.select('svg').attr('width', width).attr('height', height);
+			var g = svg.append('g');
+			var mapLayer = g.append('g').classed('map-layer', true);
+
+			d3.json(geojsons[activeGeojson].url, function(error, mapData) {
+				// create a first guess for the projection
+				 for (var k in mapData.features) {
+					 mapData.features[k].properties.selected=false;
+            	 }
+			     var center = d3.geo.centroid(mapData)
+			     var scale  = 1;
+			     var offset = [width/2, height/2];
+			     var projection = d3.geo.mercator().scale(scale).center(center).translate(offset);
+
+			     // create the path
+			     var path = d3.geo.path().projection(projection);
+
+			      // using the path determine the bounds of the current map and use 
+			      // these to determine better values for the scale and translation
+			     var bounds  = path.bounds(mapData);
+			     console.log("bounds", bounds);
+			     scale = 1 / Math.max((bounds[1][0]-bounds[0][0])*1.1/width, (bounds[1][1]-bounds[0][1])*1.1/height);
+			     offset  = [width - (bounds[0][0] + bounds[1][0])/2,height*1.1-(bounds[0][1] + bounds[1][1])/2];
+			      // new projection
+			     projection = d3.geo.mercator().center(center).scale(scale).translate(offset);
+			     path = path.projection(projection);				
+				 // Update color scale domain based on data
+				 //color.domain([0, d3.max(features, nameLength)]);
+
+				 //mapLayer.append("rect").attr('width', width).attr('height', height);
+				 // Draw each province as a path
+				 mapLayer.selectAll('path')
+				      .data(mapData.features)
+				      .enter().append('path')
+				      .attr('d', path)
+				      .attr('vector-effect', 'non-scaling-stroke')
+				      .style('fill', fillFn)
+				      .style('stroke', borderColor)
+				      .on('mouseover', highlightFeature)
+				      .on('mouseout', resetHighlight)
+				      .on('click', onAreaClick);
+				  
+				 scope.isLoading = false;
+			});
+
+			function fillFn(d){return unselectedColor;}
+			
+			scope.info = {"show": true};
+			scope.updateInfo = function(show, content){
+				$timeout(function(){
+					scope.info.show= show;
+					scope.info.content = content;
+				},100);
+			}
+			var resetAllSelection = function(){
+        	   console.log("reset",scope.geojson);
+        	   for (var k in scope.geojson.data.features) {
+        		   scope.geojson.data.features[k].properties.selected=false;
+        	   }
+			};
+
+			var highlightFeature = function(d) {
+        	   d3.select(this).style('fill', selectedColor);
+        	   scope.updateInfo(true, d.properties.code + " " + d.properties.name);
+			};
+
+			var resetHighlight = function(d) {
+        	  	mapLayer.selectAll('path').style('fill', function(d){return d.properties.selected?selectedColor: unselectedColor;});
+        	  	scope.updateInfo(false, "");
+			};
+             
+             var switchOnLayer = function(layer){
+            	 layer.setStyle({weight: 1, dashArray: '', fillOpacity: 0.7, fillColor: selectedColor});
+             }
+
+             var switchOffLayer = function(layer){
+            	 layer.setStyle({weight: 1, dashArray: '', fillOpacity: 0.7, fillColor: unselectedColor});
+             }
+
+             
+             scope.filter = {};
+             var currentSelected = null;
+             function onAreaClick(d){
+            	 console.log("onAreaClick", d);
+            	 if(currentSelected!=null){
+            		 currentSelected.properties.selected = false;
+            	 }
+            	 d.properties.selected = !d.properties.selected;
+            	 currentSelected = d;
+            	 resetHighlight();
+//            	 if(selectedLayer){
+//            		 selectedLayer.feature.properties.selected = false;
+//            		 switchOffLayer(selectedLayer);
+//            	 }
+//            	 e.target.feature.properties.selected = true;
+            	
+//                selectedLayer = e.target;
+//                switchOnLayer(e.target);
+
+          		var event = $yuccaHelpers.event.createEvent(scope.widgetId,widgetType,"dataset.filter.text", {"column": attr.column, "value" :d.properties[geojsons[activeGeojson].key]}, eventControlId);
+         		$rootScope.$broadcast ('yucca-widget-event', event);
+            	 
+             }
+             console.log("attrs", attr);
+             scope.MAP_PIEDMONT_CENTER =  {lat: 45.3522366, lng: 7.515388499999972, zoom: 7};
+
+
+        }
+
+    };
+}]);
+
+
+yuccaWidgetsTemplatesModule.run(["$templateCache", function($templateCache) {
+  $templateCache.put("template/control_map_filter.html",
+    '<div class="yucca-widget  yucca-control-map-filter">\n' +
+	'    <div class="yucca-control-main-label" for""yucca-filter-text-{{widgetId}}"">{{label}}</div>' + 
+	'    <div class="yucca-control-main-hint">{{hint}}</div>' + 
+    '    <div class="yucca-widget-control-content">\n' +
+    '        <section>\n' +
+    '           <div ng-if="isLoading" class="yucca-dataset-discretebar-chart-loading" >\n' +
+    '             <div class="yucca-widget-spinner"><div class="bullet1"></div><div class="bullet2"></div><div class="bullet3"></div></div>\n' +
+    '           </div>\n' +
+    '           <svg ng-show="!isLoading"></svg>\n' + 
+    '           <div class="info-panel" ng-show="info.show"><span>{{info.content}}</span></div>  '+ 
+    '        </section>\n' + 
+    '        <section class="yucca-widget-debug" ng-show="debug && debugMessages.length>0">\n' +
+    '          	<ul><li ng-repeat="m in debugMessages track by $index">{{m}}</li></ul>\n' +
+    '        </section>\n' +
+    '    </div>\n' +
+    '    <widget-footer ng-if="showFooter" widget-footer-text="{{footerText}}"><widget-footer>\n' +
+    '</div>\n'
+    );
+}]);
+
+
+/**
+ * SPDX-License-Identifier: EUPL-1.2
+ * (C) Copyright 2019 - 2021 Regione Piemonte
+ */
+
+yuccaWidgetsModule.directive('ngYuccaControlSelect', ['$yuccaHelpers', '$rootScope',
+    function ($yuccaHelpers,$rootScope) {
+    'use strict';
+
+    return {
+        restrict: 'E',
+        scope: {},
+        templateUrl:'template/control_select.html',
+        link: function(scope, elem, attr) {
+        	console.log("ngYuccaControlSelect - attr", attr);
+
+          var widgetType = 'ngYuccaControlSelect';
+          scope.widgetId = $yuccaHelpers.attrs.safe(attr.widgetId,widgetType+new Date().getTime());
+
+          var eventControlId = $yuccaHelpers.attrs.safe(attr.eventControlId,"EventControl");
+          scope.label =  $yuccaHelpers.attrs.safe(attr.label, null);
+          scope.hint =  $yuccaHelpers.attrs.safe(attr.hint, null);
+		  scope.selectEmptyLabel = $yuccaHelpers.attrs.safe(attr.selectEmptyLabel,null);
+          scope.debug = attr.debug==="true"?true:false;
+          scope.debugMessages = [];
+          scope.selected = {};
+          scope.selected.key = attr.selectedValue;
+          scope.flexDirection = $yuccaHelpers.attrs.safe(attr.direction, null) == null?'':'yucca-control-direction-' + attr.direction;
+          scope.flexAlignItems = $yuccaHelpers.attrs.safe(attr.alignItems, null) == null?'yucca-control-align-items-center':'yucca-control-align-items-' + attr.alignItems;
+          
+          
+		  scope.columns = null;
+		  var eventType = null;
+		  var eventData = null;
+		  if(attr.groupByColumns){
+			  scope.columns =  attr.groupByColumns?scope.$eval(attr.groupByColumns):null;
+			  eventType = "dataset.change.group_by_column";
+		  }
+		  else if(attr.valueColumns){		
+		      scope.columns =  attr.valueColumns?scope.$eval(attr.valueColumns):null;
+			  eventType = "dataset.change.value_column";
+		  }
+			
+		  if(scope.selected.key){
+			  for (var i = 0; i < scope.columns.length; i++) {
+				  if(scope.columns[i].key == scope.selected.key){
+					  scope.selectedIndex = i;
+					  break;
+				  }
+			  }
+		  }
+		  console.log("columns", scope.columns);
+		  scope.render = $yuccaHelpers.attrs.safe(attr.render, 'select'); // select, radio, button
+
+
+		  scope.select = function(key){
+			  console.log("select",key);
+			  scope.selected.key = key;
+			  var eventValue = null;
+			  for (var i = 0; i < scope.columns.length; i++) {
+				if(scope.columns[i].key == key)
+					eventValue = scope.columns[i];
+			  }
+         	  var event = $yuccaHelpers.event.createEvent(scope.widgetId,widgetType,eventType, eventValue, eventControlId);
+        	  console.log("event",event);
+        	  $rootScope.$broadcast ('yucca-widget-event', event);
+
+		  }
+		}
+
+    };
+}]);
+
+yuccaWidgetsTemplatesModule.run(["$templateCache", function($templateCache) {
+  $templateCache.put("template/control_select.html",
+		'<div class="yucca-widget yucca-control-select" id="{{widgetId}}">\n' +
+		'   <div class="yucca-control-main-header">'+
+		'     <div class="yucca-control-main-label" for="yucca-control-{{widgetId}}">{{label}}</div>' + 
+		'     <div class="yucca-control-main-hint">{{hint}}</div>' +
+//		'	  <div class="yucca-control-reset-link"><a href ng-click="reset()">Reset</a></div>' +
+		'   </div>'+
+		'	<div class="yucca-control-type-select" ng-if="render==\'select\'">' +
+		'	  <select ng-change="select(selected.key)" class="yucca-select" ng-model="selected.key" id="yucca-control-{{widgetId}}">'+
+		'       <option disabled selected value>{{selectEmptyLabel}}</option>' +
+		'		<option ng-repeat="c in columns  track by $index" value="{{c.key}}">{{c.label}}</option>'+ 
+		'	  </select>' + 
+		'	</div>\n' + 
+		'	<div class="yucca-control-type-radio" ng-if="render==\'radio\'">' +
+		'      <div class="yucca-control-items {{flexDirection}} {{flexAlignItems}}">' +
+		' 	   <div class="radio yucca-control-item" ng-repeat="c in columns track by $index">' + 
+		'          <label><input type="radio" ng-change="select(c.key)" name="yucca-control-{{widgetId}}" ng-value="c.key" ng-model="selected.key" >' + 
+		'     	      <span class="cr"><!--<span class="cr-img"></span>--><i class="cr-icon glyphicon glyphicon-ok"></i></span><span>{{c.label}}<span>'+
+		'          </label>'+
+	    '       </div>'+
+	    '     </div>' +
+		'	</div>\n' + 
+		'	<div class="yucca-control-type-button" ng-if="render==\'button\'">' +
+		'     <div class="yucca-control-items {{flexDirection}} {{flexAlignItems}}">' +
+		' 	  	<div class="yucca-control-select-button" ng-repeat="c in columns track by $index" ng-class="{\'active\': c.key==selected.key}">' + 
+		'     		<a href ng-click="select(c.key)">{{c.label}}</a>'+
+	    '   	</div>'+
+	    '     </div>'+
+		'</div>\n' + 
+    '</div>\n'
+    );
+}]);
+
+
+/**
+ * SPDX-License-Identifier: EUPL-1.2
+ * (C) Copyright 2019 - 2021 Regione Piemonte
+ */
 
 yuccaWidgetsModule.directive('ngYuccaDatasetChoroplethMap', ['metadataService','dataService', '$yuccaHelpers', '$http', 'leafletData', '$timeout', '$compile', '$rootScope',
     function (metadataService, dataService,$yuccaHelpers,$http,leafletData,$timeout,$compile,$rootScope) {

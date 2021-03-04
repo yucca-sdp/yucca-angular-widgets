@@ -1,6 +1,6 @@
 /**
  * SPDX-License-Identifier: EUPL-1.2
- * (C) Copyright 2019 Regione Piemonte
+ * (C) Copyright 2019 - 2021 Regione Piemonte
  */
 
 yuccaWidgetsModule.directive('ngYuccaDatasetMultiChart', ['metadataService','dataService', '$yuccaHelpers', '$rootScope','$timeout',
@@ -37,12 +37,27 @@ yuccaWidgetsModule.directive('ngYuccaDatasetMultiChart', ['metadataService','dat
             if(datasetcode==null )
         		scope.debugMessages.push("Invalid dataset code");
             
-            var euroValue = $yuccaHelpers.attrs.safe(attr.euroValue, false);
-            var decimalValue = $yuccaHelpers.attrs.safe(attr.decimalValue, 2);
-            var formatBigNumber = $yuccaHelpers.attrs.safe(attr.formatBigNumber, false);
-            scope.isEuroValue = function(){
-            	return euroValue == "true";
-            };
+//            var euroValueX = $yuccaHelpers.attrs.safe(attr.euroValueX, false);
+//            var decimalValueX = $yuccaHelpers.attrs.safe(attr.decimalValueX, 2);
+//            var formatBigNumberX = $yuccaHelpers.attrs.safe(attr.formatBigNumberX, false);
+//            scope.isEuroValueX = function(){
+//            	return euroValueX == "true";
+//            };
+//            var euroValueY = $yuccaHelpers.attrs.safe(attr.euroValueY, false);
+//            var decimalValueY = $yuccaHelpers.attrs.safe(attr.decimalValueY, 2);
+//            var formatBigNumberY = $yuccaHelpers.attrs.safe(attr.formatBigNumberY, false);
+//            scope.isEuroValueY = function(){
+//            	return euroValueY == "true";
+//            };
+//
+//            var euroValueY2 = $yuccaHelpers.attrs.safe(attr.euroValueY2, false);
+//            var decimalValueY2 = $yuccaHelpers.attrs.safe(attr.decimalValueY2, 2);
+//            var formatBigNumberY2 = $yuccaHelpers.attrs.safe(attr.formatBigNumberY2, false);
+//            scope.isEuroValueY2 = function(){
+//            	return euroValueY2 == "true";
+//            };
+
+            
             var skipZeroValues =  attr.skipZeroValues==="true"?true:false;
             //var countingMode  = $yuccaHelpers.attrs.safe(attr.countingMode, "count");
             //var groupOperation = $yuccaHelpers.attrs.safe(attr.groupOperation, "sum");
@@ -76,7 +91,14 @@ yuccaWidgetsModule.directive('ngYuccaDatasetMultiChart', ['metadataService','dat
             var yAxisAttr = scope.$eval(attr.yAxis);
             if(typeof yAxisAttr == 'undefined')
             	yAxisAttr = {show:false, label: ""};
+
+            var yAxisAttr2 = scope.$eval(attr.y2Axis);
+            if(typeof yAxisAttr2 == 'undefined')
+            	yAxisAttr2 = {show:false, label: ""};
             
+        	var interpolate =  attr.interpolate;
+
+
             var serieStyles = scope.$eval(attr.serieStyles);
             
             console.log("serieStyles",serieStyles);
@@ -91,9 +113,17 @@ yuccaWidgetsModule.directive('ngYuccaDatasetMultiChart', ['metadataService','dat
                     chart: {
                         type: 'multiChart',
                         duration: 500,
-    	                valueFormat: function(d){return  $yuccaHelpers.render.safeNumber(d, decimalValue, scope.isEuroValue(),formatBigNumber);},
+    	                valueFormat: function(d){
+    	                	return  d;//$yuccaHelpers.render.safeNumber(d, decimalValueY, scope.isEuroValueY(),formatBigNumberY);
+    	                },
+    	                //line1:{padData:true},
     	                yAxis1:{
-    	                	tickFormat:(function (d) {return $yuccaHelpers.render.safeNumber(d, decimalValue, scope.isEuroValue(),formatBigNumber);}),
+    	                	tickFormat:(function (d) {
+	    	            		return $yuccaHelpers.render.safeNumber(d, 
+	    	            				yAxisAttr.decimal_value, 
+	    	            				yAxisAttr.is_euro_value,
+	    	            				yAxisAttr.format_big_number);
+    	                		}),
         	                rotateLabels:yAxisAttr.rotateLabels?yAxisAttr.rotateLabels:0,
         	    			axisLabel:yAxisAttr.label?yAxisAttr.label:"",
         	    			staggerLabels: yAxisAttr.staggerLabels?true:false
@@ -106,23 +136,64 @@ yuccaWidgetsModule.directive('ngYuccaDatasetMultiChart', ['metadataService','dat
     	    	            	if(groupByDatetime)
     	    	            		return $yuccaHelpers.utils.formatDate(d);
     	    	            	else
-    	    	            		return $yuccaHelpers.render.safeNumber(d, decimalValue, scope.isEuroValue(),formatBigNumber);
+    	    	            		return $yuccaHelpers.render.safeNumber(d, 
+    	    	            				xAxisAttr.decimal_value, 
+    	    	            				xAxisAttr.is_euro_value,
+    	    	            				xAxisAttr.format_big_number);
     	    	            }),
     					},
     	                yAxis2:{
-    	                	tickFormat:(function (d) {return $yuccaHelpers.render.safeNumber(d, decimalValue, scope.isEuroValue(),formatBigNumber);}),
+    	                	tickFormat:(function (d) {
+	    	            		return $yuccaHelpers.render.safeNumber(d, 
+	    	            				yAxisAttr2.decimal_value, 
+	    	            				yAxisAttr2.is_euro_value,
+	    	            				yAxisAttr2.format_big_number);
+
+    	                	}),
     						axisLabel:yAxisAttr.label?yAxisAttr.label:""
     					},
-    	    	        reduceXTicks: attr.reduceXTicks == "true",
+    	    	        //reduceXTicks: attr.reduceXTicks == "true",
 
                     }
                 };
+            
           
+            if(interpolate)
+            	scope.options.chart.interpolate = interpolate;
 
 
+            // fix right margin 
+            $timeout(function(){
+    			var maxLabel = "";
+    			if(scope.chartData && scope.chartData.length>0){
+    				for (var j = 0; j < scope.chartData.length; j++) {
+    					if(scope.chartData[j].yAxis == "2"){
+    						for(var i=0; i<scope.chartData[j].values.length; i++){
+    							var label = $yuccaHelpers.render.safeNumber(scope.chartData[j].values[i].y, 
+    									yAxisAttr2.decimal_value, 
+	    	            				yAxisAttr2.is_euro_value,
+	    	            				yAxisAttr2.format_big_number);
+    							if(label.length>maxLabel.length)
+    								maxLabel = label;
+    						}
+    						
+    					}
+    				}
+    				var fakeText = d3.select("#"+ scope.widgetId + "-fake").insert("svg").append("text").text(maxLabel);
+    				if(!scope.options.chart.margin)
+    					scope.options.chart.margin = {};
+    				scope.options.chart.margin.right = fakeText.node().getComputedTextLength()+6;
+    				console.log("maxLabel",maxLabel, fakeText.node().getComputedTextLength());
+    				d3.select("#"+ scope.widgetId + "-fake svg").remove();
+    			}
+
+            	
+            	
+            	scope.options.chart.margin={right: 100}});
+            
+            
         	var legendAttr= scope.$eval(attr.chartLegend);
-        	if(legendAttr && legendAttr.show){
-        		
+        	if(legendAttr && legendAttr.show){        		
         		//var legend = {margin:{top: legendAttr.position.top,right: legend.position.right,bottom: legend.position.bottom,left: legend.position.left}};
         		var legend = {margin: legendAttr.position};
         		scope.options.chart.legend = legend;
@@ -315,6 +386,7 @@ yuccaWidgetsTemplatesModule.run(["$templateCache", function($templateCache) {
     '        	<div ng-if="!isLoading" class="yucca-widget-chart" >\n' +
     '				<div><nvd3 options="options" data="chartData" ></nvd3></div>\n' +
     '       	</div>\n' +
+    '           <div id="{{widgetId}}-fake" class="nvd3"></div>' + 
     '        </section>\n' +
     '        <section class="yucca-widget-debug" ng-if="debug && debugMessages.length>0">\n' +
     '          	<ul><li ng-repeat="m in debugMessages track by $index">{{m}}</li></ul>\n' +

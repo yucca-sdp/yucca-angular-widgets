@@ -1,6 +1,6 @@
 /**
  * SPDX-License-Identifier: EUPL-1.2
- * (C) Copyright 2019 Regione Piemonte
+ * (C) Copyright 2019 - 2021 Regione Piemonte
  */
 
 yuccaWidgetsModule.directive('ngYuccaDatasetSingledata', ['metadataService','dataService', '$yuccaHelpers', '$timeout', '$compile',
@@ -42,6 +42,13 @@ yuccaWidgetsModule.directive('ngYuccaDatasetSingledata', ['metadataService','dat
             scope.isEuroValue = function(){
             	return euroValue == "true";
             };
+            
+            var groupedQuery = $yuccaHelpers.attrs.safe(attr.groupedQuery, false);
+            var  groupByColumn= scope.$eval(attr.groupByColumn);
+            if(groupByColumn==null )
+        		scope.debugMessages.push("Invalid group by column");
+
+
             var valueColumn =scope.$eval(attr.valueColumn);
             scope.hideLabel = attr.hideLabel && attr.hideLabel  == 'true';
             console.log("hideLabel ",scope.hideLabel );
@@ -66,6 +73,14 @@ yuccaWidgetsModule.directive('ngYuccaDatasetSingledata', ['metadataService','dat
 			    			   filterMap[event.sourceId] = event.data;
 			    			   filter = $yuccaHelpers.event.updateTextFilter(attr.Filter, filterMap, columnDataTypeMap);
 			    			   loadData();
+			    		   }
+			    		   else if(event.eventtype == 'dataset.change.value_column'){
+			    			   valueColumn.key = event.data.key;
+			    			   valueColumn.label = event.data.label;
+			    			   if(groupedQuery)	
+			    				   loadDataGrouped();
+			    			   else
+			    				   prepareData();
 			    		   }
 			    		   else if(event.eventtype == 'dataset.filter.odata'){
 			    			   filter = "";
@@ -105,25 +120,15 @@ yuccaWidgetsModule.directive('ngYuccaDatasetSingledata', ['metadataService','dat
        		};
        		
        		var v;
+       		var odataResult = null;
+
         	var loadData = function(){
         		scope.tableData = [];
     			scope.isLoading = true;
         		dataService.getDataEntities(attr.datasetcode,user_token,filter,  0, 1, null,apiDataUrl,cache).then(function(firstData){
         			console.log("loadData", firstData);
-        			v = firstData.data.d.results[0][valueColumn.key];
-        			v = 1*v;
-        			if(!isNaN(parseFloat(v))){
-        				if(growAnimation){
-        					delta = parseInt(v/100);
-        					scope.value = 0;
-        					growloop();
-        				}
-        				else
-        					scope.value =  $yuccaHelpers.render.safeNumber(v, decimalValue, euroValue,formatBigNumber);
-        			}
-        			else
-        				scope.value = v;
-	   				scope.isLoading = false;
+        			odataResult = firstData;
+        			prepareData();
 	           },function(result){
 	   				scope.isLoading = false;
 	   				console.error("Load data error",result);
@@ -132,8 +137,51 @@ yuccaWidgetsModule.directive('ngYuccaDatasetSingledata', ['metadataService','dat
         		
         		
         	};
+        	
+        	var prepareData = function(){
+        		v = odataResult.data.d.results[0][valueColumn.key];
+    			v = 1*v;
+    			if(!isNaN(parseFloat(v))){
+    				if(growAnimation){
+    					delta = parseInt(v/100);
+    					scope.value = 0;
+    					growloop();
+    				}
+    				else
+    					scope.value =  $yuccaHelpers.render.safeNumber(v, decimalValue, euroValue,formatBigNumber);
+    			}
+    			else
+    				scope.value = v;
+   				scope.isLoading = false;
+        	}
 
-        	loadData();
+        	var loadDataGrouped = function(){
+    			scope.isLoading = true;
+           		odataResult = null;
+           		var group_by=groupByColumn.key;
+           		var group_operators= valueColumn.countingMode + "," + valueColumn.key;
+        		dataService.getDataEntitiesStats(attr.datasetcode,user_token, group_by,group_operators,filter,  0, 1000, null,apiDataUrl,cache).then(function(result){
+        			console.log("loadDataGrouped", result);
+		            
+		                if(result != null){
+			    			scope.isLoading = true;
+			    			var valueColumn4GroupBy = {"key":valueColumn.key + '_sts', "label":valueColumn.label, "countingMode":valueColumn.countingMode};
+			    			scope.chartData = $yuccaHelpers.data.aggregationSeriesKeyValue(result.data.d.results, [valueColumn4GroupBy], groupByColumn.key, chartColors,attr.mainChartColor);
+			    			console.log("discrete chartData",scope.chartData);
+			    			scope.isLoading = false;
+		                }
+	                },function(result){
+		   				scope.isLoading = false;
+		   				console.error("loadDataGrouped error",result);
+		   				scope.debugMessages.push("Load data error " +result );
+	                }
+	            );        		
+        	};
+        	if(groupedQuery)
+        		loadDataGrouped();
+        	else
+        		loadData();
+
             console.log("attrs", attr);
         }
         

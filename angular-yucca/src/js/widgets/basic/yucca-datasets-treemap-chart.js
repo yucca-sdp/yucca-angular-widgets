@@ -1,6 +1,6 @@
 /**
  * SPDX-License-Identifier: EUPL-1.2
- * (C) Copyright 2019 Regione Piemonte
+ * (C) Copyright 2019 - 2021 Regione Piemonte
  */
 
 yuccaWidgetsModule.directive('ngYuccaDatasetTreemapChart', ['metadataService','dataService', '$yuccaHelpers', '$timeout', '$compile', '$rootScope',
@@ -45,7 +45,7 @@ yuccaWidgetsModule.directive('ngYuccaDatasetTreemapChart', ['metadataService','d
             };
             var skipZeroValues =  attr.skipZeroValues==="true"?true:false;
 
-            scope.numberFormat = {"euro": euroValue == "true", decimal: decimalValue, bigNumber: formatBigNumber};
+            scope.numberFormat = {"euro": euroValue, decimal: decimalValue, bigNumber: formatBigNumber};
 
             var euroValue2 = $yuccaHelpers.attrs.safe(attr.euroValue2, false);
             var decimalValue2 = $yuccaHelpers.attrs.safe(attr.decimalValue2, 2);
@@ -53,7 +53,7 @@ yuccaWidgetsModule.directive('ngYuccaDatasetTreemapChart', ['metadataService','d
             scope.isEuroValue2 = function(){
             	return euroValue2 == "true";
             };
-            scope.numberFormat2 = {"euro": euroValue2 == "true", decimal: decimalValue2, bigNumber: formatBigNumber2};
+            scope.numberFormat2 = {"euro": euroValue2, decimal: decimalValue2, bigNumber: formatBigNumber2};
 
             //var countingMode  = $yuccaHelpers.attrs.safe(attr.countingMode, "count");
             var showLegend =  attr.showLegend==="false"?false:true;
@@ -201,7 +201,10 @@ yuccaWidgetsModule.directive('ngYuccaDatasetTreemapChart', ['metadataService','d
 	    			  
 	    			var colors = $yuccaHelpers.render.safeColors(scope.treemapData.children.length, scope.$eval(attr.chartColors),attr.mainChartColor);
 	    			for (var i = 0; i < scope.treemapData.children.length; i++) {
-	    				scope.treemapData.children[i].color = colors[i];
+	    				if(attr.mainChartColor && valueColumn2)
+	    					scope.treemapData.children[i].color = $yuccaHelpers.d3color.darker(attr.mainChartColor, .2);
+	    				else
+	    					scope.treemapData.children[i].color = colors[i];
 					}
 	    			
 	    	        console.log("chartData",scope.treemapData);

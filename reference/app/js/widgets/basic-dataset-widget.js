@@ -29,12 +29,15 @@ var odataFilterParam = {'grouped_query':{'name':'grouped_query','type':'inputboo
 
 var formatNumberParams = {'euro_value':{'name':'euro_value','type':'inputboolean','mandatory':'false','values':'', 'default':'','custom':''},
 						 'decimal_value':{'name':'decimal_value','type':'inputnumber','mandatory':'false','values':'', 'default':'','custom':''},
-						 'format_big_number':{'name':'format_big_number','type':'inputboolean','mandatory':'false','values':'', 'default':'','custom':''}
+						 'format_big_number':{'name':'format_big_number','type':'inputboolean','mandatory':'false','values':'', 'default':'','custom':''},
 					};
 var formatNumberParams2= {'euro_value':{'name':'euro_value2','type':'inputboolean','mandatory':'false','values':'', 'default':'','custom':''},
 		 'decimal_value':{'name':'decimal_value2','type':'inputnumber','mandatory':'false','values':'', 'default':'','custom':''},
 		 'format_big_number':{'name':'format_big_number2','type':'inputboolean','mandatory':'false','values':'', 'default':'','custom':''}
 	};
+
+
+var formatNumberTextAfterParams =  {'text_after':{'name':'text_after','type':'inputtext','mandatory':'false','values':'', 'default':'','custom':''}};
 
 var chartParams = {'main_chart_color':{'name':'main_chart_color','type':'inputcolor','mandatory':'false','values':'', 'default':'','custom':''},
 					'chart_colors':{'name':'chart_colors','type':'multipleinputcolor', 'mandatory':'false','values':'', 'default':'','custom':''},
@@ -175,11 +178,12 @@ var basicDatasetPieChart = {
 // linechart
 var basicDatasetLineChartParams = {
 		'time_column':{'name':'time_column','type':'datasetcolumn','mandatory':'true','values':'', 'default':'','custom':''},
-		'serie_columns':{'name':'serie_columns','type':'datasetseriecolumns','mandatory':'true','values':'', 'default':'','custom':''}
+		'serie_columns':{'name':'serie_columns','type':'datasetseriecolumns','mandatory':'true','values':'', 'default':'','custom':''},
 };
 
 var basicDatasetLineChartChartParams = {
-		'show_values':{'name':'show_values','type':'inputboolean','mandatory':'false','values':'', 'default':'','custom':''}
+		'show_values':{'name':'show_values','type':'inputboolean','mandatory':'false','values':'', 'default':'','custom':''},
+		'interpolate':{'name':'interpolate','type':'inputselect','mandatory':'false','values':'', 'default':'','custom':'','data':['linear','step-before','step-after','basis','basis-open','basis-closed','bundle','cardinal','cardinal-open','cardinal-closed','monotone']},
 }
 
 var basicDatasetLineChart = {
@@ -215,12 +219,13 @@ var basicDatasetLineChart = {
 //multichart
 var basicDatasetMultiChartParams = {
 		'group_by_column':{'name':'group_by_column','type':'datasetcolumn','mandatory':'true','values':'', 'default':'','custom':''},
-		'group_by_datetime':{'name':'group_by_datetime','type':'inputboolean','mandatory':'true','values':'', 'default':'','custom':''},
+		'group_by_datetime':{'name':'group_by_datetime','type':'inputboolean','mandatory':'false','values':'', 'default':'','custom':''},
 		'serie_columns':{'name':'serie_columns','type':'datasetseriecolumns','mandatory':'true','values':'', 'default':'','custom':''}
 };
 
 var basicDatasetMultiChartChartParams = {
-		'show_values':{'name':'show_values','type':'inputboolean','mandatory':'false','values':'', 'default':'','custom':''}
+		'show_values':{'name':'show_values','type':'inputboolean','mandatory':'false','values':'', 'default':'','custom':''},
+		'interpolate':{'name':'interpolate','type':'inputselect','mandatory':'false','values':'', 'default':'','custom':'','data':['linear','step-before','step-after','basis','basis-open','basis-closed','bundle','cardinal','cardinal-open','cardinal-closed','monotone']},
 }
 
 var basicDatasetMultiChart = {
@@ -365,7 +370,6 @@ var basicDatasetCollapsibletreeChartChartParams = {
 }
 
 basicDatasetCollapsibletreeChartParams = angular.extend({},datasetParams, basicDatasetCollapsibletreeChartParams);
-
 var basicDatasetCollapsibletreeChart = {
 		key: 'basicDatasetCollapsibletreeChart',	
 		name: 'widget_basic_collapsibletree',
@@ -376,7 +380,7 @@ var basicDatasetCollapsibletreeChart = {
 				common: angular.extend({}, commonParams,commonSizeParams),
 				chart: angular.extend({},basicDatasetCollapsibletreeChartChartParams),
 				odatafilter: odataFilterParam,
-				number_format: formatNumberParams,
+				number_format: angular.extend({},formatNumberParams,formatNumberTextAfterParams),
 				advanced: advancedParams},
 		events: {
 			'event_listening':{
@@ -428,7 +432,7 @@ var basicDatasetCollapsibletreeboxesChart = {
 				common: angular.extend({}, commonParams,commonSizeParams),
 				chart: angular.extend({},basicDatasetCollapsibletreeboxesChartChartParams),
 				odatafilter: odataFilterParam,
-				number_format: formatNumberParams,
+				number_format: angular.extend({},formatNumberParams,formatNumberTextAfterParams),
 				advanced: advancedParams},
 		events: {
 			'event_listening':{

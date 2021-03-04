@@ -6,6 +6,7 @@ var translations_en = {
 	Welcome : 'Welcome ',
 	Preview: 'Preview',
 	getting_started: 'Getting started',
+	menu_api: 'Rest API',
 	composer: 'Composer',
 	yucca_credits_intro : 'Footer',
 	active: 'classe associata alla voce di men&ugrave; attivo',

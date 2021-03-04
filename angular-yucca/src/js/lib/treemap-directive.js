@@ -1,6 +1,6 @@
 /**
  * SPDX-License-Identifier: EUPL-1.2
- * (C) Copyright 2019 Regione Piemonte
+ * (C) Copyright 2019 - 2021 Regione Piemonte
  */
 
 yuccaWidgetsModule.directive('treemapChart', function($timeout,$rootScope, $sce) {
@@ -122,8 +122,12 @@ yuccaWidgetsModule.directive('treemapChart', function($timeout,$rootScope, $sce)
 				var textvalues = "";
 				var text = "";
 				if(d && d._children){
-					for (var i = 0; i < d._children.length; i++) {
-						var c = d._children[i];
+					var orderedChildren = angular.copy(d._children);
+					orderedChildren = orderedChildren.sort(function(a,b) {
+					    return a.value > b.value?-1:1;
+					});
+					for (var i = 0; i < orderedChildren.length; i++) {
+						var c = orderedChildren[i];
 						var fColor = c.color?guessForegroundColor(c.color):"#333";
 						var value = safeNumber(c.value, scope.numberFormat);
 						textvalues+= "<span class='treemap-column' style='background-color: " + c.color + "; color: " + fColor + "'>"+c.name+"</span>"+
@@ -220,7 +224,11 @@ yuccaWidgetsModule.directive('treemapChart', function($timeout,$rootScope, $sce)
 					var display = function(d) {
 						console.log("ttt ddd ",d)
 						grandparent.datum(d.parent).on("click", transition).select("text").text(name(d));
-	
+						if(d.absolutedepth>0)
+							grandparent.attr("style","cursor:pointer");
+						else
+							grandparent.attr("style","cursor:default");
+
 						var g1 = svg.insert("g", ".grandparent").datum(d).attr("class", "depth").attr("parentname",d.name).attr("id", "absoluteparent")
 							.attr("absolutedepth", function(d){return d.absolutedepth;});
 						var g = g1.selectAll("g").data(d._children).enter().append("g");
@@ -234,7 +242,7 @@ yuccaWidgetsModule.directive('treemapChart', function($timeout,$rootScope, $sce)
 							return d._children || [ d ];
 						}).enter().append("rect").attr("class", "child").attr("style",function(d){return color(d);}).call(rect);
 	
-						g.append("rect").attr("class", "parent").attr("style",function(d){return color(d);}).call(rect).append("title").text(function(d) {
+						g.append("rect").attr("class", "parent").attr("style",function(d){return color(d) + ";" + cursorDrilldown(d);}).call(rect).append("title").text(function(d) {
 							return tooltip(d);
 						});
 						
@@ -303,11 +311,12 @@ yuccaWidgetsModule.directive('treemapChart', function($timeout,$rootScope, $sce)
 					};
 					
 					function tooltip(d){
+						console.log("tooltip", d);
 						//var t = root.valueLabel + " " + d.name.trim() + " : " + d.value.toFixed();
 						
 						var value = safeNumber(d.value, scope.numberFormat);
 
-						var t = root.valueLabel + ": " + value;
+						var t = d.name + " - " + root.valueLabel + ": " + value;
 						//if(typeof d.label != 'undefined')
 						//	t = d.label;
 						if(d.fourthElement){
@@ -337,12 +346,29 @@ yuccaWidgetsModule.directive('treemapChart', function($timeout,$rootScope, $sce)
 							c = ColorLuminance(c,lum);
 						}
 						else if(d.value2){
-							var value2percent = d.value2/d.parent.value2
-							var lum = value2percent;
-							//console.log("l", value2percent, lum);
-							c = ColorLuminance(c,lum);
+							var maxValueParent,minValueParent;
+							for (var i = 0; i < d.parent.children.length; i++) {
+								var childValue2 = d.parent.children[i].value2;
+								if(!maxValueParent || maxValueParent<childValue2)
+									maxValueParent = childValue2;
+								if(!minValueParent || minValueParent>childValue2)
+									minValueParent = childValue2;
+							}
+							//var value2percent = d.value2/d.parent.value2;
+							var value2percent = .2 + .8*d.value2/maxValueParent;
+							var lum = 1-value2percent;
+							c = colorShadeRgba(c,value2percent );
 						}
 						return "fill:" +c;
+					}
+					
+					function cursorDrilldown(d) {
+						console.log("Drilldown", d)
+						if(d._children)
+							return "cursor: pointer;";
+						else
+							return "cursor: default;";
+
 					}
 					
 					function textColor(d){
@@ -457,7 +483,29 @@ yuccaWidgetsModule.directive('treemapChart', function($timeout,$rootScope, $sce)
 
 				return rgb;
 			}
+			
+			function colorShade(col, amt) {
+				  col = col.replace(/^#/, '')
+				  if (col.length === 3) col = col[0] + col[0] + col[1] + col[1] + col[2] + col[2]
 
+				  let [r, g, b] = col.match(/.{2}/g);
+				  ([r, g, b] = [parseInt(r, 16) + amt, parseInt(g, 16) + amt, parseInt(b, 16) + amt])
+
+				  r = Math.max(Math.min(255, r), 0).toString(16)
+				  g = Math.max(Math.min(255, g), 0).toString(16)
+				  b = Math.max(Math.min(255, b), 0).toString(16)
+
+				  const rr = (r.length < 2 ? '0' : '') + r
+				  const gg = (g.length < 2 ? '0' : '') + g
+				  const bb = (b.length < 2 ? '0' : '') + b
+
+				  return '#${rr}${gg}${bb}'
+			}
+			function colorShadeRgba(col, percent) {
+				 var rgb = d3.rgb(col);
+				  return 'rgba(' + rgb.r + ','+ rgb.g + ','+ rgb.b + ',' + percent.toFixed(2) + ')';
+			}			
+			
 			var safeNumber = function(input, format) {
 				var result = input;
 				if(!isNaN(input) ){

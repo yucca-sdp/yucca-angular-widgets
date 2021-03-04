@@ -105,6 +105,12 @@ code {
     padding: 8px;
 }
 
+.btn-action{background-color:#0066cc; color: white;border-radius:4px;box-shadow: 3px 3px 10px #bcc0bd;}
+
+.btn-third{background-color: #00bbf0;}
+.btn-secondary{background-color: #dbdb00;}
+.btn-four{background-color: #00973a;}
+
 .code-widget-dialog .modal-header{padding:10px 15px;border-bottom: 1px solid #0066cc;}
 .code-widget-dialog .modal-body h4{margin-bottom: 6px; margin-top: 18px;}
 .code-widget-dialog .prettyhtml, .code-widget-dialog .prettycss{border: solid 1px #ddd; border-radius: 2px;padding: 12px;font-family: monospace;font-weight: 700;}
@@ -200,8 +206,8 @@ code {
 #home .home-welcome{display: flex; min-height: 80vh; position:relative;}
 /*background-color: #0066cc; background-image: -webkit-linear-gradient(30deg, #fff 60%, #5D7F9C 40%);}*/
 #home .home-welcome .home-welcome-left{display: flex;flex-direction: column; padding-bottom: 48px; flex-grow: 1; background: url(../images/yucca/home_left.png); background-size:cover;
-  background-position: center;}
-#home .home-welcome .home-welcome-right{display: flex;padding-bottom: 48px; position: relative;background-size:cover; 
+  background-position: center; width: 66%;}
+#home .home-welcome .home-welcome-right{display: flex;padding-bottom: 48px; position: relative;background-size:cover;  width: 33%;
 font-family: 'Titillium Web', sans-serif; font-weight: 300;background-position: center; background: url(../images/yucca/home_right.jpg); }
   /* box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22); }*/
 /*
@@ -211,19 +217,24 @@ border-left: 24px solid transparent;border-right: 0px solid transparent;border-t
 #home .jumbotron .logocontainer{text-align: left; padding: 0 24px;}
 #home .jumbotron .titlecontainer{text-align: left;padding-left: 24px;}
 #home .jumbotron .titlecontainer h1{font-size: 48px; margin-top: 0; font-family: 'Titillium Web', sans-serif; font-weight: 700;}
-#home .home-actionbutton{display:flex; font-size: 22px; margin: auto; justify-content: center; flex-wrap: nowrap}
+#home .home-actionbutton{display:flex; font-size: 22px; margin: auto; justify-content: center; flex-wrap: nowrap; }
 #home .home-actionbutton .btn-home{margin: 24px 12px;  padding:6px 12px 6px 6px; font-size: 20px; white-space: nowrap; 
-display: block;background-color:#0066cc; color: white;font-weight: bold; border-radius: 24px}
-#home .home-actionbutton .btn-home i{color: #0066cc; background-color: #fff;padding: 4px; border-radius: 100%; display: inline-block; height: 28px; width: 28px; text-align: center}
+display: block;font-weight: bold; border-radius:4px;box-shadow: 3px 3px 10px #bcc0bd;}
+#home .home-actionbutton .btn-home i{ background-color: transparent;padding: 4px; border-radius: 100%; display: inline-block; height: 28px; width: 28px; text-align: center}
 #home .home-actionbutton .btn-home-last{background-color:#eee; color: #aaa; position: relative; padding-left: 36px;}
 #home .home-actionbutton .btn-home-last i{color: #aaa; background-color: transparent; font-size: 32px; position: absolute; top: 0px; left: 2px;}
 #home .home-actionbutton>div{min-width: 15%;}
 #home .home-actionbutton .btn-home:hover{background-color:#002f5e; text-decoration: none;}
-#home .home-actionbutton .btn-home:hover i{color:#002f5e; text-decoration: none;}
+//#home .home-actionbutton .btn-home:hover i{color:#002f5e; text-decoration: none;}
 #home .home-actionbutton .btn-home-last:hover{background-color:#ddd; text-decoration: none;color: #555}
 #home .home-actionbutton .btn-home-last:hover i{color:#555; text-decoration: none;}
 #home .home-welcome-intro-panel{font-size: 24px;padding: 12px; margin: 24px; line-height: 2em;    letter-spacing: 1px; text-align: right; color: white; }
 #home .home-welcome-intro-panel a, #home .home-welcome-intro-panel strong{font-weight: 900; color: #000;background-color: #dbd91b; padding: 0; display: inline-block; line-height: 1.2em;}
+
+#home .home-actionbutton .btn-api{background-color: #a3aaaa; }
+
+em{color: #00bbf0;}
+
 /*        background-color: #001d39; color: transparent; text-shadow: 0px 1px 3px rgba(255, 255, 255, 0.5);
   -webkit-background-clip: text; background-clip: text;}
      
@@ -231,7 +242,7 @@ display: block;background-color:#0066cc; color: white;font-weight: bold; border-
   -webkit-background-clip: text; background-clip: text;}
 */
 
-
+#home .widget-area{display: flex;}
 /*
 #home .jumbotron .btn{margin: 24px 48px 12px 0;font-size: 22px;}
 #home .jumbotron .github-link{color: white; font-size: 22px;margin-top: 24px; display: block; line-height: 1.5em;}
@@ -262,6 +273,12 @@ display: block;background-color:#0066cc; color: white;font-weight: bold; border-
 .panel-feature .btn-action:hover{background-color: #778f00;}
 
 
+.api-metadata{padding: 0 12px;}
+.api-data{border-left: dashed 4px #000;padding: 0 12px;}
+#install .btn-action{font-size: 2rem; color: black; padding: .5em 1em; font-weight: bold;}
+.api-data .panel-help{border: solid 1px #99b800; border-radius: 2px; padding: 6px; background-color: #f1ffad; }
+.api-data .panel-help .tip-icon{color: #99b800;}
+.api-data .panel-help pre{border-color: #99b800;}
 /*
 #install .example-section .btn{margin: 40px 20px;font-size: 24px;box-shadow: 1px 3px 3px rgba(0, 0, 0, 0.3); background-color: #717b7c; color: white; border-color: #717b7c}
 #install .example-section .btn:hover, #install .example-section .btn:active, #install .example-section .btn:focus{background-color: #3f5152;  border-color: #3f5152;}
@@ -290,6 +307,9 @@ display: block;background-color:#0066cc; color: white;font-weight: bold; border-
 #install .table > tfoot > tr > td {
   border-color: transparent;
 }
+
+#install
+h4{font-weight: bold; margin-top: 1.5em;}
  
  .inline-feedback-warning{background-color: #ffffc9; border-top: 1px solid #ffff3e; border-bottom: 1px solid #ffff3e; padding: 6px 12px; margin: 0 24px;}
  .inline-feedback-info{background-color: #bfe9ff; border-top: 1px solid #158fd1; border-bottom: 1px solid #158fd1; padding: 6px 12px; margin: 0 24px;}
@@ -408,9 +428,9 @@ border-left: 4px solid #59324C;
 .widget-panel .widget-intro-panel h2{font-size:20px; margin: 36px 0 6px 0;} 
 .widget-panel .widget-view-panel h2{margin: 0 0 6px 0; font-size:20px;}
 .widget-panel .widget-view-panel-row{display: flex; }
-.widget-panel .widget-code-panel{padding: 0 36px;}
+.widget-panel .widget-code-panel{padding: 0 36px; width: 50%; overflow: hidden;}
 .widget-panel .widget-code-panel .prettyhtml{font-family: monospace;}
-.widget-panel .widget-preview-panel{flex-grow: 1; display:flex;}
+.widget-panel .widget-preview-panel{flex-grow: 1; display:flex;width: 50%; }
 .widget-panel .widget-preview-panel>div{width: 100%; display: flex;}
 .widget-panel .widget-preview-panel>div>*{width: 100%; display: flex;}
 .widget-panel .widget-preview-panel .yucca-widget{padding: 0;width: 100%;}
@@ -534,11 +554,10 @@ background-color: white;font-family: monospace;}
 
 
 .input-group-xs>.form-control,.input-group-xs>.input-group-addon{height: 22px;padding: 1px 5px;font-size: 12px;line-height: 1.5;}
-
 #composer{background: #fff; position: relative;}
 #composer #composer-header{display: flex; background: #000; color: #fff; margin: 0;  z-index: 100;
 padding:24px .5em.5em.5em;box-shadow: 0px 5px 7px 0px rgba(0,0,0,0.25); position: absolute; top:0; width: 100%;  align-items: flex-end;}
-#composer #composer-header .header-title{ font-size: 1.4em;color: #777}
+#composer #composer-header .header-title{ font-size: 1.4em;color: #777; display: flex; align-items: baseline;}
 #composer #composer-header small{padding: 0 1em;}
 #composer #composer-header a{color: white; text-decoration: none;}
 #composer #composer-header a i{ padding: 0 .5em;}
@@ -547,7 +566,7 @@ padding:24px .5em.5em.5em;box-shadow: 0px 5px 7px 0px rgba(0,0,0,0.25); position
 #composer #composer-header a:hover i.fa{color: #0066cc;}
 #composer #composer-header .composer-header-toolbar{display: flex; align-items: flex-end;flex-grow:1; justify-content: flex-end;}
 #composer #composer-header .menu-h {display: flex; padding: .2em;position: absolute; bottom 0; background-color: black; z-index: 10;padding-top: 1em;}	
-#composer #composer-header .menu-h .composer-header-toolbar-item {padding: .2em .5em;;}		
+#composer #composer-header .menu-h .composer-header-toolbar-item {padding: .2em .5em;}		
 #composer #composer-header .menu-h a i{padding:0;}	
 #composer #composer-header .menu-a {display: block; padding: .2em;position: absolute; bottom 0; background-color: black; z-index: 10;padding-top: 1em;}				
 #composer #composer-header .menu-a a{display: block; padding: .4em 1em;; white-space: nowrap; color: white;}			
@@ -599,8 +618,9 @@ padding:24px .5em.5em.5em;box-shadow: 0px 5px 7px 0px rgba(0,0,0,0.25); position
 
 #composer-content #left-sidebar{box-shadow: 5px 0px 7px 0px rgba(0,0,0,0.25);}
 #composer-content #right-sidebar{box-shadow: -5px 0px 7px 0px rgba(0,0,0,0.25);}
-#composer-content #content{flex-grow: 1; padding: 24px;   background-size: 24px 24px;background-image: linear-gradient(to right, #eeeeee 1px, transparent 1px), 
-	linear-gradient(to bottom,  #efefef 1px, transparent 1px); position: relative; display: flex; flex-wrap: wrap;align-content: flex-start;}
+#composer-content #content{flex-grow: 1; padding: 24px;   background-size: 24px 24px; position: relative; display: flex; flex-wrap: wrap;align-content: flex-start;}
+.squared-background{background-image: linear-gradient(to right, #eeeeee 1px, transparent 1px), linear-gradient(to bottom,  #efefef 1px, transparent 1px);}
+
 #composer-content #content .composer-content-x-y-coord{position: absolute; z-index: 6; color: #aaa; font-size: 10px; background-color: #fff; 
 	padding: 0px; top: 24px; right: 24px; font-family: monospace;}
 #composer-content #content .composer-content-x-y-coord span{padding: 0 6px;}
@@ -666,7 +686,7 @@ height: 20px; width: 20px; text-align:center; line-height: 20px; text-decoration
 .grid-layout-preview-item:hover{cursor: pointer;}
 .grid-layout-preview-item.selected{background-color: #d1e3f6;color: #bbb;}
 
-.grid-panel{min-height: 40px; min-width: 40px; border: dashed 1px #ddd; display: flex;}
+.grid-panel{min-height: 40px; min-width: 40px; border: dashed 1px #bbb; display: flex;}
 .grid-panel .component-card{margin: 2px;}
 .grid-panel.selected{background-color: #b8d4f1;}
 .grid-panel-name{display: none; }
@@ -914,6 +934,9 @@ input[type="color"]::-webkit-color-swatch-wrapper {margin:0px; padding: 0px;}
 
 .help-interpolation{text-align: center;}
 .help-interpolation img{max-width: 100%}
+
+.help_inline_interpolate img{max-width: 100%}
+
 
 .help_inline_geoprojection{clear: both;}
 .help_inline_geoprojection div{float: left; width: 50%; padding: 12px;}

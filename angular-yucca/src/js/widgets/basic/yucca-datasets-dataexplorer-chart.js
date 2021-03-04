@@ -1,6 +1,6 @@
 /**
  * SPDX-License-Identifier: EUPL-1.2
- * (C) Copyright 2019 Regione Piemonte
+ * (C) Copyright 2019 - 2021 Regione Piemonte
  */
 
 yuccaWidgetsModule.directive('ngYuccaDatasetDataexplorerTable', ['metadataService','dataService', '$yuccaHelpers', '$timeout', '$compile',
@@ -352,13 +352,26 @@ yuccaWidgetsModule.directive('ngYuccaDatasetDataexplorerTable', ['metadataServic
             	scope.tableData.data = scope.tableData.data.sort(compareData);
             }
             
-            var compareData = function( a, b ) {
+            var compareData = function( aString, bString ) {
             	var res = 0
+            	var a = aString.cols[sort.predicate].val;
+            	var b = bString.cols[sort.predicate].val;
+            	if(columnMap[sort.predicate].datatype == "int" ||
+            			columnMap[sort.predicate].datatype == "long"){
+            		a = parseInt(a.replace(/\./g, ''));
+            		b = parseInt(b.replace(/\./g, ''));
+            	}
+            	else if(columnMap[sort.predicate].datatype == "float" ||
+            			columnMap[sort.predicate].datatype == "double"){
+            		a = parseFloat(a.replace(/\./g, ''));
+            		b = parseFloat(b.replace(/\./g, ''));
+            	}
+
             	if(!sort.reverse){
-            		res= a.cols[sort.predicate].val < b.cols[sort.predicate].val?-1:1;
+            		res= a < b?-1:1;
             	}
             	else{
-            		res= a.cols[sort.predicate].val > b.cols[sort.predicate].val?-1:1;
+            		res= a > b?-1:1;
             	}
             	return res;
             }
@@ -481,7 +494,7 @@ yuccaWidgetsTemplatesModule.run(["$templateCache", function($templateCache) {
     '               <div class="yucca-widget-dataexplorer-pagination-total">Total <strong>{{filtered.rows.length}}</strong></div>' +
     '                <a href ng-if="pagination.current>1" ng-click="pagination.current=pagination.current-1" title="Previous" class="yucca-widget-dataexplorer-pagination-prev">&lt;</a> ' +
     '                  {{pagination.current}}/{{numberOfPages()}}\n' +
-    '			     <a href ng-if="pagination.current < filtered.rows.length/pagination.pagesize - 1" ng-click="pagination.current=pagination.current+1" title="Next"  class="yucca-widget-dataexplorer-pagination-prev">&gt;</a>' +
+    '			     <a href ng-if="pagination.current < filtered.rows.length/pagination.pagesize" ng-click="pagination.current=pagination.current+1" title="Next"  class="yucca-widget-dataexplorer-pagination-prev">&gt;</a>' +
     '   	      </div>\n' +
     '   	    </div>\n' +
     '           <div class="yucca-widget-table-detail-panel" ng-if="detail"><a class="yucca-widget-table-close" href ng-click="hideDetail()">&times</a>'+

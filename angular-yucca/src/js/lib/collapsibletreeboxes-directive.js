@@ -1,6 +1,6 @@
 /**
  * SPDX-License-Identifier: EUPL-1.2
- * (C) Copyright 2019 Regione Piemonte
+ * (C) Copyright 2019 - 2021 Regione Piemonte
  */
 
 yuccaWidgetsModule.directive('collapsibleTreeBoxes',
@@ -63,7 +63,9 @@ yuccaWidgetsModule.directive('collapsibleTreeBoxes',
 						height = height - margin.top - margin.bottom;
 						console.log("width in", width);
 
-						tree = d3.layout.tree().size([ height, width ]);
+						tree = d3.layout.tree().size([ height, width ]).sort(function(a,b){
+						      return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+					    });
 						root = scope.data;
 
 						root.x0 = height / 2;

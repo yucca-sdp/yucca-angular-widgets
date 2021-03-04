@@ -1,6 +1,6 @@
 /**
  * SPDX-License-Identifier: EUPL-1.2
- * (C) Copyright 2019 Regione Piemonte
+ * (C) Copyright 2019 - 2021 Regione Piemonte
  */
 
 yuccaWidgetsModule.directive('ngYuccaDatasetDiscretebarChart', ['metadataService','dataService', '$yuccaHelpers', '$rootScope','$timeout',
@@ -293,7 +293,7 @@ yuccaWidgetsModule.directive('ngYuccaDatasetDiscretebarChart', ['metadataService
 	    					scope.options.chart.margin = {};
 	    				scope.options.chart.margin.left = fakeText.node().getComputedTextLength()+6;
 	    				console.log("maxLabel",maxLabel, fakeText.node().getComputedTextLength());
-	    				d3.select("#"+ scope.widgetId + "-fake").remove();
+	    				d3.select("#"+ scope.widgetId + "-fake svg").remove();
 	    			}
 
 	    	        console.log("discrete chartData",scope.chartData);

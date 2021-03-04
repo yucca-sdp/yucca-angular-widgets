@@ -1,6 +1,6 @@
 /**
  * SPDX-License-Identifier: EUPL-1.2
- * (C) Copyright 2019 Regione Piemonte
+ * (C) Copyright 2019 - 2021 Regione Piemonte
  */
 
 yuccaWidgetsModule.directive('ngYuccaDatasetCollapsibletreeChart', ['metadataService','dataService', '$yuccaHelpers', '$timeout', '$compile', '$rootScope',
@@ -43,6 +43,8 @@ yuccaWidgetsModule.directive('ngYuccaDatasetCollapsibletreeChart', ['metadataSer
             scope.isEuroValue = function(){
             	return euroValue == "true";
             };
+
+            var textAfter = $yuccaHelpers.attrs.safe(attr.textAfter, '');
 
             var chartColors =  scope.$eval(attr.chartColors);
             var mainChartColor =  $yuccaHelpers.attrs.safe(attr.mainChartColor, "#00bbf0");
@@ -182,7 +184,7 @@ yuccaWidgetsModule.directive('ngYuccaDatasetCollapsibletreeChart', ['metadataSer
 	    			for(var i=0; i<odataResult.length; i++)
 	    				allData = allData.concat(odataResult[i].data.d.results);
 	    				
-	    			var valueFormat = {decimalValue: decimalValue, isEuro: scope.isEuroValue(), formatBigNumber: formatBigNumber};
+	    			var valueFormat = {decimalValue: decimalValue, isEuro: scope.isEuroValue(), formatBigNumber: formatBigNumber, textAfter:textAfter};
 
 	    			scope.collapsibletreeData = $yuccaHelpers.data.aggregationTree(rootLabel, allData, treeColumns, valueColumn, null, valueFormat);
 	    			console.log("tree fuori", scope.collapsibletreeData);

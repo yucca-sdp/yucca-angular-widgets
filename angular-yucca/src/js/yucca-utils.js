@@ -1,6 +1,6 @@
 /**
  * SPDX-License-Identifier: EUPL-1.2
- * (C) Copyright 2019 Regione Piemonte
+ * (C) Copyright 2019 - 2021 Regione Piemonte
  */
 
 var yuccaUtilsModule = angular.module('yucca.utils', []);
@@ -324,7 +324,10 @@ yuccaUtilsModule.factory('$yuccaHelpers', [function () {
 						for (var i = 0; i < data[0].values.length; i++) {
 							csv += data[0].values[i].label;
 							for (var j = 0; j < data.length; j++){
-								csv += ";" + data[j].values[i].value;
+								if(data[j].values[i].value && !isNaN(data[j].values[i].value))
+									csv += ";" + parseFloat(data[j].values[i].value).toLocaleString();
+								else
+									csv += ";" + data[j].values[i].value;
 							}
 							csv  += "\r\n";
 						}
@@ -461,10 +464,13 @@ yuccaUtilsModule.factory('$yuccaHelpers', [function () {
 					}
 					return result;
 				},
-				safeNumber : function(input, decimal, isEuro,formatBigNumber) {
+				safeNumber : function(input, decimal, isEuro,formatBigNumber, textAfter) {
+
 					var result = input;
 					if(!isNaN(input) ){
-						if(input)
+						if(input=== parseInt(input, 10))
+							input = parseInt(input);
+						else
 							input = parseFloat(input);
 						if(isEuro){
 							result = this.formatEuro(input, decimal,formatBigNumber);
@@ -475,7 +481,7 @@ yuccaUtilsModule.factory('$yuccaHelpers', [function () {
 									decimal=0;
 								else if(Math.abs(input)<1){
 									decimal= -1*Math.log10(input) +1;
-									if(decimal < 0)
+									if(decimal < 0 || decimal==Infinity)
 										decimal = 0;
 									else if(decimal>20)
 										decimal =20;
@@ -488,9 +494,12 @@ yuccaUtilsModule.factory('$yuccaHelpers', [function () {
 								result = this.format_big_number(result, decimal);
 							}
 							else
-								result = new Number(result).toLocaleString();
+								if(result>3000) // to avoid year written like 2.019
+									result = new Number(result).toLocaleString();
 						}
 					}
+					if(textAfter)
+						result += ' ' + textAfter;
 					return result;
 				},
 				format_big_number:function(input, decimal, lang) {
@@ -1105,13 +1114,14 @@ yuccaUtilsModule.factory('$yuccaHelpers', [function () {
 							keys.push({k:rows[r][columns[c].key], c: columns[c], d:c});
 						}
 						var value = 1;
+						//console.log("aaaaaaaaaaaa",rows[r][valueColumn.key]);
 						if(valueColumn.countingMode== 'sum')
-							value = rows[r][valueColumn.key];
+							value = rows[r][valueColumn.key]==null?0:rows[r][valueColumn.key];
 
 						if(valueColumn2){
 							var value2 = 1;
 							if(valueColumn2.countingMode== 'sum')
-								value2 = rows[r][valueColumn2.key];
+								value2 = rows[r][valueColumn2.key]==null?0:rows[r][valueColumn2.key];
 						}				
 						tree = this.initTreeNode(tree, keys, value,value2, valueFormat, valueFormat2);
 					}
@@ -1141,13 +1151,13 @@ yuccaUtilsModule.factory('$yuccaHelpers', [function () {
 
 					cur.value += parseFloat(value);
 					if(typeof valueFormat != 'undefined' && valueFormat)
-						cur.formattedValue = self.render.safeNumber(cur.value, valueFormat.decimalValue, valueFormat.isEuro,valueFormat.formatBigNumber);
+						cur.formattedValue = self.render.safeNumber(cur.value, valueFormat.decimalValue, valueFormat.isEuro,valueFormat.formatBigNumber, valueFormat.textAfter);
 					else
 						cur.formattedValue = cur.value;
 					if(value2){
 						cur.value2 += parseFloat(value2);
 						if(typeof valueFormat2 != 'undefined' && valueFormat2)
-							cur.formattedValue2 = self.render.safeNumber(cur.value2, valueFormat2.decimalValue, valueFormat2.isEuro,valueFormat2.formatBigNumber);
+							cur.formattedValue2 = self.render.safeNumber(cur.value2, valueFormat2.decimalValue, valueFormat2.isEuro,valueFormat2.formatBigNumber, valueFormat.textAfter);
 						else
 							cur.formattedValue2 = cur.value2;
 
@@ -1283,55 +1293,59 @@ yuccaUtilsModule.factory('$yuccaHelpers', [function () {
 					var linksDictionary = [];
 					var nodeIndex = 0;
 					for(var i=0; i<rows.length; i++){
-						for(var j=0; j<columns.length; j++){
-							if(typeof(matrix[columns[j].key]) == "undefined")
-								matrix[columns[j].key] = [];
-							if( typeof(uniqueNode[columns[j].key +"_"+rows[i][columns[j].key]]) == "undefined"){
-								var c = mainColor;
-//								if(colors && colors[j])
-//								c = colors[j];
-								var node = {"name": ""+rows[i][columns[j].key], "index": nodeIndex, "label": ""+rows[i][columns[j].key], "color": c,"fades":true};
-								console.debug("render",columns[j]+"_"+node.name);
-								if(typeof render!= 'undefined' && typeof render[columns[j].key+"_"+node.name] != 'undefined'){
-									var r = render[columns[j].key+"_"+node.name];
-									if(typeof r.label!=undefined)
-										node.label = r.label;
-									if(typeof r.color!=undefined)
-										node.color = r.color;
-									if(r.fades=="true")
-										node.fades = true;
-									else
-										node.fades = false;
+						if(rows[i][columnValue]){
+							for(var j=0; j<columns.length; j++){
+								if(typeof(matrix[columns[j].key]) == "undefined")
+									matrix[columns[j].key] = [];
+								if( typeof(uniqueNode[columns[j].key +"_"+rows[i][columns[j].key]]) == "undefined"){
+									var c = mainColor;
+	//								if(colors && colors[j])
+	//								c = colors[j];
+									var node = {"name": ""+rows[i][columns[j].key], "index": nodeIndex, "label": ""+rows[i][columns[j].key], "color": c,"fades":true};
+									console.debug("render",columns[j]+"_"+node.name);
+									if(typeof render!= 'undefined' && typeof render[columns[j].key+"_"+node.name] != 'undefined'){
+										var r = render[columns[j].key+"_"+node.name];
+										if(typeof r.label!=undefined)
+											node.label = r.label;
+										if(typeof r.color!=undefined)
+											node.color = r.color;
+										if(r.fades=="true")
+											node.fades = true;
+										else
+											node.fades = false;
+									}
+									nodes.push(node);
+									matrix[columns[j].key].push({"node":rows[i][columns[j].key],"index": nodeIndex});
+									nodeIndex++;
 								}
-								nodes.push(node);
-								matrix[columns[j].key].push({"node":rows[i][columns[j].key],"index": nodeIndex});
-								nodeIndex++;
+								uniqueNode[columns[j].key +"_"+rows[i][columns[j].key]] = 0;
 							}
-							uniqueNode[columns[j].key +"_"+rows[i][columns[j].key]] = 0;
 						}
 					}
 					console.debug("nodes", nodes);
 					console.debug("matrix", matrix);
 
 					for(var i=0; i<rows.length; i++){
-						for(var j=0; j<columns.length; j++){
-							if(j<columns.length-1){
-								var key= columns[j].key;
-								for(var k=0; k<matrix[key].length; k++){
-									var source = matrix[key][k];
-									for(var m=0; m<matrix[columns[j+1].key].length; m++){
-										var target = matrix[columns[j+1].key][m];
-										if(typeof(linksDictionary[key+"|"+source.node+"|"+target.node]) == "undefined")
-											linksDictionary[key+"|"+source.node+"|"+target.node] = {"source": source.index, "target":target.index, "value": 0};
-										if(rows[i][columns[j].key] == source.node && rows[i][columns[j+1].key]  == target.node){
-											var add = countingMode=='sum'?parseFloat(rows[i][columnValue]):1;
-											linksDictionary[key+"|"+source.node+"|"+target.node].value += add;
+						if(rows[i][columnValue]){
+							for(var j=0; j<columns.length; j++){
+								if(j<columns.length-1){
+									var key= columns[j].key;
+									for(var k=0; k<matrix[key].length; k++){
+										var source = matrix[key][k];
+										for(var m=0; m<matrix[columns[j+1].key].length; m++){
+											var target = matrix[columns[j+1].key][m];
+											if(typeof(linksDictionary[key+"|"+source.node+"|"+target.node]) == "undefined")
+												linksDictionary[key+"|"+source.node+"|"+target.node] = {"source": source.index, "target":target.index, "value": 0};
+											if(rows[i][columns[j].key] == source.node && rows[i][columns[j+1].key]  == target.node){
+												var value = rows[i][columnValue]?parseFloat(rows[i][columnValue]):0;
+												var add = countingMode=='sum'?value:1;
+												linksDictionary[key+"|"+source.node+"|"+target.node].value += add;
+											}
 										}
 									}
+	
 								}
-
 							}
-
 						}
 
 					}

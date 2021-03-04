@@ -1,6 +1,6 @@
 /**
  * SPDX-License-Identifier: EUPL-1.2
- * (C) Copyright 2019 Regione Piemonte
+ * (C) Copyright 2019 - 2021 Regione Piemonte
  */
 
 yuccaWidgetsModule.directive('ngYuccaDatasetChoroplethMapChart', ['metadataService','dataService', '$yuccaHelpers', '$http', '$timeout', '$compile', '$rootScope',
@@ -340,8 +340,9 @@ yuccaWidgetsModule.directive('ngYuccaDatasetChoroplethMapChart', ['metadataServi
 			var highlightFeature = function(d) {
 				var color = $yuccaHelpers.d3color.darker(getValueColor(d), 0.3);
 				d3.select(this).style('fill', color);
-				scope.updateInfo(true, d.properties.name  + (d.properties.label?" - " + d.properties.label:"") +
-						(d.properties.value?
+				var name = d.properties.name || d.properties.description;
+				scope.updateInfo(true, name  + (d.properties.label?" - " + d.properties.label:"") +
+						(typeof d.properties.value != 'undefined'?
 						": " + $yuccaHelpers.render.safeNumber(d.properties.value, decimalValue, scope.isEuroValue(),formatBigNumber):": no data"));
           		var event = $yuccaHelpers.event.createEvent(scope.widgetId,widgetType,"dataset.highlight.group_by_column", 
           				{"key": d.properties[geojsons[activeGeojson].key], "color" :color}, eventControlId);

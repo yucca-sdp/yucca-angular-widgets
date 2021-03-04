@@ -1,6 +1,6 @@
 /**
  * SPDX-License-Identifier: EUPL-1.2
- * (C) Copyright 2019 Regione Piemonte
+ * (C) Copyright 2019 - 2021 Regione Piemonte
  */
 
 yuccaWidgetsModule.directive('ngYuccaDatasetLineChart', ['metadataService','dataService', '$yuccaHelpers', '$timeout', '$compile',
@@ -75,6 +75,7 @@ yuccaWidgetsModule.directive('ngYuccaDatasetLineChart', ['metadataService','data
             	yAxisAttr = {hide:false, label: ""};
     		
             //var serieStyles = scope.$eval(attr.serieStyles);
+        	var interpolate =  attr.interpolate;
 
         	scope.options = {
     			chart: {
@@ -105,6 +106,9 @@ yuccaWidgetsModule.directive('ngYuccaDatasetLineChart', ['metadataService','data
 	     
 	            }
 	        };
+            if(interpolate)
+            	scope.options.chart.interpolate = interpolate;
+
         	// range 0->1
 
         	var legendAttr= scope.$eval(attr.chartLegend);

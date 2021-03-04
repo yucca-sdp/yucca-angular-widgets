@@ -92,31 +92,14 @@
 			<div class=' col-sm-8 widget-container'>
 				<div class='row' >
  					<div class=' col-sm-6'>
- 					<ng-yucca-dataset-sankey-chart 
- 						tenantcode='regp_crusgov' datasetcode='PartecipateFlussiDiSpesa_8747' main_chart_color='#3bba3b'
- 						value_column='{"key":"Importoimpegnatocompetenzatitolo","label":"Spesa titolo partecipata", "countingMode":"sum"}' 
- 						node_columns='[{"key":"AnnoSpesaTotale","label":"Spesa Totale"},{"key":"DescTitolo","label":"Descrizione Spesa"},{"key":"RagioneSociale","label":"Ragione Sociale"}]' 
- 					filter='(%272018%27 eq Anno) '
- 						 usertoken='5wHuWCcdb1qgToAlPU8B81h8aXwa' />
-						<!--<ng-yucca-dataset-sankey-chart 
-							 tenant_code="regpie" 
-							 datasetcode="Flussi_turistici_provincia_6054" 
-							 node_columns='[{"key":"anno","label":"Anno"},{"key":"qualifica","label":"Qualifica"},{"key":"settore","label":"Settore"},{"key":"provincia","label":"Provincia"}]'
-							 value_column='{"key":"arrivi_stranieri","label":"Arrivi Italiani", "countingMode":"sum"}'
-							 widget_title="Sankey"
-							 root-label="Totale" 
-							 widget_subtitle="Flussi turistici" 
-							 euro_value="false" 
-							 decimal_value='0'
-							 format_big_number='true'
-							 chart_width='300'
-							 chart_height='300'
-							 main_chart_color__='#6a00ff'
-							 main_chart_color='#eee'
-							 chart_colors_='["#eaeaea","#eee","#e5e5e5","#f04090","#916ab1","#55b9fc"]'	
-							 node_render="{'settore_SETTORE ALBERGHIERO_':{color:'#beff42', fades: 'false'}, 'settore_SETTORE EXTRALBERGHIERO':{color:'#beff42', fades: 'false'}}"
-							 
-							/>-->
+ 					<ng-yucca-dataset-sankey-chart tenantcode='regpie'
+  datasetcode='FlussiTurist_2749'
+  value_column='{"key":"Italianiarrivi","label":"Italiani Arrivi", "countingMode":"sum"}'
+  node_columns='[{"key":"Subtipoprovenienza","label":"Sub Tipo Provenienza"},{"key":"Provincia","label":"Provincia"}]'
+  filter='(Italianiarrivi ne %27%27)'   widget_height='800'
+  >
+    
+</ng-yucca-dataset-sankey-chart>
 					</div> 
  					<div class=' col-sm-6'>
 					<ng-yucca-dataset-navigableexplorer-chart 

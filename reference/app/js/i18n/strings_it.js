@@ -11,6 +11,7 @@ var translations_it = {
 	getting_started: 'Per iniziare',
 	composer: 'Composer',
 	advaced_widget: 'Widget Avanzati',
+	menu_api: 'Rest API',
 	yucca_credits_intro: 'Footer',
 	active: 'css class for the active menu item',
 	yes: 'Si',
@@ -1912,6 +1913,22 @@ var translations_it = {
 	visualization_type_line: 'Grafico a linea',
 	visualization_type_scatter: 'Visualizzazione a dispersione',
 
+	param_interpolate: 'Interpolazione',
+	'interpolate_linear':'linear',
+	'interpolate_step-before':'step-before',
+	'interpolate_step-after':'step-after',
+	'interpolate_basis':'basis',
+	'interpolate_basis-open':'basis-open',
+	'interpolate_basis-closed':'basis-closed',
+	'interpolate_bundle':'bundle',
+	'interpolate_cardinal':'cardinal',
+	'interpolate_cardinal-open':'cardinal-open',
+	'interpolate_cardinal-closed':'cardinal-closed',
+	'interpolate_monotone':'monotone',
+	help_inline_interpolate: '<div class="help_inline_interpolate"><img src="images/help/d3_interpolation_type_help_big.jpg" /></div>',
+
+	
+	
 	param_config_visualization_interpolation: 'Interpolazione',
 	param_config_area_color: 'Colore area',
 

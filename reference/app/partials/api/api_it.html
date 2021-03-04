@@ -1,0 +1,136 @@
+<div id='install'>
+	<h1>
+		Rest API<small> Cercare e usare i dati</small>
+	</h1>
+	<div class='row'>
+		<div class='col-sm-6 api-metadata'>
+			<h3>
+				Metadata API<br>
+				<small>Cercare Stream e Dataset tramite i metadati</small>
+			</h3>
+			<h4>Filtri di ricerca</h4>
+			<p>
+				Esposizione API di ricerca e dettaglio dei Metadati di stream e
+				dataset tramite <em>ricerca libera</em> e/o filtri specifici su <em>area
+					di lavoro</em>, <em>Organizzazione</em>, <em>Ambito</em>, <em>tag</em>,
+				<em>visibilit&agrave</em>
+			</p>
+			<h4>Formati di output</h4>
+			<p>I risultati delle query possono essere in questi formati:
+			<ul>
+				<li>Json</li>
+				<li><a href='https://ckan.org/' target='_blank'>CKAN</a></li>
+				<li>Data Catalog Interoperability Protocol <a
+					href='https://www.dati.gov.it/content/dcat-ap-it-v10-profilo-italiano-dcat-ap-0'>DCAT-AP-IT</a>
+					in formato JSON+LD
+				</li>
+			</ul>
+			<br>	
+
+			<h4>Esempio di chiamata</h4>
+			<div class='panel-help'>
+				<i class="fa fa-lightbulb-o tip-icon" aria-hidden="true"></i>
+				Ricerca dataset o stream relativi all'<strong>acqua</strong>
+				<div class='help-content'>
+					<div>
+						<a
+							href="https://api.smartdatanet.it/metadataapi/api/v02/search?q=acqua"
+							target="_blank"> 
+							<pre><code>https://api.smartdatanet.it/metadataapi/api/v02/search?q=acqua</code></pre>
+						</a>
+					</div>
+					<div>Risposta (parziale)</div>
+					<div>
+						 <pre><code>{
+  "start": 0,
+  "count": 12,
+  "totalCount": 23,
+  "totalPages": 2,
+  "params": {
+    "q": "acqua"
+  },
+  "metadata": [
+    {
+      "name": "Patrimonio immobiliare regionale - Beni demaniali",
+      "version": "5",
+       &hellip;</code></pre>
+					</div>
+				</div>
+			</div>
+			<p>&nbsp;</p>
+		</div>
+		<div class='col-sm-6 api-data'>
+			<h3>
+				Data API<br>
+				<small>Query sui dati</small>
+			</h3>
+			<h4>Interrogare la piattaforma e filtrare i dati</h4>
+			<!-- <p>La piattaforma fornisce delle API Rest basate sul protocollo oData per le interazioni</p>-->
+			<p>
+				Esposizione dei dati tramite servizi rest-http implementati secondo
+				le specifiche del protocollo <a href="https://www.odata.org/"
+					target='_blank'>oData</a>
+			</p>
+			<p>
+				Si possono effettuare query <em>paginate</em> con <em>filtri</em> su
+				tutte le colonne del dataset.Filtri di tipo <em>numerico</em>, <em>temporale</em>
+				o <em>sul contenuto del testo</em> in base alla tipologia di dato
+			</p>
+			<h4>Formati di output</h4>
+			<p>I risultati delle query possono essere in questi formati:
+			<ul>
+				<li>Json</li>
+				<li>XML</li>
+			</ul>
+
+			<h4>Esempio di chiamata</h4>
+			<div class='panel-help'>
+				<i class="fa fa-lightbulb-o tip-icon" aria-hidden="true"></i>
+				Ricerca dataset o stream relativi all'<strong>acqua</strong>
+				<div class='help-content'>
+					<div>
+						<a
+							href="http://api.smartdatanet.it/api/BeniDemanialiRegionali_9520/DataEntities?$format=json&$top=15&$orderby=internalId%20desc"
+							target="_blank"> 
+							<pre><code>http://api.smartdatanet.it/api/BeniDemanialiRegionali_9520/DataEntities?$format=json&$top=10</code></pre>
+						</a>
+					</div>
+					<div>Risposta (parziale)</div>
+					<div>
+						<small> <pre><code>{
+	"d": {
+	  "__count": "946",
+	  "results": [
+	     {
+		   "internalId": "5f9eb2a77f3a61473f8ad",
+		   "datasetVersion": 5,
+		   "idDataset": "9520",
+		   "Anno": "2017",
+		   "Nome_Site": "VIVAI",
+		   "Numero_Inventario": "DIMMP904E_F",
+      		&hellip;</code></pre></small>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+	<p>&nbsp;</p>
+	<p>&nbsp;</p>
+	<div class='row'>
+		<div class='col-sm-6'>
+			<p class='text-center'>
+				<a href="https://api.smartdatanet.it/metadataapi/" target='_blank'
+					class='btn btn-action btn-third'>Approfondisci le Metadata API</a>
+			</p>
+		</div>
+		<div class='col-sm-6'>
+			<p class='text-center'>
+				<a class='btn-action btn-secondary btn' target='_blank'
+					href="https://yucca.readthedocs.io/it/latest/yucca-docs/docs/linee_guida/4.3_accesso_esposizione_dati.html">Approfondisci le Data API</a>
+			</p>
+		</div>
+	</div>
+	<p>&nbsp;</p>
+	<p>&nbsp;</p>
+</div>

@@ -140,7 +140,8 @@
 				
 		</div>
 		<style>{{getDashboardCss()}}</style>
-		<div id='content' ng-mousemove="captureCoordinate($event)" ng-drop="true" ng-drop-success="onDropComponent($data,$event)" ng-drag-move='onResizeComponent($data,$event)'  ng-class='{"grid-editing":isEditingGrid}'>
+		<div id='content' ng-mousemove="captureCoordinate($event)" ng-drop="true" ng-drop-success="onDropComponent($data,$event)" ng-drag-move='onResizeComponent($data,$event)'  
+		ng-class='{"grid-editing":isEditingGrid, "squared-background":dashboard.widgetPositionType != "grid"}'>
 			<div class='composer-content-x-y-coord' ><span><strong>x:</strong>{{composerCoordinates.x}}</span> <span><strong>y:</strong>{{composerCoordinates.y}}</span> </div>
 			<!--   ----------- GRID ------------ -->
 			<div ng-if="dashboard.widgetPositionType == 'grid'" ng-repeat='p in dashboard.grid.panels track by $index' class='grid-panel {{p.name}} {{gridPanelStyle($index)}}'

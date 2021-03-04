@@ -1,6 +1,6 @@
 /**
  * SPDX-License-Identifier: EUPL-1.2
- * (C) Copyright 2019 Regione Piemonte
+ * (C) Copyright 2019 - 2021 Regione Piemonte
  */
 
 yuccaWidgetsModule.directive('ngYuccaControlFilter', ['$yuccaHelpers', '$rootScope',
@@ -98,6 +98,11 @@ yuccaWidgetsModule.directive('ngYuccaControlFilter', ['$yuccaHelpers', '$rootSco
           var oldFilterValue = null;
 		  scope.filterText = function(){
 			 console.log("filterText",scope.filter, oldFilterValue);
+			 if(attr.textcase == "uppercase")
+				 scope.filter.value = scope.filter.value.toUpperCase();
+			 else if(attr.textcase == "lowercase")
+				 scope.filter.value = scope.filter.value.toLowerCase();
+			 
 			 if(!angular.equals(oldFilterValue,scope.filter)){
 				 var event = $yuccaHelpers.event.createEvent(scope.widgetId,widgetType,"dataset.filter.text", {"column": attr.column, "value" :scope.filter.value}, eventControlId);
 				 if(scope.advancedFilter)
@@ -129,7 +134,7 @@ yuccaWidgetsTemplatesModule.run(["$templateCache", function($templateCache) {
 		'	<div class="yucca-control-type-select" ng-if="filterType==\'text\'">' +
 		'     <div class="yucca-control-main-label" for="yucca-filter-text-{{widgetId}}">{{label}}</div>' + 
 		'     <div class="yucca-control-main-hint">{{hint}}</div>' + 
-		'	  <input type="text" class="yucca-control-filter-text" ng-blur="filterText()" ng-model="filter.value" name="yucca-filter-text" id="yucca-filter-text-{{widgetId}}" placeholder="{{placeholder}}"/>' + 
+		'	  <input type="text" class="yucca-control-filter-text" ng-blur="filterText()" ng-enter="filterText()" ng-model="filter.value" name="yucca-filter-text" id="yucca-filter-text-{{widgetId}}" placeholder="{{placeholder}}"/>' + 
 		'     <div class="yucca-control-filter-text-advanced" ng-if="advancedFilter==\'text\'">'+
 		'       <div class="radio">' + 
 		'          <label><input type="radio" name="adv_text_radio_{{widgetId}}" value="exact" ng-model="filter.advanced" ng-change="filterText()" >' + 

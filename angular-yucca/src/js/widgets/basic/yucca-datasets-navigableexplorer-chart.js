@@ -1,6 +1,6 @@
 /**
  * SPDX-License-Identifier: EUPL-1.2
- * (C) Copyright 2019 Regione Piemonte
+ * (C) Copyright 2019 - 2021 Regione Piemonte
  */
 
 yuccaWidgetsModule.directive('ngYuccaDatasetNavigableexplorerTable', ['metadataService','dataService', '$yuccaHelpers', '$timeout', '$rootScope',
@@ -95,7 +95,7 @@ yuccaWidgetsModule.directive('ngYuccaDatasetNavigableexplorerTable', ['metadataS
 			    		   }
 			    		   else if(event.eventtype == 'dataset.filter.text'){
 			    			   filterMap[event.sourceId] = event.data;
-			    			   filter = $yuccaHelpers.event.updateTextFilter(attr.Filter, filterMap, columnDataTypeMap);
+			    			   filter = $yuccaHelpers.event.updateTextFilter(attr.filter, filterMap, columnDataTypeMap);
 			    			   loadData();
 			    		   }
 			    		   else if(event.eventtype == 'dataset.filter.odata'){
@@ -119,12 +119,23 @@ yuccaWidgetsModule.directive('ngYuccaDatasetNavigableexplorerTable', ['metadataS
        		scope.tableData = [];
        		var odataResult = null;
        		scope.totalResult = 0;
+       		var columnDataTypeMap = {};
+
         	var loadData = function(){
         		scope.tableData = [];
     			scope.isLoading = true;
         		dataService.getDataEntities(attr.datasetcode,user_token,filter,  0, 1, null,apiDataUrl,cache).then(function(firstData){
         			console.log("loadData", firstData);
 	    			var maxData = firstData.data.d.__count>10000?10000:firstData.data.d.__count;
+	    			if(maxData>0){
+	    				var d = firstData.data.d.results[0];
+	    				for (var k in d) {
+	    				    if (d.hasOwnProperty(k) && k!='__metadata'){
+	    				    	columnDataTypeMap[k] = typeof d[k];
+	    				    } 
+	    				}
+	    				console.log("columnDataTypeMap ", columnDataTypeMap);
+	    			}
 	    			dataService.getMultipleDataEnties(attr.datasetcode, user_token, filter,  orderby, maxData,apiDataUrl,cache).then( function(result) {
 	    				scope.isLoading = false;
 	    				console.info("navigableexplorer:loadData", result);
@@ -178,8 +189,10 @@ yuccaWidgetsModule.directive('ngYuccaDatasetNavigableexplorerTable', ['metadataS
         		var total = 0;
         		if(tree.children){
 	        		for (var i = 0; i < tree.children.length; i++) {
-	        			if(tree.children[i].children)
-		    				return sumChildresValue(tree.children[i].name, tree.children[i], valueIndex);
+	        			if(tree.children[i].children){
+	        				//	return sumChildresValue(tree.children[i].name, tree.children[i], valueIndex);
+	        				total += sumChildresValue(tree.children[i].name, tree.children[i], valueIndex)
+	        			}
 						else{
 							if(valueIndex == 2)
 								total += tree.children[i].value2;
@@ -190,9 +203,9 @@ yuccaWidgetsModule.directive('ngYuccaDatasetNavigableexplorerTable', ['metadataS
         		}
         		else{
 					if(valueIndex == 2)
-						total = tree.value2;
+						total += tree.value2;
 					else
-						total = tree.value;
+						total += tree.value;
         			
         		}
         		return total;

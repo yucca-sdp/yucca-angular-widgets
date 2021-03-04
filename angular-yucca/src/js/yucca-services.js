@@ -1,6 +1,6 @@
 /**
  * SPDX-License-Identifier: EUPL-1.2
- * (C) Copyright 2019 Regione Piemonte
+ * (C) Copyright 2019 - 2021 Regione Piemonte
  */
 
 var yuccaServices = yuccaServices || angular.module('yucca.services', []);
@@ -29,7 +29,7 @@ yuccaServices.factory('metadataService',["$http","$q", function($http, $q) {
 	};
 	
 	metadataService.getStreamMetadata = function(tenant_code, stream_code, smartobject_code, user_token) {
-		var URLBaseQuery = Constants.API_METADATA_URL + "detail/"+tenant_code + "/" + smartobject_code + "/"  + stream_code+'?';
+		var URLBaseQuery ="https:" +  Constants.API_METADATA_URL + "detail/"+tenant_code + "/" + smartobject_code + "/"  + stream_code+'?';
 		console.debug(URLBaseQuery);
 		return loadMetadata(URLBaseQuery, user_token);
 
@@ -40,7 +40,7 @@ yuccaServices.factory('metadataService',["$http","$q", function($http, $q) {
 		if(!apiMetadataUrl)
 			apiMetadataUrl = Constants.API_METADATA_URL;
 
-		var URLBaseQuery = apiMetadataUrl + "detail/"+tenant_code + "/" + dataset_code + '?';
+		var URLBaseQuery = "https:" + apiMetadataUrl + "detail/"+tenant_code + "/" + dataset_code + '?';
 		return loadMetadata(URLBaseQuery, user_token, apiMetadataUrl,useCache);
 	};
 	

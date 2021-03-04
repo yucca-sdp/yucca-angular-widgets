@@ -108,6 +108,8 @@
 	<script type="text/javascript" 
 	src="http://localhost:8001/js/widgets/basic/yucca-datasets-choropleth-map-chart.js"></script>
 	
+	<script type="text/javascript" 
+	src="http://localhost:8001/js/widgets/yucca-datasets-multidata-stats.js"></script>
 
 
 <script type="text/javascript"
@@ -186,18 +188,71 @@ body {
     background-color: #41668e;
     color: #fff;
 }
+
+.nvd3 .nv-axis text{font: 400 5px Arial,sans-serif;}
+.single-data-anno .yucca-widget .yucca-widget-singledata-label {font-size: 1rem; }
+.single-data-anno .yucca-widget .yucca-widget-singledata-value{font-size: 1rem;}
+.yucca-widget .yucca-widget-dataexplorer-pagination{display: none;}
+
+
+.yucca-widget .yucca-control-type-button .yucca-control-items .yucca-control-select-button{flex-grow:1}
+
+.yucca-control-items{white-space: nowrap; flex-wrap: wrap; font-size: .8rem}
+.info-panel{position: absolute;top: 10px;left: 10px;max-width: 15rem;}
+
+.home_offerta_ricettiva{display: flex; padding: 1rem; align-content:center; width: 100%;}
+.home_offerta_ricettiva .home_offerta_ricettiva_widget{flex-grow: 1;text-align:center}
+.home_offerta_ricettiva img{height: 8rem;}
+
+.yucca-widget .collapsible-tree-container .node text {
+    font-size: 10px;
+}
 </style>
 
 <script type="text/javascript">
-		angular.module('myApp', ['yucca.plugin', 'ngSanitize']).controller('myCtrl', function($scope, $compile){
-			$scope.token = '21d612a9a1cec5e98e9e33d05551229c';
+		angular.module('myApp', ['yucca.plugin', 'ngSanitize']).controller('myCtrl', function($scope, $compile, $http){
+			$scope.token = 'bcc49e686061ef51692cbd2c812beec8';
 			
 			$scope.accordions = {interna2collapseOne:false,interna2collapseTwo:false};
+
+			var loadUltimoanno = function(){
+				  var ultimoannoUrl = 'https://api.smartdatanet.it/api/Osstur_ultimoannooffertaricettiva_14587/DataEntities?$format=json&$top=1&$orderby=internalId%20desc';
+				  var httpBodyRequest = {
+					method : 'GET',
+					url : ultimoannoUrl,
+					headers: {'Authorization': "Bearer " + $scope.token},
+					httpBodyRequestwithCredentials : true
+				  };
+				  return $http(httpBodyRequest);
+			}
+
+			loadUltimoanno().then(function(result){
+			      console.log("loadUltimoanno", result);
+			      var ultimoanno = result.data.d.results[0]['anno'];
+			      console.log("loadUltimoanno data", $scope.anno);
+					$scope.trendMensiliSerieColumns = '['+
+					'{"type":"line","key":"ultimoanno","label":"'+(ultimoanno)+'","countingMode":"sum","color":"#3ce10e"},'+
+					'{"type":"line","key":"anno_1","label":"'+(ultimoanno -1)+'","countingMode":"sum","color":"#d71d1d","strokeWidth":3,"classed":"solid","interpolate":"linear"},' +
+					'{"type":"line","key":"anno_2","label":"'+(ultimoanno -2)+'","countingMode":"sum","strokeWidth":3,"color":"#c42199"},'+
+					'{"type":"line","key":"anno_3","label":"'+(ultimoanno -3)+'","countingMode":"sum","strokeWidth":2,"classed":"solid","interpolate":"linear","color":"#5d32d2"},'+
+					'{"type":"line","key":"anno_4","label":"'+(ultimoanno -4)+'","countingMode":"sum","color":"#46dce7"}]';
+					console.log("trendMensiliSerieColumns", $scope.trendMensiliSerieColumns);
+			  },function(result){
+				 console.error("loadUltimoanno error",result);
+				 var ultimoanno =2019;
+					$scope.trendMensiliSerieColumns = '['+
+					'{"type":"line","key":"ultimoanno","label":"'+(ultimoanno)+'","countingMode":"sum","color":"#3ce10e"},'+
+					'{"type":"line","key":"anno_1","label":"'+(ultimoanno -1)+'","countingMode":"sum","color":"#d71d1d","strokeWidth":3,"classed":"solid","interpolate":"linear"},' +
+					'{"type":"line","key":"anno_2","label":"'+(ultimoanno -2)+'","countingMode":"sum","strokeWidth":3,"color":"#c42199"},'+
+					'{"type":"line","key":"anno_3","label":"'+(ultimoanno -3)+'","countingMode":"sum","strokeWidth":2,"classed":"solid","interpolate":"linear","color":"#5d32d2"},'+
+					'{"type":"line","key":"anno_4","label":"'+(ultimoanno -4)+'","countingMode":"sum","color":"#46dce7"}]';
+			  });
+			
+			  
 });
 
 
 
-		
 
 	</script>
 
@@ -210,61 +265,290 @@ body {
 		<a href='https://userportal.smartdatanet.it/reference/#/widget'
 			target='_blank'>Documentation</a>
 	</header>
-	<div ng-app="myApp" class='content' ng-controller="myCtrl"><!-- 21d612a9a1cec5e98e9e33d05551229c -->
-		<p><a href ng-click='show=true'>show</a></p>
+	<div ng-app="myApp" class='content' ng-controller="myCtrl" ><!-- 21d612a9a1cec5e98e9e33d05551229c -->
+	
+		<div class="card-box-body"><!-- 
+		<ng-yucca-dataset-choropleth-map-chart 
+		tenantcode="regpie_statcovid" 
+		datasetcode="ProvaMappaCoropletica_15045" 
+		value_column='{"key":"attualmentepositivi","label":"attualmente positivi", "countingMode":"sum"}'
+		group_by_column='{"key":"code","label":"codice istat comune"}'
+		geojsons='[{"url":"https://userportal.smartdatanet.it/reference/lib/yucca-angular-widgets/dist/data/piemonte_comuni_geojson.json","key":"code"}]' 
+		widget_width="782" widget_height="604" 
+			map_legend="{"show":true,"position":"topleft"}" decimal_value="0" usertoken="ZP5Kg_5x1qxwFifaBfWohmdMc_oa" class="ng-scope ng-isolate-scope">
+		</ng-yucca-dataset-choropleth-map-chart> -->
+
+   <div class="yucca-dashboard-grid-panel item_25_0" style="grid-area:item_25_0">
+<ng-yucca-dataset-multi-chart tenantcode='regpie_statcovid' 
+  datasetcode='Dashboard_trend_positivi_interpolazione_14997' 
+  group_by_column='{"key":"data_time","label":"data"}' 
+  group_by_datetime='true' 
+  serie_columns='[{"key":"totcasipositivi","label":"nuovi casi positivi","countingMode":"sum","yAxis":"1","type":"bar","color":"#4658d5"},{"key":"interpolazione","label":"interpolazione","countingMode":"sum","yAxis":"2","type":"line","color":"#7b7b7b","strokeWidth":2,"classed":"solid","interpolate":"natural"}]' 
+  widget_title='Trend giornaliero dei nuovi casi positivi' 
+  widget_width='1870' 
+  widget_height='532' 
+  show_values='false' 
+  interpolate='bundle'
+  grouped_query='false' 
+  usertoken='ZP5Kg_5x1qxwFifaBfWohmdMc_oa' 
+  >
+    
+</ng-yucca-dataset-multi-chart>
+                </div>
+			
+	<!-- 
+	<ng-yucca-dataset-pie-chart 
+									tenantcode='regpie_turismo'
+										  datasetcode='Osstur_ultimoannoatlitaliaestero_14571'
+										  value_column='{"key":"presenze","label":"Presenze", "countingMode":"sum"}'
+										  group_by_column='{"key":"provenienza","label":"Provenienza"}'
+										  widget_title='Presenze ATL di Cuneo'
+										  render='{"rotation":"2","cornerRadius":"50"}'
+										  label_sunbeam_layout='true'
+										  chart_colors='["#fce94f","#73d216"]'
+										  orderby='provenienza desc'
+										  evt_highlight_groupbycolumn='{"enabled":true}'
+										  format_big_number='false' 
+									  decimal_value='1'
+									  show_values='true'
+										  label_type='percent'
+										  chart_legend='{"show":true,"position":{"top":12,"left":12}}'
+										  filter='(%27ATL di Cuneo%27 eq valore) '
+										  format_big_number='false' 
+										  usertoken="{{token}}"
+										  ></ng-yucca-dataset-pie-chart>
+	
+	<div class=''>
+	
+	
+						<ng-yucca-dataset-pie-chart 
+						tenantcode='regpie_turismo' 
+						datasetcode='Osstur_ultimoannoatl_14570' 
+						value_column='{"key":"numero_arrivi","label":"Arrivi", "countingMode":"sum"}' 
+						group_by_column='{"key":"valore","label":"ATL"}'  
+						render='{"rotation":"5","cornerRadius":"5"}' 
+						label_sunbeam_layout='true' 
+						main_chart_color='#2a9d8f' 
+						show_values='true' 
+						label_type='percent' 
+						chart_legend='{"show":true,"position":"bottom"}' 
+						format_big_number='true' 
+						widget_id='piechart_arrivi_atl' 
+						evt_accepted_control_ids='["filtro_mappa"]'
+
+						usertoken='33bf6aa856ab6114895ace8abb96a' >
+					</ng-yucca-dataset-pie-chart>
+	
+				   <ng-yucca-control-select 
+					  event_control_id='filtro_offerta'
+					  class='control'
+						  value_columns='[{"key":"numero_strutture_tot","label":"Strutture"},{"key":"camere_tot","label":"Camere"},{"key":"letti_tot","label":"Letti"}]'
+						  render='button'
+						  selected_value='numero_strutture_tot'
+						  direction='row'
+						  >
+							
+						</ng-yucca-control-select>
+
+			  </div><div>
+					<ng-yucca-dataset-singledata tenantcode='regpie_turismo'
+					  datasetcode='Osstur_ultimoannooffertaricettiva_14587'
+					  value_column='{"key":"numero_strutture_tot","label":""}'
+					  hide_label='true'
+					  grouped_query='false'
+					  widget_id='offerta'
+					  usertoken='33bf6aa856ab6114895ace8abb96a'
+					  evt_filtertext='{"enabled":true}'
+					  evt_accepted_control_ids='["filtro_offerta"]'
+					  evt_highlight_groupbycolumn='{"enabled":true}'>
+						</ng-yucca-control-select></div>
+					<div>
+					<ng-yucca-dataset-singledata tenantcode='regpie_turismo'
+					  datasetcode='Osstur_ultimoannooffertaricettiva_14587'
+					  value_column='{"key":"numero_strutture_ap_tot","label":""}'
+					  hide_label='true'
+					  grouped_query='false'
+					  widget_id='offerta'
+					  usertoken='33bf6aa856ab6114895ace8abb96a'
+					  evt_filtertext='{"enabled":true}'
+					  evt_accepted_control_ids='["filtro_offerta"]'
+					  evt_highlight_groupbycolumn='{"enabled":true}'>
+						</ng-yucca-control-select></div>
+					<div>
+					<ng-yucca-dataset-singledata tenantcode='regpie_turismo'
+					  datasetcode='Osstur_ultimoannooffertaricettiva_14587'
+					  value_column='{"key":"variazione_strutture","label":""}'
+					  hide_label='true'
+					  grouped_query='false'
+					  widget_id='offerta'
+					  usertoken='33bf6aa856ab6114895ace8abb96a'
+					  evt_filtertext='{"enabled":true}'
+					  evt_accepted_control_ids='["filtro_offerta"]'
+					  evt_highlight_groupbycolumn='{"enabled":true}'>
+						</ng-yucca-control-select></div>
+<div>
+<ng-yucca-dataset-dataexplorer-table 
+					tenantcode='regpie_turismo'
+				  datasetcode='Osstur_ultimoannomovimenti_14563'
+				  widget_title='Info presenze'
+				  dataexplorer_columns='[{"name":"anno","alias":"anno","datatype":"int","inOrder":1,"label":"Anno"},{"name":"numero_presenze_tot","alias":"numero_presenze_tot","datatype":"long","inOrder":2,"label":"Presenze","formatBigNumber":false},{"name":"numero_presenze_ap_tot","alias":"numero_presenze_ap_tot","datatype":"long","inOrder":3,"label":"Presenze anno precedente","formatBigNumber":false},{"name":"numero_arrivi_tot","alias":"numero_arrivi_tot","datatype":"long","inOrder":4,"label":"numero_arrivi_tot","skip":{"table":true,"detail":true}},{"name":"numero_arrivi_ap_tot","alias":"numero_arrivi_ap_tot","datatype":"long","inOrder":5,"label":"numero_arrivi_ap_tot","skip":{"detail":true,"table":true}},{"name":"variazione_presenze","alias":"variazione_presenze","datatype":"double","inOrder":6,"label":"Variazione %","decimalValue":2},{"name":"variazione_arrivi","alias":"variazione_arrivi","datatype":"double","inOrder":7,"label":"variazione_arrivi","skip":{"detail":true,"table":true}}]'
+				  usertoken='33bf6aa856ab6114895ace8abb96a'
+				  evt_filtertext='{"enabled":true}'
+				  evt_accepted_control_ids='["none"]'
+				  evt_highlight_groupbycolumn='{"enabled":true}'>
+				</ng-yucca-dataset-dataexplorer-table></div>
+	
+               <div>	<!--	<ng-yucca-dataset-choropleth-map-chart 
+						tenantcode='regpie_turismo'
+					  datasetcode='Osstur_ultimoannoatl_14570'
+					  value_column='{"key":"numero_arrivi","label":"Arrivi", "countingMode":"sum"}'
+					  group_by_column='{"key":"valore","label":"ATL"}'
+					  geojsons='[{"url":"http://dev-www.sistemapiemonte.it/sandbox/A-osservatorio-turismo/geojson/atl_nuova.json","key":"denominazione_atl","render":{"line":{"weight":1}}}]'
+						main_chart_color=''
+						widget_width='372'
+						scroll_wheel_zoom='true'
+						evt_accepted_control_ids='["filtro_mappa"]'
+						decimal_value='0'
+						usertoken='33bf6aa856ab6114895ace8abb96a'>
+						</ng-yucca-dataset-choropleth-map-chart></div>-->
+  <!-- 
+  <ng-yucca-dataset-dataexplorer-table tenantcode='regpie_oopp'
+                        datasetcode='NobelPrizeByWinner_9081' usertoken=LRulMu0Ie7nC2auw1q_x4MDNLkca></ng-yucca-dataset-dataexplorer-table>
+		
+   -->
+		<div>
+</div>
 		<div class='row' >
-			<div class=' col-sm-4 '>
+		<!-- 	<div class=' col-sm-6'>
 				<a href ng-click="accordions['interna2collapseOne']=!accordions['interna2collapseOne']">toggle one</a>
+
+			<style>
+			.yucca-widget-singledata-value {flex-grow:1; text-align: center;}</style>
+			<ng-yucca-dataset-treemap-chart tenantcode='regpie_oopp'
+                        datasetcode='Ossappalti_provincia_14179'
+                        value_column='{"key":"importo","label":"Importo", "countingMode":"sum"}'
+                        value_column2='{"key":"n_cig","label":"N. Cig", "countingMode":"sum"}'
+                        tree_columns='[{"key":"provincia","label":"Provincia"}]'
+                        root_label='Totali importi per provincia (Filtrabile per anno)'
+                        main_chart_color='#0066cc'
+                        format_big_number='true'
+                        filter='provincia ne %27TO1%27'
+                        euro_value='true'
+                          euro_value2='false'
+  decimal_value2='0'
+  format_big_number2='true'
+                        usertoken='ebTkkCd3tfoLPf6Db_a3v8JnTUga'></ng-yucca-dataset-treemap-chart>
+                        <ng-yucca-dataset-dataexplorer-table tenantcode='regpie_oopp'
+                        datasetcode='Ossappalti_provincia_14179' usertoken='ebTkkCd3tfoLPf6Db_a3v8JnTUga'></ng-yucca-dataset-dataexplorer-table> -->
+  -->
+			
+			<!-- 
+			   <ng-yucca-dataset-dataexplorer-table tenantcode='regpie_oopp'
+                        datasetcode='Ossappalti_riepilogo_tabella_14177'
+                        usertoken='ebTkkCd3tfoLPf6Db_a3v8JnTUga'
+                        evt_filtertext='{"enabled":true}'
+                        widget_subtitle="Tabella riepilogativa (Filtrabile per anno)"
+                        evt_highlight_groupbycolumn='{"enabled":true}'></ng-yucca-dataset-dataexplorer-table>    -->
+                        <!-- 
+  <div class="yucca-dashboard-component-card" id="component_filtro">
+                    <ng-yucca-control-filter-data-discrete
+                        event_control_id='filtro_anno'
+                        value_columns='[{"label":"Tutti","filter":"    anno eq %272012%27 or anno eq %272013%27 or anno eq %272014%27 or
+                                                                    anno eq %272015%27 or anno eq %272016%27 or anno eq %272017%27 or
+                                                                    anno eq %272018%27 or anno eq %272019%27 or anno eq %272020%27"},
+                                        {"label":"2012","filter":"anno eq %272012%27"},
+                                        {"label":"2013","filter":"anno eq %272013%27"},
+                                        {"label":"2014","filter":"anno eq %272014%27"},
+                                        {"label":"2015","filter":"anno eq %272015%27"},
+                                        {"label":"2016","filter":"anno eq %272016%27"},
+                                        {"label":"2017","filter":"anno eq %272017%27"},
+                                        {"label":"2018","filter":"anno eq %272018%27"},
+                                        {"label":"2019","filter":"anno eq %272019%27"},
+                                        {"label":"2020","filter":"anno eq %272020%27"}]'
+                        filter_type='unique'
+                        render='button'
+                        direction='row'/>
+                </div>
+                <div class="yucca-dashboard-component-card" id="component_0">
+                    <ng-yucca-dataset-multi-chart tenantcode='regpie_oopp'
+                        datasetcode='Ossappalti_tipo_gt40000_14181'
+                        chart_legend='{"show":true,"position":{"top":0,"left":0}}'
+                        group_by_column='{"key":"anno","label":"Anno"}'
+                        serie_columns='[{"key":"n_cig_forniture","label":"N. CIG forniture","countingMode":"sum","yAxis":"1","type":"bar","color":"#2da9d9"},
+                                        {"key":"n_cig_servizi","label":"N. CIG servizi","countingMode":"sum","yAxis":"1","type":"bar","color":"#b73377"},
+                                        {"key":"importo","label":"Importo","countingMode":"sum","yAxis":"2","type":"line","color":"#d900a7"},
+                                        {"key":"n_cig_lavori","label":"N. CIG lavori","countingMode":"sum","yAxis":"1","type":"bar","color":"#a799a7"}]'
+                        series_from_values='true'
+                        decimal_value='0'
+                        format_big_number='true'
+                        widget_subtitle="N. CIG con importo >= €40.000 (Filtrabile per anno)"
+                        widget_width='1300'
+                        filter='(%272021%27 gt anno) '
+                        evt_accepted_control_ids='["primo_controllo","secondo_controllo"]'
+                        y2_axis='{is_euro_value:true,format_big_number:true}'
+                        usertoken='ebTkkCd3tfoLPf6Db_a3v8JnTUga'/>
+                </div>
+                         -->
+                 <!-- 
+                <ng-yucca-dataset-dataexplorer-table tenantcode='regpie_oopp'
+                        datasetcode='Ossappalti_provincia_14179' orderby='provincia,n_cig'
+  filter='(%272020%27 eq anno) ' usertoken='ebTkkCd3tfoLPf6Db_a3v8JnTUga'></ng-yucca-dataset-dataexplorer-table>
+  -->
+<!-- <ng-yucca-dataset-singledata tenantcode='regpie_oopp'
+datasetcode='Ossappalti_contraenti_14088'
+value_column='{"key":"conteggio_contraente","label":"Conteggio"}'
+widget_subtitle='N. CIG con affidamento diretto'
+hide_label='true'
+usertoken='ebTkkCd3tfoLPf6Db_a3v8JnTUga'></ng-yucca-dataset-singledata>	-->
+				<!-- 
 				<div class=' widget-container'>
-     			 	<ng-yucca-dataset-heatmap-map-chart tenantcode='regpie_statcovid'
-					  datasetcode='Dashboard_mappa_nuovi_positivi_10591'
-					  value_column='{"key":"positivi","label":"nuovi positivi", "countingMode":"sum"}'
-					  label_column='{"key":"codistat","label":"codistat"}'
-					  geojsons='[{"url":"http://localhost:8000/lib/yucca-angular-widgets/dist/data/piemonte_comuni_geojson.json","key":"description"}]'
-					  wwidget_title='Mappa dei nuovi positivi in Piemonte'
-				   	  area_color='#dddddd'
-					  lat_column='lat'
-					  lng_column='lng'
-					  map_legend='{"show":true,"position":"topright"}'
-					  radius='10'
-					  blur='10'
-					  gradient='{"0":"#000000","1":"#ff0000","0.1":"#000000","0.4":"#0000ff","0.6":"#00ffff","0.7":"#00ff00","0.8":"#ffff00"}'
-					  decimal_value='0'
-					  usertoken='ZP5Kg_5x1qxwFifaBfWohmdMc_oa'
-					  >
-					</ng-yucca-dataset-heatmap-map-chart> 
-   				</div>
+				<ng-yucca-dataset-multi-chart tenantcode='smartlab'
+  datasetcode='Australianforeignstudents20072009_9501'
+  group_by_column='{"key":"Year","label":"Year"}'
+    x_axis='{"hide":false,"staggerLabels":true,format_big_number:true}'
+  
+  y_axis='{"hide":false,"staggerLabels":true,format_big_number:true,is_euro_value:true}'
+  y2_axis='{"hide":false,"staggerLabels":true,is_euro_value:true}'
+  
+   chart_legend='{"show":true,"position":{"top":0,"left":0}}'
+  
+  serie_columns='[{"key":"Total","label":"Total","countingMode":"sum","yAxis":"1","type":"area","color":"#e0e0e0"},
+  {"key":"GenderMale","label":"Male","countingMode":"sum","yAxis":"1","type":"bar","color":"#2da9d9"},
+  {"key":"GenderFemale","label":"Female","countingMode":"sum","yAxis":"1","type":"bar","color":"#b73377"},
+  {"key":"SudAmerica","label":"Sud America","countingMode":"sum","yAxis":"1","type":"line","color":"#ff8585","strokeWidth":4,"classed":"solid","interpolate":"basis"},
+  {"key":"NorthAmerica","label":"North America","countingMode":"sum","yAxis":"2","type":"line","color":"#dc0000","strokeWidth":4,"classed":"solid","interpolate":"basis"},{"key":"Europe","label":"Europe","countingMode":"sum","yAxis":"1","type":"line","color":"#9ade00","strokeWidth":4,"classed":"solid","interpolate":"basis"},
+  {"key":"Africa","label":"Africa","countingMode":"sum","yAxis":"1","type":"line","color":"#333333","strokeWidth":4,"classed":"solid","interpolate":"basis"},
+  {"key":"Asia","label":"Asia","countingMode":"sum","yAxis":"2","type":"line","color":"#fbb32e","strokeWidth":4,"classed":"solid","interpolate":"basis"}]'
+
+  usertoken='LRulMu0Ie7nC2auw1q_x4MDNLkca'
+  ></ng-yucca-dataset-multi-chart>
+  
+ <ng-yucca-dataset-dataexplorer-table tenantcode='regpie_oopp'
+  datasetcode='Ossappalti_contraenti_14088'
+  usertoken='ebTkkCd3tfoLPf6Db_a3v8JnTUga'
+ ></ng-yucca-dataset-dataexplorer-table>
+  
+ <ng-yucca-dataset-dataexplorer-table tenantcode='regpie'
+  datasetcode='Flussi_turistici_provincia_6054'
+  filter='(2007 eq anno) '
+  >
+</ng-yucca-dataset-dataexplorer-table>
+   
+				
+<ng-yucca-dataset-multi-chart1 tenantcode='regpie_oopp'
+						datasetcode='Ossappalti_st1_infog1_13876'
+						group_by_column='{"key":"anno","label":"Anno"}'
+						serie_columns='[{"key":"n_cig_forniture","label":"N. CIG forniture","countingMode":"sum","yAxis":"1","type":"bar","color":"#2da9d9"},
+										{"key":"n_cig_servizi","label":"N. CIG servizi","countingMode":"sum","yAxis":"1","type":"bar","color":"#b73377"},
+										{"key":"n_cig_lavori","label":"N. CIG lavori","countingMode":"sum","yAxis":"1","type":"bar","color":"#a799a7"},
+										{"key":"importo","label":"Importo","countingMode":"sum","yAxis":"2","type":"line","color":"#d900a7"}]'
+						series_from_values='true'
+						decimal_value='0'
+						format_big_number='true'
+						widget_subtitle="N. CIG con importo >= €40.000" 
+						usertoken='ebTkkCd3tfoLPf6Db_a3v8JnTUga'></ng-yucca-dataset-multi-chart1>
+     			 </div>
             </div>
-			<div class=' col-sm-4 '>
-	            <div class=' widget-container'>
-				<a href ng-click="accordions['interna2collapseTwo']=!accordions['interna2collapseTwo']">toggle two</a>
-<ng-yucca-dataset-discretebar-chart tenantcode='regpie_agri' datasetcode='Cmpsrpie_widget_1_0_0_10389'
-                  value_column='{"key":"valore","label":"valore", "countingMode":"sum"}'
-                  group_by_column='{"key":"indicatore","label":"indicatore"}' 
-                  widget_title="Quadro finanziario complessivo" 
-                  widget_intro="Il grafico presenta in sintesi gli importi stanziati dal Programma, attivati attraverso i Bandi, ammessi al finanziamento e pagati complessivamente"
-                  main_chart_color='#4e9a06'
-                  euro_value='true' decimal_value='0'
-                  x_axis='{"hide":false,"label":"","rotateLabels":0, staggerLabels: true}'
-				  orderby='indicatore'
-                  usertoken='2ea1cb94a2216edcf7a6dfd867edac0' />
-	            <!-- 	<ng-yucca-dataset-bubbles-map-chart
-					    tenantcode='regpie_statcovid'
-					    datasetcode='Dashboard_mappa_nuovi_positivi_10591'
-						value_column='{"key":"positivi","label":"nuovi positivi", "countingMode":"sum"}'
-						label_column='{"key":"codistat","label":"codistat"}'
-					    decimal_value=0
-					    format_big_number='true'
-					    area_color='#dddddd'
-					    main_chart_color='#C34CFF'
-					    lat_column='lat'
-					    radius='5'
-					    lng_column='lng'
-	  					geojsons='[{"url":"http://localhost:8000/lib/yucca-angular-widgets/dist/data/piemonte_comuni_geojson.json","key":"code"}]'
-					    usertoken='ZP5Kg_5x1qxwFifaBfWohmdMc_oa'
-					/>  -->
-				</div>
-			</div>
 			<div class=' col-sm-4 '>
 	            <!-- 
 	            <div class=' widget-container'>
